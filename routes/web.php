@@ -27,3 +27,4 @@ Route::get('/levels/create/{id}','LevelsController@create');
 Route::post('/levels/{id}','LevelsController@store');
 Route::delete('levels/delete/{lid}/{lnum}/{cid}','LevelsController@destroy');
 Route::get('levels/{id}','LevelsController@index');
+//this is just testing if it works
