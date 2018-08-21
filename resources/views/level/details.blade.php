@@ -43,7 +43,7 @@
                             </div>
                         </td>
                         <td>	
-                            <a href="#" class="btn btn-info">DETAILS</a>
+                            <a href="/questions/{{$level->lev_id}}" class="btn btn-info">DETAILS</a>
                         </td>
                     </tr>
                     @endforeach

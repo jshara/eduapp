@@ -8,7 +8,6 @@ class Category extends Model
 {
 
     public $primaryKey = 'cat_id';
-
     protected $table = 'categories';
 
     
