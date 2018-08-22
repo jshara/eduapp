@@ -14,8 +14,7 @@
                 <thead>
                     <tr>                        
                         <th><?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></th>
-                        <th>Latitudes</th>
-                        <th>Longitudes</th>
+                        <th>Coordinates</th>
                         <th> </th>
                     </tr>
                 </thead>
@@ -29,11 +28,6 @@
                         <td>
                             <div class="input-group">  
                                 <li class="form-control">{{$level->lev_location}}</li>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group">  
-                                <li class="form-control">{{$level->lev_location}}</li>
                                 <span class="input-group-addon"><a href="#" class="btn"><i class="fa fa-pencil fa-lg"></i></a></span>
                                 {!!Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id], 'method'=>'POST', 'class'=>'pull-right'])!!}
                                     {{Form::hidden('_method','DELETE')}}
@@ -43,7 +37,7 @@
                             </div>
                         </td>
                         <td>	
-                            <a href="#" class="btn btn-info">DETAILS</a>
+                            <a href="/questions/{{$level->lev_id}}" class="btn btn-info">DETAILS</a>
                         </td>
                     </tr>
                     @endforeach
