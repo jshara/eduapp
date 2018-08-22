@@ -31,3 +31,4 @@ Route::get('levels/{id}','LevelsController@index');
 //Questions
 Route::get('questions/{id}','QuestionsController@index');
 Route::post('/questions','QuestionsController@display');
+Route::post('/questions/{id}', 'QuestionsController@store');

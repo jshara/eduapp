@@ -14,8 +14,7 @@
                 <thead>
                     <tr>                        
                         <th><?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></th>
-                        <th>Latitudes</th>
-                        <th>Longitudes</th>
+                        <th>Coordinates</th>
                         <th> </th>
                     </tr>
                 </thead>
@@ -25,11 +24,6 @@
                     <tr>
                         <td>                           
                             <p class="text-center">Level #{{$level->lev_num}}</p>                            
-                        </td>
-                        <td>
-                            <div class="input-group">  
-                                <li class="form-control">{{$level->lev_location}}</li>
-                            </div>
                         </td>
                         <td>
                             <div class="input-group">  
