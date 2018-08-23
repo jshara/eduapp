@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,3 +17,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/cat','ApiController@getAllCat');
+Route::get('/cat={id}','ApiController@getLevel');
+Route::get('/numLev/{cat_id}','ApiController@checkHowManyLevel');
+Route::get('/nextLevel/current={lev_id}&cat={cat_id}','ApiController@loadNextLevel');
