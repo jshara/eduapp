@@ -128,17 +128,34 @@ class QuestionsController extends Controller
         ]);
 
         $question = Question::find($id);
-        $question->content = $request->input('question');
+        $question->ques_content = $request->input('question');
         $question->save();  
+
+        //  while(!blank($request->input('ans_'.$i)) && $i < 5){
+        //     if($question->answers->ans_num == $i){
+        //         $question->answers->ans_content = $request->input('ans_'.$i);
+        //     }            
+        //     $i ++;
+        //     $question->answers->save();
+        // }
+        $answers = Answer::where('ques_id',$id)->get();
         $i =1;
-        while(!blank($request->input('ans_'.$i)) && $i < 5){
-            if($question->$answers->ans_num == $i){
-                $question->answers->ans_content = $request->input('ans_'.$i);
-            }            
-            $i ++;
-            $question->$answers->save();
+        foreach ($answers as $answer) {
+            if($answer->ans_num == 1){
+                $answer->ans_correct = 1;
+                $answer->ans_content = $request->input('ans_1');
+            } 
+            else
+            {
+                $answer->ans_content = $request->input('ans_'.$i);
+            }
+            $answer->save();
+            $i++;
+            
         }
-             
+        
+
+        return redirect('questions/'.$question->lev_id)->with('success', 'Question updated');
     }
 
     /**

@@ -75,7 +75,6 @@ class CategorysController extends Controller
     {
         $cat = Category::find($id);
         return view('category.edit')->with('cat',$cat);
-
     }
 
     /**

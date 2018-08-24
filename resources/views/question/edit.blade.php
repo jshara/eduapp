@@ -6,7 +6,7 @@
             <a class="btn btn-lg"> Editing Question <?php echo $question->ques_num ?></a>
         </div>
     </div>
-    {!! Form::open(['action'=>['QuestionsController@update', $question->ques_id], 'method'=>'POST'])!!}
+    {!! Form::open(['action'=>['QuestionsController@update', $question->ques_id], 'method'=>'PUT'])!!}
         <div class="row">
             <div class="col-md-12">
                 {{form::textarea('question',$question->ques_content,['style'=>'border-color:blue; background-color:lightsteelblue;',
@@ -35,7 +35,7 @@
         <div class="row">
             <div class="col-md-12 text-right">
                 {{Form::submit('Update',['class'=>'btn btn-success','name' => 'update'])}}
-                {{Form::submit('Cancel',['class'=>'btn btn-danger','name' => 'cancel'])}}
+                {{-- {{Form::submit('Cancel',['class'=>'btn btn-danger','name' => 'cancel'])}} --}}
             </div>
         </div>
     {!! Form::close() !!}
