@@ -29,6 +29,9 @@ Route::delete('levels/delete/{lid}/{lnum}/{cid}','LevelsController@destroy');
 Route::get('levels/{id}','LevelsController@index');
 
 //Questions
-Route::get('questions/{id}','QuestionsController@index');
+Route::get('/questions/{id}','QuestionsController@index');
 Route::post('/questions','QuestionsController@display');
 Route::post('/questions/{id}', 'QuestionsController@store');
+Route::get('/questions/create/{id}','QuestionsController@create');
+Route::get('/questions/{id}/edit','QuestionsController@edit');
+Route::put('/questions/update/{id}','QuestionsController@update');

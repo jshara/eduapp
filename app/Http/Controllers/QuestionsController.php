@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Level;
 use App\Question;
 use App\Answer;
+use DB;
 
 class QuestionsController extends Controller
 {
@@ -16,28 +17,28 @@ class QuestionsController extends Controller
      */
     public function index($lid)
     {
-        return view('question.details')->with('lev_id',$lid);
+        $questions = Question::where('lev_id',$lid)->orderBy('ques_num','asc')->get();
+        return view('question.details')->with('lev_id',$lid)->with('questions',$questions);
     }
-
-    // public function display(Request $request){
-    //     $number = count($request->name);
-    //     if($number > 0){
-    //         for($i=0,$i<$number; $i++){
-    //             if(trim($request->name))
-    //         }
-    //     }else{
-            
-    //     }
-    // }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($lid)
     {
-        //
+        $ques_num = DB::table('questions')->where('lev_id',$lid)->max('ques_num');
+
+        if($ques_num == NULL) 
+            $ques_num = 1;
+        else 
+            $ques_num++;
+
+        if($ques_num < 6)
+            return view('question.add')->with('lev_id',$lid)->with('ques_num',$ques_num);
+        else
+            return redirect('/questions/'.$lid)->with('error', 'ITS FULL');
     }
 
     /**
@@ -65,53 +66,24 @@ class QuestionsController extends Controller
             $ans = new Answer();
             $ans->ans_content = $request->input('ans_'.$i);
             $ans->ans_num = $i;
-            if($i==1){
-                $ans->ans_correct = 1;
-            }else{
-                $ans->ans_correct =0;
-            }
+            if($i==1)                
+                $ans->ans_correct = 1;                
+            else                
+                $ans->ans_correct =0;                
             
             $ans->ques_id = $ques->ques_id;
             $ans->save();
             $i ++;
         }
-        // switch($request->input['submitbtn']) {
-        //     case 'save_exit': 
-        //         // $cid = Level::where('lev_id', $lid)->select('cat_id')->get();
-        //         // return redirect('/levels/'.$cid[0]->cat_id)->with('success', 'Question added');
-        //         return 1;
-        //     break;
-        
-        //     case 'save_next': 
-        //         // return redirect('/questions/'.$lid)->with('success', 'Question added');
-        //         return 2;
-        //     break;
-
-        //     default:
-        //     return 3;
-        // }
-
+      
         if($request->save_exit){
-            $cid = Level::where('lev_id', $lid)->select('cat_id')->get();
-            return redirect('/levels/'.$cid[0]->cat_id)->with('success', 'Question added');
-        }
-        elseif($request->save_next){
-            return redirect('/questions/'.$lid)->with('success', 'Question added');
+            return redirect('questions/'.$lid)->with('success', 'Question added');
         }
         else
-        return 3;
-        // if($_POST['submitbtn'] == 'save_exit'){
+        {
+            return redirect('/questions/create/'.$lid)->with('success', 'Question added');
+        }
 
-        //     // $cid = Level::where('lev_id', $lid)->select('cat_id')->get();
-        //     // return redirect('/levels/'.$cid[0]->cat_id)->with('success', 'Question added');
-        //     return 1;
-
-        // }elseif($_POST['submitbtn'] == 'save_next'){
-        //     // return redirect('/questions/'.$lid)->with('success', 'Question added');
-        //     return 2;
-        // }else{
-        //     return 3;
-        // }
     }
 
     /**
@@ -131,9 +103,13 @@ class QuestionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($qid)
     {
-        //
+        // $question = DB:: select('select * from questions where ques_id =? order by ques_num asc',[$qid]);
+       // $question = Question::where('ques_id',$qid)->orderBy('ques_num','acs')->get();
+        // dd($question);
+        $question = Question::find($qid);
+        return view('question.edit')->with('question',$question);
     }
 
     /**
@@ -145,7 +121,41 @@ class QuestionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'question'=> 'required',
+            'ans_1' => 'required',
+            'ans_2' => 'required'
+        ]);
+
+        $question = Question::find($id);
+        $question->ques_content = $request->input('question');
+        $question->save();  
+
+        //  while(!blank($request->input('ans_'.$i)) && $i < 5){
+        //     if($question->answers->ans_num == $i){
+        //         $question->answers->ans_content = $request->input('ans_'.$i);
+        //     }            
+        //     $i ++;
+        //     $question->answers->save();
+        // }
+        $answers = Answer::where('ques_id',$id)->get();
+        $i =1;
+        foreach ($answers as $answer) {
+            if($answer->ans_num == 1){
+                $answer->ans_correct = 1;
+                $answer->ans_content = $request->input('ans_1');
+            } 
+            else
+            {
+                $answer->ans_content = $request->input('ans_'.$i);
+            }
+            $answer->save();
+            $i++;
+            
+        }
+        
+
+        return redirect('questions/'.$question->lev_id)->with('success', 'Question updated');
     }
 
     /**
