@@ -99,6 +99,14 @@ class CategorysController extends Controller
         return redirect('/categories')->with('success', 'Category Name Updated');
     }
 
+    public function ajax(Request $req)
+    {
+        $data = Category::find($req->id);
+        $data->cat_name = $req->name;
+        $data->save();
+        return response()->json($data);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

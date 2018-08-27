@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //Categories
 Route::resource('categories','CategorysController');
+Route::post('/category','CategorysController@ajax');
 
 //Levels
 Route::get('/levels/create/{id}','LevelsController@create');
