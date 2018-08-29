@@ -112,36 +112,100 @@ class ApiController extends Controller
             shuffle($data[$i]['answers'] );
             
         }
+
+        shuffle($data);
         return response()->json($data);
 
     }
 
     //check whether answers submitted are correct
     public function checkAns($ans_id){
-        $resultSet;
+            $resultSet;
+            $ans_id = explode(',',$ans_id);
+            $numQuestions =count($ans_id);
+            $numCorrect = 0;
+            foreach ($ans_id as $id){
+                $result = DB::table('answers')
+                        ->where('ans_id',$id)
+                        ->value('ans_correct');
+                if ($result==1){
+                    // echo 'correct ' . $result;
+                    $resultSet[] = ($result);
+                    $numCorrect ++;
+                }
+                else 
+                {
+                    // echo 'wrong '.$result;
+                    $resultSet[] = ($result);
+                }
+            }
+            $score = ($numCorrect/$numQuestions)*100;
+            $score = number_format((float)$score, 0, '.', ''); 
+            $data = [
+                'score' => $score
+            ];
+  
 
-        $ans_id = explode(',',$ans_id);
-        $numQuestions =count($ans_id);
-        $numCorrect = 0;
-        foreach ($ans_id as $id){
-            $result = DB::table('answers')
-                    ->where('ans_id',$id)
-                    ->value('ans_correct');
-            if ($result==1){
-                // echo 'correct ' . $result;
-                $resultSet[] = ($result);
-                $numCorrect ++;
-            }
-            else 
-            {
-                // echo 'wrong '.$result;
-                $resultSet[] = ($result);
-            }
+        return response()->json($data);
+
+    }
+
+    public function getRandomLatLng($values){
+        // $array = array();
+        $array = [
+        '-18.147252, 178.445223',
+        '-18.146773, 178.444021',
+        '-18.147456, 178.445898',
+        '-18.147864, 178.444879',
+        '-18.147874, 178.444139',
+        '-18.147109, 178.442809',
+        '-18.148628, 178.443485',
+        '-18.148692, 178.447268',
+        '-18.149357, 178.446605',
+        '-18.150040, 178.446380',
+        '-18.150458, 178.446959',
+        '-18.151019, 178.445693',
+        '-18.150866, 178.444899',
+        '-18.150662, 178.445414',
+        '-18.149690, 178.444025',
+        '-18.149772, 178.443671',
+        '-18.150465, 178.443853',
+        '-18.150409, 178.443477',
+        '-18.150297, 178.443262',
+        '-18.150144, 178.442956',
+        '-18.149904, 178.443235'
+    ];
+        if ($values == 1){
+            $list =  $array[array_rand($array,$values)] ;
+            $data = explode(",", $list);
+            $coords = [
+                'lat' => $data[0],
+                'lng' => $data[1]
+            ];
+            $list = $coords;
         }
-        $score = ($numCorrect/$numQuestions)*100;
-        $score = number_format((float)$score, 0, '.', ''); 
-        return $score.'%';
+        else{
+            $index[] = array_rand($array,$values);
+            $c = 0;
+            foreach ($index[0] as $i) {
+                $list[$c] = [
+                   $array[$i]                   
+                ];
+            $c++;
+            }
+            $a = 0;
+            foreach($list as $item){
+                $data = explode(",",$item[0]);
+                $coords[$a] = [
+                    'lat' => $data[0],
+                    'lng' => $data[1]
+                ];
+             $a++;                  
+            }
 
+            $list = $coords; 
+        }
+       return response()->json($list); 
     }
 
     /**

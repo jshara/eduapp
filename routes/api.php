@@ -24,3 +24,4 @@ Route::get('/numLev/{cat_id}','ApiController@checkHowManyLevel');
 Route::get('/nextLevel/current={lev_id}&cat={cat_id}','ApiController@loadNextLevel');
 Route::get('/loadQuestions/{id}&{catid}','ApiController@loadQuestion');
 Route::get('/checkAns/{id}','ApiController@checkAns');
+Route::get('/getRan/{num}','ApiController@getRandomLatLng');

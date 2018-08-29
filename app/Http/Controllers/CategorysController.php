@@ -77,6 +77,14 @@ class CategorysController extends Controller
         return view('category.edit')->with('cat',$cat);
     }
 
+    public function ajax(Request $req){
+        echo "i am in the controller";
+        $cat = Category::find($req->id);
+        $cat->cat_name = $req->name;
+        $cat->save();
+        return response()->json($cat);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -86,13 +94,14 @@ class CategorysController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'cat_name' =>'required'
-        ]);
+        echo "i am in the controller";
+        // $this->validate($request, [
+        //     'cat_name' =>'required'
+        // ]);
         
         //FInd category
         $cat = Category::find($id);
-        $cat->cat_name= $request->input('cat_name');
+        $cat->cat_name= $request->name;
         $cat->save();
 
         return redirect('/categories')->with('success', 'Category Name Updated');
