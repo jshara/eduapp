@@ -28,16 +28,15 @@
                         <td>
                             <div class="input-group">  
                                 <li class="form-control">{{$level->lev_location}}</li>
-                                <span class="input-group-addon"><a href="#" class="btn"><i class="fa fa-pencil fa-lg"></i></a></span>
+                                <span class="input-group-addon"><a href="/mapslevel/{{$level->lev_id}}" class="btn"><i class="fa fa-pencil fa-lg"></i></a></span>
                                 {!!Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id], 'method'=>'POST', 'class'=>'pull-right'])!!}
                                     {{Form::hidden('_method','DELETE')}}
-                                    {{-- {{Form::submit('Delete',['class'=> 'fa fa-trash-o fa-lg'])}} --}}
                                     {!! Form::button( '<i class="fa fa-trash-o fa-lg" style="color:#FF0000;"></i>', ['type' => 'submit'] ) !!}
                                 {!!Form::close()!!}
                             </div>
                         </td>
                         <td>	
-                            <a href="/questions/{{$level->lev_id}}" class="btn btn-info">DETAILS</a>
+                            <a href="/questions/{{$level->lev_id}}" class="btn btn-info">Question[s]</a>
                         </td>
                     </tr>
                     @endforeach

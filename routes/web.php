@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //Categories
 Route::resource('categories','CategorysController');
+ROute::post('/categories/ajax', 'CategorysController@ajax');
 
 //Levels
 Route::get('/levels/create/{id}','LevelsController@create');
@@ -35,3 +36,7 @@ Route::post('/questions/{id}', 'QuestionsController@store');
 Route::get('/questions/create/{id}','QuestionsController@create');
 Route::get('/questions/{id}/edit','QuestionsController@edit');
 Route::put('/questions/update/{id}','QuestionsController@update');
+
+//Maps
+Route::get('/maps/{id}','MapsController@map');
+Route::get('/mapslevel/{id}', 'MapsController@viewLevel');
