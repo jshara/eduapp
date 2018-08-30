@@ -28,6 +28,7 @@ class MapsController extends Controller
 
         foreach($locations as $data){
             $marker['position'] = $data->val;
+            $marker['title'] = 'Level '.$i;
             $marker['label']= $i;
             $gmap->add_marker($marker);
             $i++;
@@ -39,33 +40,19 @@ class MapsController extends Controller
     }
 
     public function viewLevel($lev_id){
-        $config['center'] = 'USP Laucal Campus';
-        $config['zoom'] = '16';
-        $config['map_height'] = '500px';
-        $config['map_width'] = '100%';
-        $config['scrollwheel'] = true;
 
         $location = Level::find($lev_id);
 
-    //  Initialize the map with $config properties
-        $gmap = new GMaps();
-        $gmap->initialize($config);
-  
-        $marker['position']= $location->lev_location;
-        $marker['id'] = $lev_num;
-        $marker['label']=$location->lev_num;
-        $marker['draggable'] = true;   
-        $gmap->add_marker($marker);
-        // $marker['ondragend'] != "") {
-        //     $marker_output .= '
-        //     google.maps.event.addListener(marker_'.$marker.', "dragend", function(event) {
-        //         '.$marker['ondragend'].'
-        //     });
-        //     ';
+        return view('level.edit')->with('location',$location);
+    }
 
-        $map = $gmap->create_map();
+    public function updateLevel(Request $request){
+        $lev= Level::find($request->lev_id);
+        $lev->lev_location = $request->lev_location;
+        $lev->save();
 
+        $cat_id = DB::table('levels')->where('lev_id','=',$request->lev_id)->value('cat_id');
 
-        return view('category.map')->with('map', $map)/*->('marker_out',$marker_output)*/;
+        return redirect('/levels/'.$cat_id)->with('success', 'Level Updated');
     }
 }

@@ -40,3 +40,4 @@ Route::put('/questions/update/{id}','QuestionsController@update');
 //Maps
 Route::get('/maps/{id}','MapsController@map');
 Route::get('/mapslevel/{id}', 'MapsController@viewLevel');
+Route::put('/mapsupdate', 'MapsController@updateLevel');
