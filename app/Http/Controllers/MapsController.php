@@ -10,11 +10,15 @@ use FarhanWazir\GoogleMaps\GMaps;
 class MapsController extends Controller
 {
     public function map($cat_id) {
-        $config['center'] = 'USP Laucal Campus';
+        $config['center'] = 'USP Laucala Campus';
         $config['zoom'] = '16';
         $config['map_height'] = '500px';
         $config['map_width'] = '100%';
         $config['scrollwheel'] = true;
+
+        $cat_name = db::table('categories')
+                    ->where('cat_id','=',$cat_id)
+                    ->value('cat_name');
 
         $locations =DB::table('levels')
                 ->select('lev_location as val')
@@ -36,7 +40,7 @@ class MapsController extends Controller
 
         $map = $gmap->create_map();
 
-        return view('category.map')->with('map', $map);
+        return view('category.map')->with('map', $map)->with('cat_name',$cat_name);
     }
 
     public function viewLevel($lev_id){

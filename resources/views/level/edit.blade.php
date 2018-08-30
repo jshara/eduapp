@@ -3,7 +3,11 @@
 @section('content')
         {{-- {!! $map['js'] !!} --}}
     <body>
-        <h1>Laucala Campus Map</h1>
+        <h1>Edit Level {{$location->lev_num}}</h1>
+        <p> Drag the marker to change the location where this level spawns. 
+        When satisfied with the position, click Update to save the location. </p>
+        <p style="color:red !important;"> Please select safe locations for the levels as the 
+        players will need to be near these locations to access the levels. </p>
         {{-- <p>{{$location->lev_location}} </p> --}}
 
         <?php
