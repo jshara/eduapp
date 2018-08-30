@@ -17,22 +17,20 @@
             @if(count($category) > 0)
                 @foreach($category as $c)
                 <tr class="cat{{$c->cat_id}}">
-                    
+
                     <td>
                         <div class="input-group">
                             <li class="form-control">{{$c->cat_name}}</li>
                             <span class="input-group-addon">                                       
-                                {{-- <button type="button" class="btn" data-toggle="modal" onclick="edit({{$c}})"  data-target="#editModal"><i class="fa fa-pencil fa-lg"></i></button>                                        --}}
                                 <button class="edit-modal btn btn-info" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
                                     <span class="glyphicon glyphicon-edit"></span> Edit
                                 </button>
                             </span>
-
-                            {!!Form::open(['action'=>['CategorysController@destroy', $c->cat_id], 'method'=>'POST', 'class'=>'pull-right'])!!}
-                                {{Form::hidden('_method','DELETE')}}
-                                {{-- {{Form::submit('Delete',['class'=> 'fa fa-trash-o fa-lg'])}} --}}
-                                {!! Form::button( '<i class="btn fa fa-trash-o fa-lg" style="color:#FF0000;"></i>', ['type' => 'submit'] ) !!}
-                            {!!Form::close()!!}
+                            <span class="input-group-addon">                                       
+                                <button class="delete-modal btn btn-danger" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
+                                    <span class="glyphicon glyphicon-trash"></span> Delete
+                                </button>
+                            </span>
                         </div>
                     </td>
                     <td>	
@@ -74,8 +72,9 @@
 						</div>
 					</form>
 					<div class="deleteContent">
-						Are you Sure you want to delete <span class="dname"></span> ? <span class="hidden did"></span>
+						Are you Sure you want to delete <span class="dname"></span> ?  <span class="hidden did" style="visibility:hidden;"></span>
 					</div>
+                   
 					<div class="modal-footer">
 						<button type="button" class="btn actionBtn" data-dismiss="modal">
 							<span id="footer_action_button" class="glyphicon"> </span>
@@ -123,47 +122,18 @@
                 $('#myModal').modal('show');
             });
 
-            // $('.modal-footer').on('click', '.edit1', function() {
-            //     console.log('I am in update button');
-            //     $.ajax({
-            //         type: 'post',
-            //         url: '/ajax-crud-operations-laravel/editItem',
-            //         data: {
-            //             '_token': $('input[name=_token]').val(),
-            //             'id': $("#fid").val(),
-            //             'name': $('#n').val()
-            //         },
-            //         // success: function(data) {
-            //         //      $('.cat' + data.id).replaceWith("<tr class='cat" + data.id + "'><td><div class='input-group'><li class='form-control'>" + data.name + "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-name='" + data.name + "'><span class='glyphicon glyphicon-edit'></span> Edit</button></span></div></td><td><a href='/levels/" + data.id +"' class='btn btn-info'>DETAILS</a><a href='/maps/" + data.id + "' class='btn btn-info'>MAP</a> </td></tr>");
-            //         // }
-            //         success: function(data) { alert("succsess") },
-            //         error: function(ts) { alert(ts.responseText) }
-            //     });
-            // });
-            $('.modal-footer').on('click', '.edit1', function() {
-                 console.log("I am in update button");
-                $.ajax({
-                    type: 'post',
-                    url: '/ajax-crud-operations-laravel/editItem',
-                    data: {
-                        // '_token': $('input[name=_token]').val(),
-                        // 'id': $("#fid").val(),
-                        // 'name': $('#n').val()
-                    }
-                });
-            });
-            $('.modal-footer').on('click', '.edit', function() {
+            $(document).on('click', '.edit', function() {
                 console.log('I am in update button');
                 $.ajax({
                     type: 'post',
-                    url: '/ajax-crud-operations-laravel/editItem',
+                    url: '/categories/ajax',
                     data: {
                         '_token': $('input[name=_token]').val(),
                         'id': $("#fid").val(),
                         'name': $('#n').val()
                     },
-                    success: function(data) {
-                        $('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.name + "</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-name='" + data.name + "'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-name='" + data.name + "' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+                    success: function(data) {                       
+                        $('.cat' + data.cat_id).replaceWith("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='glyphicon glyphicon-edit'></span> Edit</button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='glyphicon glyphicon-trash'></span> Delete</button></span></div></td><td><a href='/levels/" + data.cat_id +"' class='btn btn-info'>DETAILS</a><a href='/maps/" + data.cat_id + "' class='btn btn-info'>MAP</a> </td></tr>");
                     }
                 });
             });
@@ -191,16 +161,16 @@
                 });
                 $('#name').val('');
             });
-            $('.modal-footer').on('click', '.delete', function() {
+            $(document).on('click', '.delete', function() {
                 $.ajax({
                     type: 'post',
-                    url: '/ajax-crud-operations-laravel/deleteItem',
+                    url: 'categories/ajaxdelete',
                     data: {
                         '_token': $('input[name=_token]').val(),
                         'id': $('.did').text()
                     },
                     success: function(data) {
-                        $('.item' + $('.did').text()).remove();
+                        $('.cat' + $('.did').text()).remove();
                     }
                 });
             });
@@ -235,45 +205,4 @@
             </div>
         </div>
     </div>
-    <script>
-            // $('#editModal').on('show.bs.modal', function (event) {
-            //     console.log("name=");
-            //     var button = $(event.relatedTarget) // Button that triggered the modal
-            //     var id = button.data('id') // Extract info from data-* attributes
-            //     var name = button.data('name')
-            //     console.log("name=");
-
-            //     var modal = $(this)
-            //     modal.find('#cat_id').text('Edit ' + id);
-            //     modal.find('.modal-body input').val(name);
-            // })
-
-            // function edit(category){
-            //     console.log(category);
-            //     console.log("id=" + category['cat_id']);
-            //     console.log("name=" + category['cat_name']);
-
-            //     $('#cat_id').val(category['cat_id']);
-            //     $('#cat_name').val(category['cat_name']);
-            // }
-
-            // function update(){
-            //     console.log("this is printing");
-            //     $.ajax({
-            //         type:'post',
-            //         url: '/categories/' + $('#cat_id').val(),
-            //         data:{
-            //             // '_token': $('input[name=token]').val(),
-            //             "_token": "{{ csrf_token() }}",
-            //             'id':$('#cat_id').val(),
-            //             'name':$('#cat_name').val()                      
-            //         },
-                    
-            //         success: function(){
-            //             console.log("We have updated the cat name");
-            //         }
-            //     });
-            // }
-
-            </script>
 @endsection

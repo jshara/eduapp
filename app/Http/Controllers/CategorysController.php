@@ -78,10 +78,17 @@ class CategorysController extends Controller
     }
 
     public function ajax(Request $req){
-        echo "i am in the controller";
         $cat = Category::find($req->id);
         $cat->cat_name = $req->name;
         $cat->save();
+        
+        return response()->json($cat);
+    }
+
+    public function ajaxdelete(Request $req){
+        $cat = Category::find($req->id);
+        $cat->delete();
+
         return response()->json($cat);
     }
 
