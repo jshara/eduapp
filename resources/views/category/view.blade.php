@@ -10,7 +10,7 @@
             <thead>
                 <tr>
                     <th> Category Name</th>
-                    <th> </th>
+                    <th> Level Details </th>
                 </tr>
             </thead>
             <body>

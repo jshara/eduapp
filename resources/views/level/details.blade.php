@@ -15,7 +15,7 @@
                     <tr>                        
                         <th><?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></th>
                         <th>Coordinates</th>
-                        <th> </th>
+                        <th> Questions </th>
                     </tr>
                 </thead>
                 <body>
@@ -35,9 +35,12 @@
                                 {!!Form::close()!!}
                             </div>
                         </td>
-                        <td>	
+                        <td>                           
                             <a href="/questions/{{$level->lev_id}}" class="btn btn-info">Question[s]</a>
                         </td>
+                   
+                         
+                  
                     </tr>
                     @endforeach
                 @else

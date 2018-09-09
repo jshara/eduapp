@@ -10,7 +10,7 @@ use FarhanWazir\GoogleMaps\GMaps;
 class MapsController extends Controller
 {
     public function map($cat_id) {
-        $config['center'] = 'USP Laucala Campus';
+        $config['center'] = '-18.147747, 178.446832';
         $config['zoom'] = '16';
         $config['map_height'] = '500px';
         $config['map_width'] = '100%';

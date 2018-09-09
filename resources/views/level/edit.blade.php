@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-        {{-- {!! $map['js'] !!} --}}
+        <!-- {{-- {!! $map['js'] !!} --}} -->
     <body>
         <h1>Edit Level {{$location->lev_num}}</h1>
         <p> Drag the marker to change the location where this level spawns. 
@@ -14,12 +14,12 @@
         $data = explode(",",$location->lev_location); 
         // echo 'lat: ' . $data[0]. 'lng '. $data[1];
         ?>
-        <div  class="container">
+        <div  class="container"> 
             <div class="row" style="height:500px;">
-        {{-- <div class="container">{!! $map['html'] !!}</div> --}}
+        <!-- {{-- <div class="container">{!! $map['html'] !!}</div> --}} -->
         <div id="map"  style="height:500px; width:100%;"> </div>
 
-        {{-- <div ><strong> coords here:</strong> <p id="latlng"> Choose a position </p> </div> --}}
+        <!-- {{-- <div ><strong> coords here:</strong> <p id="latlng"> Choose a position </p> </div> --}} -->
         <div>
             {!! Form::open(['action' => ['MapsController@updateLevel'],'method'=>'POST']) !!}
             <div class="form-group ">
