@@ -1,26 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
-        <h1>Create Level </h1>
-        <p> Drag the marker to select the location where this level spawns. 
-        When satisfied with the position, click Update to save the location. </p>
-        <p style="color:red !important;"> Please select safe locations for the levels as the 
-        players will need to be near these locations to access the levels. </p>
-        {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!}
-            <div class="row">
-            <div id="map"  style="height:500px; width:100%;">  </div>
-                <div class="form-group col-md-6">
-                    {{Form::label('location', 'Location of the level')}}  {{Form::text('location','',['class' => 'form-control','placeholder'=>'Move Marker to input','id'=>'latlng','readonly'=>'true'])}}
-                </div>
-                <div class="form-group col-md-6">
-                    {{Form::label('position', 'Position of the level')}}  {{ Form::selectRange('position',1,$newLevel,['class' => 'form-control',$newLevel,'id'=>'position']) }}
-                   
-                </div>            
-            </div>    
-            {{Form::submit('Add',['class'=>'btn btn-primary'])}}
-        {!! Form::close() !!}
-
-
 <script type="text/javascript">
             function initMap() {
                 //declarations
@@ -58,15 +35,15 @@
 
 
                 var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(-18.149767 ,178.443921),       
-                    title: 'Level {{$newLevel}} ',
-                    label: '{{$newLevel}}',
+                    position: new google.maps.LatLng("{{$data[0]}}","{{$data[1]}}"),       
+                    title: 'Level {{$location->lev_num}}',
+                    label: '{{$location->lev_num}}',
                     draggable: true
                 });
 
                 marker.setMap(map);
                 // map.setCenter(marker.getPosition());
-                // document.getElementById("latlng").innerHTML = marker.getPosition().lat()+","+marker.getPosition().lng();
+                document.getElementById("latlng").innerHTML = marker.getPosition().lat()+","+marker.getPosition().lng();
 
                 // Construct the polygon.
                 var bounds = new google.maps.Polygon({
@@ -90,21 +67,14 @@
                 new google.maps.event.addListener(marker, 'dragend', function (event) { 
                     var result = google.maps.geometry.poly.containsLocation(marker.getPosition(), bounds);
                     if (result == false){
-                        marker.setPosition(new google.maps.LatLng(-18.149767 ,178.443921));
-                        $("#latlng").val("Move Marker to input") ;
+                        marker.setPosition(new google.maps.LatLng("{{$data[0]}}","{{$data[1]}}"));
+                        $("#latlng").val("{{$data[0]}},{{$data[1]}}") ;
                         map.setCenter(coord);
                         map.setZoom(16);
                     }
                 });
-
-                $("#position").on('change',function(){
-                    // console.log( $("#position").val());
-                    marker.set('label',$("#position").val());
-                })
                 
             }
         </script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjTZpMJds--UcfE_WqFDszvnHIskZc2PQ&callback=initMap"
         async defer></script> 
-
-@endsection

@@ -75,7 +75,21 @@ class CategorysController extends Controller
     {
         $cat = Category::find($id);
         return view('category.edit')->with('cat',$cat);
+    }
 
+    public function ajax(Request $req){
+        $cat = Category::find($req->id);
+        $cat->cat_name = $req->name;
+        $cat->save();
+        
+        return response()->json($cat);
+    }
+
+    public function ajaxdelete(Request $req){
+        $cat = Category::find($req->id);
+        $cat->delete();
+
+        return response()->json($cat);
     }
 
     /**
@@ -87,13 +101,14 @@ class CategorysController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'cat_name' =>'required'
-        ]);
+        echo "i am in the controller";
+        // $this->validate($request, [
+        //     'cat_name' =>'required'
+        // ]);
         
         //FInd category
         $cat = Category::find($id);
-        $cat->cat_name= $request->input('cat_name');
+        $cat->cat_name= $request->name;
         $cat->save();
 
         return redirect('/categories')->with('success', 'Category Name Updated');
