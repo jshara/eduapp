@@ -42,9 +42,9 @@ class LevelsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request,$cid)    {
-        $this->validate($request, [
-            'location' =>'required'
-        ]);
+        // $this->validate($request, [
+        //     'location' =>'required'
+        // ]);
         
         $level = new Level();
         $level->lev_location = $request->input('location');
@@ -104,16 +104,36 @@ class LevelsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($lid,$lnum,$cid)
+    public function destroy(Request $req)
     {
-       $allLevel = Level::where('cat_id',$cid)->where('lev_num','>',$lnum)->get();
+       $allLevel = Level::where('cat_id',$req->cid)->where('lev_num','>',$req->lnum)->get();
         foreach ($allLevel as $level){
             --$level->lev_num;
             $level->save();
         }
 
-        $currentLevel = Level::find($lid);
+        $currentLevel = Level::find($req->lid);
         $currentLevel->delete();
-        return redirect('/levels/'.$cid)->with('success', 'Level Deleted');
+
+        return redirect('/levels/'.$req->cid)->with('success', 'Level Deleted');
+    }
+
+    public function destroy1(Request $req)
+    {
+         dd($req);
+        // var_dump($req->lid);
+
+    //    $allLevel = Level::where('cat_id',$req->cid)->where('lev_num','>',$req->lnum)->get();
+    //     foreach ($allLevel as $level){
+    //         --$level->lev_num;
+    //         $level->save();
+    //     }
+
+        $currentLevel = Level::find($req->id);
+        $currentLevel->delete();
+
+        return response()->json($currentLevel);
+
     }
 }
+

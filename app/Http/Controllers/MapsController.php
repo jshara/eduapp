@@ -47,7 +47,9 @@ class MapsController extends Controller
 
         $location = Level::find($lev_id);
 
-        return view('level.edit')->with('location',$location);
+        $cid = DB::table('levels')->where('lev_id', $lev_id)->value('cat_id');
+
+        return view('level.edit')->with('location',$location)->with('cat_id', $cid);
     }
 
     public function updateLevel(Request $request){

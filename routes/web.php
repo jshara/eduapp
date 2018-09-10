@@ -23,11 +23,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('categories','CategorysController');
 ROute::post('/categories/ajax', 'CategorysController@ajax');
 ROute::post('/categories/ajaxdelete', 'CategorysController@ajaxdelete');
+ROute::post('/categories/ajaxcreate', 'CategorysController@ajaxcreate');
 
 //Levels
 Route::get('/levels/create/{id}','LevelsController@create');
 Route::post('/levels/{id}','LevelsController@store');
 Route::delete('levels/delete/{lid}/{lnum}/{cid}','LevelsController@destroy');
+// Route::post('/levels/adelete','LevelsController@destroy1');
 Route::get('levels/{id}','LevelsController@index');
 
 //Questions
