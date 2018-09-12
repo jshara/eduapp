@@ -24,6 +24,9 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    {{-- CK editor --}}
+    <script src="https://cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+
     <style>
     .nopadding {
         padding: 0 !important;
@@ -119,5 +122,8 @@
             </div>
         </main>
     </div>
+    <script>
+		CKEDITOR.replace( 'editor1' );
+	</script>
 </body>
 </html>
