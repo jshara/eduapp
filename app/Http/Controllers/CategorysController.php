@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use App\User;
+use DB;
 
 class CategorysController extends Controller
 {
@@ -44,6 +45,43 @@ class CategorysController extends Controller
         $cat->delete();
         
         return response()->json($cat);
+    }
+
+    public function checkpublish($cid){
+        $cat = Category::find($cid);
+        // var_dump($cat->cat_name);
+        $message = $cat->cat_name.' has been ';
+        $type = "success";
+        $emptyLevels = "";
+        if($cat->published == 0){
+            $adequate = true;
+            $levels = DB:: select('select * from levels where cat_id =? order by lev_num asc',[$cid]);
+            if(count($levels) > 0){                
+                foreach($levels as $level){
+                    if(DB::table('questions')->where('lev_id',$level->lev_id)->doesntExist()){
+                        $adequate = false;
+                        $emptyLevels .= $level->lev_num .", ";
+                    }
+                }
+                if($adequate){
+                    $cat->published = 1;
+                    $cat->save();
+                    $message .= 'published.';
+                }else{
+                    $type = "error";
+                    $message = "Please Add Questions to Level(s) ".$emptyLevels;
+                }
+            }else{
+                $type = "error";
+                $message = "Please Add Levels before Publishing";
+            }
+            
+        }else{
+            $cat->published = 0;
+            $cat->save();
+            $message .= 'unpublished.';
+        }
+        return redirect('categories')->with($type, $message);
     }
 
     // /**

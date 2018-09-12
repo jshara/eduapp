@@ -29,7 +29,7 @@
             {!! Form::open(['action'=>['QuestionsController@store',$lev_id], 'method'=>'POST'])!!}
                 <div class="row">
                     <div class="col-md-12">
-                        {{form::textarea('question','',['style'=>'border-color:blue; background-color:lightsteelblue;', 'class'=>'form-control','rows' => 2, 'placeholder'=>'Enter Question'])}} <br>
+                        {{form::textarea('question','',['style'=>'border-color:blue; background-color:lightsteelblue;', 'class'=>'form-control ckeditor','rows' => 2, 'id'=>'ckeditor','placeholder'=>'Enter Question'])}} <br>
                         {{ Form::hidden('ques_num', $ques_num) }}
                     </div>
                 </div>

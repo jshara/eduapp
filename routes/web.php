@@ -24,6 +24,7 @@ Route::resource('categories','CategorysController');
 ROute::post('/categories/ajax', 'CategorysController@ajax');
 ROute::post('/categories/ajaxdelete', 'CategorysController@ajaxdelete');
 ROute::post('/categories/ajaxcreate', 'CategorysController@ajaxcreate');
+ROute::get('/categories/publish/{cid}', 'CategorysController@checkpublish');
 
 //Levels
 Route::get('/levels/create/{id}','LevelsController@create');
@@ -39,6 +40,7 @@ Route::post('/questions/{id}', 'QuestionsController@store');
 Route::get('/questions/create/{id}','QuestionsController@create');
 Route::get('/questions/{id}/edit','QuestionsController@edit');
 Route::put('/questions/update/{id}','QuestionsController@update');
+ROute::post('/questions/ajaxdelete', 'QuestionsController@ajaxdelete');
 
 //Maps
 Route::get('/maps/{id}','MapsController@map');

@@ -24,6 +24,9 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    {{-- CK editor --}}
+    <script src="https://cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+
     <style>
     .nopadding {
         padding: 0 !important;
@@ -46,17 +49,29 @@
                         @guest
                            
                         @else
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="category" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Categories </a>
-                                <div class="dropdown-menu" aria-labelledby="category">
-                                    <a class="dropdown-item" href="/categories">View</a>
-                                    <a class="dropdown-item" href="/categories/create">Create</a>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                    <a class="nav-link" href="#">Results</a>
-                            </li>
+                             @if(Auth::user()->role == 'coordinator')
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="category" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Categories </a>
+                                    <div class="dropdown-menu" aria-labelledby="category">
+                                        <a class="dropdown-item" href="/categories">View</a>
+                                        <a class="dropdown-item" href="/categories/create">Create</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                        <a class="nav-link" href="#">Results</a>
+                                </li>
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="category" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        HOcusPocus </a>
+                                    <div class="dropdown-menu" aria-labelledby="category">
+                                        <a class="dropdown-item" href="/categories">View</a>
+                                        <a class="dropdown-item" href="/categories/create">Create</a>
+                                    </div>
+                                </li>
+
+                            @endif
                         @endguest
                     </ul>
 
@@ -107,5 +122,8 @@
             </div>
         </main>
     </div>
+    <script>
+		CKEDITOR.replace( 'editor1' );
+	</script>
 </body>
 </html>

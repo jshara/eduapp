@@ -21,7 +21,7 @@ class ApiController extends Controller
     public function getAllCat(){
         // $list = Category::select('cat_name')->get();
         // return response()->json($list);
-        $list = DB::table('categories')->select('cat_id','cat_name')->get();
+        $list = DB::table('categories')->select('cat_id','cat_name')->where('published', 1)->get();
         return response()->json($list);
     }
 
@@ -119,36 +119,81 @@ class ApiController extends Controller
     }
 
     //check whether answers submitted are correct
-    public function checkAns($ans_id){
-            $resultSet;
-            $ans_id = explode(',',$ans_id);
-            $numQuestions =count($ans_id);
-            $numCorrect = 0;
-            foreach ($ans_id as $id){
-                $result = DB::table('answers')
-                        ->where('ans_id',$id)
-                        ->value('ans_correct');
-                if ($result==1){
-                    // echo 'correct ' . $result;
-                    $resultSet[] = ($result);
-                    $numCorrect ++;
-                }
-                else 
-                {
-                    // echo 'wrong '.$result;
-                    $resultSet[] = ($result);
-                }
-            }
-            $score = ($numCorrect/$numQuestions)*100;
-            $score = number_format((float)$score, 0, '.', ''); 
-            $data = [
-                'score' => $score
-            ];
+    // public function checkAns($ans_id){
+    //         $resultSet;
+    //         $ans_id = explode(',',$ans_id);
+    //         $numQuestions =count($ans_id);
+    //         $numCorrect = 0;
+    //         foreach ($ans_id as $id){
+    //             $result = DB::table('answers')
+    //                     ->where('ans_id',$id)
+    //                     ->value('ans_correct');
+    //             if ($result==1){
+    //                 // echo 'correct ' . $result;
+    //                 $resultSet[] = ($result);
+    //                 $numCorrect ++;
+    //             }
+    //             else 
+    //             {
+    //                 // echo 'wrong '.$result;
+    //                 $resultSet[] = ($result);
+    //             }
+    //         }
+    //         $score = ($numCorrect/$numQuestions)*100;
+    //         $score = number_format((float)$score, 0, '.', ''); 
+    //         $data = [
+    //             'score' => $score
+    //         ];
   
 
-        return response()->json($data);
+    //     return response()->json($data);
 
-    }
+    // }
+
+    public function checkAns($cid,$lnum, $ans_id = null){
+        $resultSet;     
+        if($ans_id == null){
+            $data = [
+                'score' => 0
+            ];
+    
+    
+        return response()->json($data);
+        }
+        $ans_id = explode(',',$ans_id);
+        $levId = DB::table('levels')
+                        ->where('cat_id',$cid)
+                        ->where('lev_num',$lnum)
+                        ->value('lev_id');
+        $numQuestions = DB::table('questions')
+                        ->where('lev_id',$levId)
+                        ->count();
+        $numCorrect = 0;
+        foreach ($ans_id as $id){
+            $result = DB::table('answers')
+                    ->where('ans_id',$id)
+                    ->value('ans_correct');
+            if ($result==1){
+                // echo 'correct ' . $result;
+                $resultSet[] = ($result);
+                $numCorrect ++;
+            }
+            else 
+            {
+                // echo 'wrong '.$result;
+                $resultSet[] = ($result);
+            }
+        }
+        $score = ($numCorrect/$numQuestions)*100;
+        $score = number_format((float)$score, 0, '.', ''); 
+        $data = [
+            'score' => $score
+        ];
+
+
+    return response()->json($data);
+
+}
 
     public function getRandomLatLng($values){
         // $array = array();
