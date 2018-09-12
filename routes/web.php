@@ -24,6 +24,7 @@ Route::resource('categories','CategorysController');
 ROute::post('/categories/ajax', 'CategorysController@ajax');
 ROute::post('/categories/ajaxdelete', 'CategorysController@ajaxdelete');
 ROute::post('/categories/ajaxcreate', 'CategorysController@ajaxcreate');
+ROute::get('/categories/publish/{cid}', 'CategorysController@checkpublish');
 
 //Levels
 Route::get('/levels/create/{id}','LevelsController@create');

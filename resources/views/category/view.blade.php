@@ -19,6 +19,7 @@
                 <tr>
                     <th> Category Name</th>
                     <th> Level</th>
+                    <th> Status</th>
                 </tr>
             </thead>
             <body>
@@ -43,6 +44,15 @@
                     <td>	
                         <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
                         <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
+                    </td>
+                    <td>
+                        <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
+                            @if($c->published == '0')
+                            <span style="color:green;"> PUBLISH </span>
+                            @else
+                                <span style="color:red;"> UNPUBLISH </span>
+                            @endif
+                        </a>
                     </td>
                 </tr>
                 @endforeach
@@ -121,7 +131,7 @@
                         else {
                             $('.error').addClass('hidden');
                             $('#newcat').val("");
-                            $('#table').append("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-trash fa-lg'></span></button></span></div></td><td><a href='/levels/" + data.cat_id +"' class='btn btn-info'>DETAILS</a> <a href='/maps/" + data.cat_id + "' class='btn btn-info'>MAP</a> </td></tr>");
+                            $('#table').append("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-trash fa-lg'></span></button></span></div></td><td><a href='/levels/" + data.cat_id +"' class='btn btn-info'>DETAILS</a> <a href='/maps/" + data.cat_id + "' class='btn btn-info'>MAP</a> </td><td><a href='/categories/publish/" + data.cat_id + "' class='btn btn-default'><span style='color:green;'> PUBLISH </span></a></td></tr>");
                         }
                     },
 
@@ -140,6 +150,10 @@
                         $('.cat' + $('.did').text()).remove();
                     }
                 });
+            });
+
+            $(document).on('click','.publish', function() {
+                console.log('I am here');
             });
          </script>
 
