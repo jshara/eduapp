@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-md-12">
                 {{form::textarea('question',$question->ques_content,['style'=>'border-color:blue; background-color:lightsteelblue;',
-                'class'=>'form-control','rows' => 2, 'placeholder'=>'Enter Question'])}} <br>
+                'class'=>'form-control ckeditor','rows' => 2, 'placeholder'=>'Enter Question'])}} <br>
                 {{ Form::hidden('ques_num', $question->ques_num) }}
             </div>
         </div>
