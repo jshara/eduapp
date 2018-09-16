@@ -1,24 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-        <h1>Create Level </h1>
+        <div class="row">
+            <div class="col-4">
+                <a href="/levels/{{$cat_id}}" class="btn btn-danger">BACK</a>
+            </div>
+            <div class="col-8 float-left">
+                <h1>Create Level </h1>
+            </div>
+        </div> 
+        
         <p> Drag the marker to select the location where this level spawns. 
         When satisfied with the position, click Update to save the location. </p>
         <p style="color:red !important;"> Please select safe locations for the levels as the 
         players will need to be near these locations to access the levels. </p>
-        {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!}
+
+        <div class="container">
+            <div class="row" style="height:500px;">
+                <div id="map" style="height:500px; width:100%;"> </div>
+            </div><br>
+
             <div class="row">
-            <div id="map"  style="height:500px; width:100%;">  </div>
-                <div class="form-group col-md-6">
-                    {{Form::label('location', 'Location of the level')}}  {{Form::text('location','',['class' => 'form-control','placeholder'=>'Move Marker to input','id'=>'latlng','readonly'=>'true'])}}
+                <div class="col-md-4 offset-md-4">
+                    <div class="form-group">
+                        {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!}
+                        {{Form::label('location', 'Location of the level',['class'=> 'form-control', 'for'=>'latlng'])}}  
+                        {{Form::text('location','',['class' => 'form-control','placeholder'=>'Move Marker to input','id'=>'latlng','readonly'=>'true'])}}
+                    </div>
                 </div>
-                <div class="form-group col-md-6">
-                    {{Form::label('position', 'Position of the level')}}  {{ Form::selectRange('position',1,$newLevel,['class' => 'form-control',$newLevel,'id'=>'position']) }}
-                   
-                </div>            
-            </div>    
-            {{Form::submit('Add',['class'=>'btn btn-primary'])}}
-        {!! Form::close() !!}
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{Form::label('position', 'Position of the level',['class'=> 'form-control', 'for'=>'position'])}}  
+                        {!!Form::selectRange('position',1,$newLevel,['class' => 'form-control',$newLevel,'id'=>'position','style'=>'color:red;size:15;']) !!} 
+                    </div>
+                </div>
+            </div>
+            <div class="row float-right nopadding">
+                {{Form::submit('Add',['class'=>'btn btn-primary'])}}
+                {!! Form::close() !!}
+            </div>
+        </div>         
 
 
 <script type="text/javascript">
