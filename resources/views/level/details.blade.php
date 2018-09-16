@@ -10,18 +10,19 @@
         </div>
     </div>
     <div class="row">     
-            <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">    
+            {{-- <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     --}}
             <table id="table" class ="table table-striped table-border table-hover text-center">
                 <thead>
                     <tr>                        
                         <th><?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></th>
+                        <th> Number of questions</th>
                         <th> Questions </th>
                     </tr>
                 </thead>
                 <body>
                 @if(count($levels) > 0)
                     @foreach($levels as $level)
-                <tr class="lev{{$level->lev_id}} text-center">
+                <tr class="lev{{$level->lev_id}}">
                         <td>  
                             {{-- <div class="input-group">                        
                                 <li class="form-control">Level #{{$level->lev_num}}</li>
@@ -37,14 +38,24 @@
                                 </span>
                             </div> --}}
                             <div class="input-group">  
-                                <span class="input-group-addon">Level #{{$level->lev_num}}  {{$level->lev_location}}</span>
-                                <span class="input-group-addon"><a href="/mapslevel/{{$level->lev_id}}" class="btn"><i class="fa fa-pencil fa-lg"></i></a></span>
-                                {!!Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id], 'method'=>'POST', 'class'=>'pull-right'])!!}
+                                <li class="form-control">Level #{{$level->lev_num}}</li>
+                                <button class="btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
+                                    <span class="fa fa-pencil fa-lg"></span>
+                                </button>
+                                {!! Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id],'method' => 'DELETE']) !!}
+                                    {!! Form::submit('', ['class' => 'btn btn-danger']) !!}
+                                {!! Form::close() !!}
+                                {!!Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id], 'method'=>'POST'])!!}
                                     {{Form::hidden('_method','DELETE')}}
                                     {!! Form::button( '<i class="fa fa-trash-o fa-lg" style="color:#FF0000;"></i>', ['type' => 'submit'] ) !!}
                                 {!!Form::close()!!}
                             </div>
                         </td>
+                        <td>                           
+                            <select> 
+                                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                            </select>
+                        </td> 
                         <td>                           
                             <a href="/questions/{{$level->lev_id}}" class="btn btn-info">Question[s]</a>
                         </td>                                

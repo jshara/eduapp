@@ -29,16 +29,12 @@
                     <td>
                         <div class="input-group">
                             <li class="form-control">{{$c->cat_name}}</li>
-                            <span class="input-group-addon">                                       
-                                <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
-                                    <span class="fa fa-pencil fa-lg"></span>
-                                </button>
-                            </span>
-                            <span class="input-group-addon">                                       
-                                <button class="delete-modal btn btn-danger" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
-                                    <span class="fa fa-trash-o fa-lg"></span>
-                                </button>
-                            </span>
+                            <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
+                                <span class="fa fa-pencil fa-lg"></span>
+                            </button>
+                            <button class="delete-modal btn btn-danger" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
+                                <span class="fa fa-trash-o fa-lg"></span>
+                            </button>
                         </div>
                     </td>
                     <td>	
