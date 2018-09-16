@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class ApiController extends Controller
 {
@@ -160,38 +162,41 @@ class ApiController extends Controller
     
         return response()->json($data);
         }
-        $ans_id = explode(',',$ans_id);
-        $levId = DB::table('levels')
-                        ->where('cat_id',$cid)
-                        ->where('lev_num',$lnum)
-                        ->value('lev_id');
-        $numQuestions = DB::table('questions')
-                        ->where('lev_id',$levId)
-                        ->count();
-        $numCorrect = 0;
-        foreach ($ans_id as $id){
-            $result = DB::table('answers')
-                    ->where('ans_id',$id)
-                    ->value('ans_correct');
-            if ($result==1){
-                // echo 'correct ' . $result;
-                $resultSet[] = ($result);
-                $numCorrect ++;
+        else{
+            $ans_id = explode(',',$ans_id);
+            $levId = DB::table('levels')
+                            ->where('cat_id',$cid)
+                            ->where('lev_num',$lnum)
+                            ->value('lev_id');
+            $numQuestions = DB::table('questions')
+                            ->where('lev_id',$levId)
+                            ->count();
+            $numCorrect = 0;
+            foreach ($ans_id as $id){
+                $result = DB::table('answers')
+                        ->where('ans_id',$id)
+                        ->value('ans_correct');
+                if ($result==1){
+                    // echo 'correct ' . $result;
+                    $resultSet[] = ($result);
+                    $numCorrect ++;
+                }
+                else 
+                {
+                    // echo 'wrong '.$result;
+                    $resultSet[] = ($result);
+                }
             }
-            else 
-            {
-                // echo 'wrong '.$result;
-                $resultSet[] = ($result);
-            }
+            $score = ($numCorrect/$numQuestions)*100;
+            $score = number_format((float)$score, 0, '.', ''); 
+            $data = [
+                'score' => $score
+            ];
+    
+    
+        return response()->json($data);
         }
-        $score = ($numCorrect/$numQuestions)*100;
-        $score = number_format((float)$score, 0, '.', ''); 
-        $data = [
-            'score' => $score
-        ];
-
-
-    return response()->json($data);
+        
 
 }
 
@@ -329,6 +334,60 @@ class ApiController extends Controller
         $random[$key] = $list[$key];
     
       return $random;
+    }
+
+    public function createGameSession($userId,$cid,$lnum){
+        $levId = DB::table('levels')
+            ->where('cat_id',$cid)
+            ->where('lev_num',$lnum)
+            ->value('lev_id');
+        DB::table('sessions')->insert([
+            // sample syntax ['email' => 'taylor@example.com', 'votes' => 0]
+            ['player_id' => $userId,
+             'cat_id'  => $cid,
+             'lev_id'  => $levId,
+             'session_score'  => '0',
+             'created_at' => Carbon::now()->toDateTimeString(),
+             'updated_at'=> Carbon::now()->toDateTimeString()
+             ]
+        ]);
+            
+    }
+
+    public function saveGameSession($userId,$cid,$lnum,$score){
+        $levId = DB::table('levels')
+        ->where('cat_id',$cid)
+        ->where('lev_num',$lnum)
+        ->value('lev_id');
+        DB::table('sessions')
+            ->where('player_id',$userId)
+            ->where('cat_id', $cid)
+            ->update(
+            ['lev_id'  => $levId,
+             'session_score'  => $score,
+             'updated_at'=> Carbon::now()->toDateTimeString()
+             ]
+        );
+    }
+
+    public function loadGameSession($userId,$cid){
+        $levId = DB::table('sessions')
+                ->where('player_id', $userId)
+                ->where('cat_id',$cid)
+                ->value('lev_id');
+        $score = DB::table('sessions')
+                ->where('player_id', $userId)
+                ->where('cat_id',$cid)
+                ->value('session_score');
+        $lnum = DB::table('levels')
+            ->where('lev_id',$levId)
+            ->value('lev_num');
+        $data = [
+            'lnum' => $lnum,
+            'score' => $score
+        ];
+
+        return response()->json($data);
     }
     
     

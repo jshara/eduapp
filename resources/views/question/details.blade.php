@@ -31,7 +31,7 @@
                                 <p class="text-center">{{$question->ques_num}}</p>                            
                             </td>
                             <td>                          
-                                <p class="text-center">{!!$question->ques_content!!} </p>                        
+                                <p class="text-center">{!!($question->ques_content)!!} </p>                        
                             </td>
                             <td>                               
                                 @foreach($question->answers as $answer)
