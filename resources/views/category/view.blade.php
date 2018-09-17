@@ -18,8 +18,9 @@
             <thead>
                 <tr>
                     <th> Category Name</th>
-                    <th> Level</th>
                     <th> Status</th>
+                    <th> Level</th>
+                    
                 </tr>
             </thead>
             <body>
@@ -37,18 +38,29 @@
                             </button>
                         </div>
                     </td>
-                    <td>	
-                        <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
-                        <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
-                    </td>
+
+                    <?php
+                        $link = "/levels/".$c->cat_id;
+                    ?>
+                   
                     <td>
                         <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
                             @if($c->published == '0')
-                            <span style="color:green;"> PUBLISH </span>
+                                <span style="color:green;"> PUBLISH </span>
+                                <?php
+                                    $link = "/levels/".$c->cat_id;
+                                ?>
                             @else
                                 <span style="color:red;"> UNPUBLISH </span>
+                                <?php
+                                    $link = "/categories";
+                                ?>
                             @endif
                         </a>
+                    </td> 
+                    <td>	
+                        <a href="{{$link}}" class="btn btn-info">DETAILS</a>
+                        <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
                     </td>
                 </tr>
                 @endforeach
