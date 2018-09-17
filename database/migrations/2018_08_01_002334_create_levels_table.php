@@ -17,6 +17,7 @@ class CreateLevelsTable extends Migration
             $table->increments('lev_id');
             $table->integer('lev_num');
             $table->string('lev_location');
+            $table->integer('numOfQues');
             $table->integer('cat_id')->unsigned();
             $table->timestamps();
         });
