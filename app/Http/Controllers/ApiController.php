@@ -19,6 +19,13 @@ class ApiController extends Controller
         //
     }
 
+    public function login($sid,$pass){
+        $res = file_get_contents("http://mlearn.usp.ac.fj/uspmobile/IEP_authenticate/?username=".$sid."&password=".$pass);
+            $res = str_replace('{"auth":','',$res);
+            $res = str_replace('}','',$res);
+        return $res;
+    }
+
     //api that returns a list of all categories.
     public function getAllCat(){
         // $list = Category::select('cat_name')->get();
@@ -121,37 +128,6 @@ class ApiController extends Controller
     }
 
     //check whether answers submitted are correct
-    // public function checkAns($ans_id){
-    //         $resultSet;
-    //         $ans_id = explode(',',$ans_id);
-    //         $numQuestions =count($ans_id);
-    //         $numCorrect = 0;
-    //         foreach ($ans_id as $id){
-    //             $result = DB::table('answers')
-    //                     ->where('ans_id',$id)
-    //                     ->value('ans_correct');
-    //             if ($result==1){
-    //                 // echo 'correct ' . $result;
-    //                 $resultSet[] = ($result);
-    //                 $numCorrect ++;
-    //             }
-    //             else 
-    //             {
-    //                 // echo 'wrong '.$result;
-    //                 $resultSet[] = ($result);
-    //             }
-    //         }
-    //         $score = ($numCorrect/$numQuestions)*100;
-    //         $score = number_format((float)$score, 0, '.', ''); 
-    //         $data = [
-    //             'score' => $score
-    //         ];
-  
-
-    //     return response()->json($data);
-
-    // }
-
     public function checkAns($cid,$lnum, $ans_id = null){
         $resultSet;     
         if($ans_id == null){
@@ -258,72 +234,6 @@ class ApiController extends Controller
        return response()->json($list); 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function shuffle_assoc($list) {
       if (!is_array($list)) return $list;
     
@@ -389,6 +299,8 @@ class ApiController extends Controller
 
         return response()->json($data);
     }
+
+
     
     
 }
