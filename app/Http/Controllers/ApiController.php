@@ -93,11 +93,10 @@ class ApiController extends Controller
                 ->where('lev_num',$lev_num)
                 ->where('cat_id',$cat_id)
                 ->value('lev_id');
-        $max = DB::table('questions')
-                ->select(DB::raw('max(ques_num) as max'))
+                $max = DB::table('questions')
                 ->where('lev_id',$lev_id)
                 ->where('ques_hide','0')
-                ->get();
+                ->count();
         $num = DB::table('levels')
                 ->where('lev_id',$lev_id)
                 ->value('numOfQues');
@@ -107,36 +106,24 @@ class ApiController extends Controller
         ->where('ques_hide','0')
         ->get();
 
-        // $index[] = array_rand($list,$num);
-        // $c = 0;
-        // foreach ($index[0] as $i) {
-        //     $result[$c] = [
-        //        $list[$i]                   
-        //     ];
-        // $c++;
-        // }
-
         $data2=null;
-        for($i = 0;$i < $max[0]->max ; $i++){
+        for($i = 0;$i < $max ; $i++){
             $list = DB::table('answers')
                     -> select ('ans_id','ans_content')
                     ->where('ques_id', $result[$i]->ques_id)
                     ->get();
  
-            // shuffle($list); 
 
-        $data[$i] = [
-          
-            'ID' => $result[$i]->ques_id,
-            'Number' => $result[$i]->ques_num,
-            'Content' => $result[$i]->ques_content,
-            'answers' => $list
-            ];
-            $data[$i]= json_decode(json_encode($data[$i]), true);
-            shuffle($data[$i]['answers'] );
-            shuffle($data[$i]['answers'] );
-            shuffle($data[$i]['answers'] );
-            
+            $data[$i] = [            
+                'ID' => $result[$i]->ques_id,
+                'Number' => $result[$i]->ques_num,
+                'Content' => $result[$i]->ques_content,
+                'answers' => $list
+                ];
+                $data[$i]= json_decode(json_encode($data[$i]), true);
+                shuffle($data[$i]['answers'] );
+                shuffle($data[$i]['answers'] );
+                shuffle($data[$i]['answers'] );            
         }
 
         shuffle($data);
@@ -164,6 +151,7 @@ class ApiController extends Controller
                             ->value('lev_id');
             $numQuestions = DB::table('questions')
                             ->where('lev_id',$levId)
+                            ->where('ques_hide','0')
                             ->count();
             $numCorrect = 0;
             foreach ($ans_id as $id){

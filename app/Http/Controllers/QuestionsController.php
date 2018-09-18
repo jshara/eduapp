@@ -161,15 +161,25 @@ class QuestionsController extends Controller
         //
     }
 
-    public function hide(Request $req){   
+    public function hide(Request $req){  
+        
         $bool = "0";
-        if($req->checked == "true")
-        $bool = '1';
-    
+        if($req->checked == "true"){
+            $bool = '1';
+        }
         // var_dump($bool);        
-        $question = Question::find($req->id);
+        $question = Question::find($req->id);       
         $question->ques_hide = $bool;
         $question->save();
+        
+        $level =Level::find($question->lev_id);
+         var_dump($level->numOfQues);
+        $unhidden = DB::table('questions')->where('lev_id',$question->lev_id)->where('ques_hide','0')->count();
+         var_dump($unhidden);
+        if($unhidden < $level->numOfQues){
+            $level->numOfQues = 1;
+            $level->save();
+        }
 
         return response()->json($question);
     }

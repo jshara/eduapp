@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+<span class="hidden message" style="visibility:hidden;">
+    <div class='alert alert-success'>
+        <a href="#" class="close" data-dismiss="alert" aria-label="close"><span class="fa fa-close"></span></a>
+        
+    </div>
+</span>
     <div class="row justify-content-end">
         <div class="col nopadding">
                 <a href="/categories" class="btn btn-danger">BACK</a>
@@ -26,32 +32,25 @@
                     @foreach($levels as $level)
                 <tr class="lev{{$level->lev_id}}">
                         <td>  
-                            {{-- <div class="input-group">                        
+                            <div class="input-group">                        
                                 <li class="form-control">Level #{{$level->lev_num}}</li>
+                                 <button class="btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
+                                    <span class="fa fa-pencil fa-lg"></span>
+                                </button>
                                 <span class="input-group-addon">                                       
+                                <button class="delete-modal btn btn-danger" data-id="{{$level->lev_id}}" data-name="Level #{{$level->lev_num}}" data-lnum="{{$level->lev_num}}" data-cid="{{$cat_id}}">
+                                        <span class="fa fa-trash-o fa-lg"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            {{-- <div class="input-group">  
+                                <li class="form-control">Level #{{$level->lev_num}}</li>
+                                 <span class="input-group-addon">                                       
                                     <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$level->lev_id}}" data-name="{{$level->lev_num}}">
                                         <span >MAP</span>
                                     </button>
                                 </span>
-                                <span class="input-group-addon">                                       
-                                    <button class="delete-modal btn btn-danger" data-id="{{$level->lev_id}}" data-name="{{$level->lev_num}}">
-                                        <span class="fa fa-trash-o fa-lg"></span>
-                                    </button>
-                                </span>
                             </div> --}}
-                            <div class="input-group">  
-                                <li class="form-control">Level #{{$level->lev_num}}</li>
-                                <button class="btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
-                                    <span class="fa fa-pencil fa-lg"></span>
-                                </button>
-                                {{-- {!! Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id],'method' => 'DELETE']) !!}
-                                    {!! Form::submit('', ['class' => 'btn btn-danger']) !!}
-                                {!! Form::close() !!} --}}
-                                {!!Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id], 'method'=>'POST'])!!}
-                                    {{Form::hidden('_method','DELETE')}}
-                                    {!! Form::button( '<i class="fa fa-trash-o fa-lg" style="color:#FF0000;"></i>', ['type' => 'submit'] ) !!}
-                                {!!Form::close()!!}
-                            </div>
                         </td>
                         <td>   
                             <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     
@@ -111,7 +110,7 @@
             });
         });
     </script>
-{{-- @include('layouts.modal')
+@include('layouts.modal')
     
     <script>
         $(document).on('click', '.edit-modal', function() {
@@ -141,8 +140,8 @@
             $('.actionBtn').removeClass('edit');
             $('.modal-title').text('Delete');
             $('.did').text($(this).data('id'));
-            // $('.lnum').text($(this).data('level'));
-            // $('.cid').text($(this).data('cid'));            
+            $('.lnum').text($(this).data('lnum'));
+            $('.cid').text($(this).data('cid'));            
             $('.deleteContent').show();
             $('.form-horizontal').hide();
             $('.dname').html($(this).data('name'));
@@ -189,17 +188,17 @@
         $(document).on('click', '.delete', function() {
             $.ajax({
                 type: 'post',
-                url: '/levels/adelete',
+                url: '/level/adelete',
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'id':  $('.did').text()
-                    // 'lnum': $('.lnum').text(),
-                    // 'cid':$('.cid').text()
+                    'id':  $('.did').text(),
+                    'lnum': $('.lnum').text(),
+                    'cid':$('.cid').text()
                 },
                 success: function(data) {
-                    $('.lev' + $('.did').text()).remove();
+                    location.reload();
                 }
             });
         });
-    </script> --}}
+    </script>
 @endsection
