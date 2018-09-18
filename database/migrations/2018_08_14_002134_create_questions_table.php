@@ -17,6 +17,7 @@ class CreateQuestionsTable extends Migration
             $table->increments('ques_id');
             $table->integer('ques_num');
             $table->longText('ques_content');
+            $table->boolean('ques_hide')->default('0');
             $table->integer('lev_id')->unsigned();
             $table->timestamps();
         });

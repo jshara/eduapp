@@ -135,5 +135,14 @@ class LevelsController extends Controller
         return response()->json($currentLevel);
 
     }
+
+    public function numOfQues(Request $req){
+        $level = Level::find($req->id);
+        $level->numOfQues = $req->number;
+        $level->save();
+
+        return response()->json($level);
+
+    }
 }
 

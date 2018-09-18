@@ -89,11 +89,26 @@ class ApiController extends Controller
         $max = DB::table('questions')
                 ->select(DB::raw('max(ques_num) as max'))
                 ->where('lev_id',$lev_id)
+                ->where('ques_hide','0')
                 ->get();
+        $num = DB::table('levels')
+                ->where('lev_id',$lev_id)
+                ->value('numOfQues');
         $result = DB::table('questions')
         ->select('questions.ques_id','questions.ques_num', 'questions.ques_content')
         ->where('questions.lev_id',$lev_id)
+        ->where('ques_hide','0')
         ->get();
+
+        // $index[] = array_rand($list,$num);
+        // $c = 0;
+        // foreach ($index[0] as $i) {
+        //     $result[$c] = [
+        //        $list[$i]                   
+        //     ];
+        // $c++;
+        // }
+
         $data2=null;
         for($i = 0;$i < $max[0]->max ; $i++){
             $list = DB::table('answers')
@@ -112,10 +127,13 @@ class ApiController extends Controller
             ];
             $data[$i]= json_decode(json_encode($data[$i]), true);
             shuffle($data[$i]['answers'] );
+            shuffle($data[$i]['answers'] );
+            shuffle($data[$i]['answers'] );
             
         }
 
         shuffle($data);
+        $data = array_slice($data, 0, $num);
         return response()->json($data);
 
     }

@@ -15,8 +15,10 @@
                 <thead>
                     <tr>                        
                         <th><?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></th>
-                        <th> Number of questions</th>
-                        <th> Questions </th>
+                        <th> Questions to Show(Max 5)</th>
+                        <th> Possible Questions</th>
+                        <th> All Questions</th>
+                        <th> Details </th>
                     </tr>
                 </thead>
                 <body>
@@ -42,19 +44,37 @@
                                 <button class="btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
                                     <span class="fa fa-pencil fa-lg"></span>
                                 </button>
-                                {!! Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id],'method' => 'DELETE']) !!}
+                                {{-- {!! Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id],'method' => 'DELETE']) !!}
                                     {!! Form::submit('', ['class' => 'btn btn-danger']) !!}
-                                {!! Form::close() !!}
+                                {!! Form::close() !!} --}}
                                 {!!Form::open(['action'=>['LevelsController@destroy', $level->lev_id,$level->lev_num, $cat_id], 'method'=>'POST'])!!}
                                     {{Form::hidden('_method','DELETE')}}
                                     {!! Form::button( '<i class="fa fa-trash-o fa-lg" style="color:#FF0000;"></i>', ['type' => 'submit'] ) !!}
                                 {!!Form::close()!!}
                             </div>
                         </td>
-                        <td>                           
-                            <select> 
-                                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                        <td>   
+                            <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     
+                            <?php $unhide = DB::table('questions')->where('lev_id',$level->lev_id)->where('ques_hide', '0')->count();?>                     
+                            <select id="number" data-id="{{$level->lev_id}}">
+                                @for($i = 1; $i <= $unhide; $i++)
+                                    @if($i == $level->numOfQues)
+                                        <option value="{{$i}}" selected="selected">{{$i}}</option>
+                                    @else
+                                        <option value="{{$i}}">{{$i}}</option>
+                                    @endif
+
+                                    @if($i == 5)
+                                        @break
+                                    @endif                                    
+                                @endfor
                             </select>
+                        </td> 
+                        <td>                                                      
+                            <li class="form-control" style="width:50px;"><?php echo $unhide; ?></li>
+                        </td> 
+                        <td>                                                      
+                            <li class="form-control" style="width:50px;"><?php echo DB::table('questions')->where('lev_id',$level->lev_id)->count(); ?></li>
                         </td> 
                         <td>                           
                             <a href="/questions/{{$level->lev_id}}" class="btn btn-info">Question[s]</a>
@@ -70,6 +90,27 @@
             </table>
         </div>
 
+    <script>
+        $(document).on("change", "#number", function () {
+            var select = $("#number").val();
+            $.ajax({
+                url:"/level/questions",
+                type: 'post',
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    id: $(this).data('id'), 
+                    number: select
+                },
+                success: function(data) {
+                    //alert(data);
+                },
+                error: function(data) {
+                    // alert(data);
+                    // Revert
+                }
+            });
+        });
+    </script>
 {{-- @include('layouts.modal')
     
     <script>

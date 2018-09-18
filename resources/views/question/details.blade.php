@@ -21,6 +21,7 @@
                             <th>Questions</th>
                             <th>Answers</th>
                             <th></th>
+                            <th>Hide</th>
                         </tr>
                     </thead>
                     <body>
@@ -46,13 +47,24 @@
                             </td>
                             <td>
                                 <div class="input-group">  
-                                    <span class="input-group-addon"><a href="/questions/{{$question->ques_id}}/edit" class="btn"><i class="fa fa-pencil fa-lg"></i></a></span>
+                                        <button class="btn btn-info" onclick="location.href = '/questions/{{$question->ques_id}}/edit'" style="margin:0 5px 0 5px;">
+                                            <span class="fa fa-pencil fa-lg"></span>
+                                        </button>
+                                    {{-- <span class="form-control"><a href="/questions/{{$question->ques_id}}/edit" class="btn"><i class="fa fa-pencil fa-lg"></i></a></span> --}}
                                     {{-- {!!Form::open(['action'=>['QuestionsController@destroy', $question->ques_id,$level->lev_num, $cat_id], 'method'=>'POST', 'class'=>'pull-right'])!!}
                                         {{Form::hidden('_method','DELETE')}}
                                         {{-- {{Form::submit('Delete',['class'=> 'fa fa-trash-o fa-lg'])}} -}}
                                         {!! Form::button( '<i class="fa fa-trash-o fa-lg" style="color:#FF0000;"></i>', ['type' => 'submit'] ) !!}
                                     {!!Form::close()!!} --}}
                                 </div>
+                            </td>
+                            <td>
+                                <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">  
+                                @if($question->ques_hide == '0')
+                                    <input type="checkbox" name="hide" id="hide" data-id="{{$question->ques_id}}" />
+                                @else
+                                    <input type="checkbox" name="hide" id="hide" data-id="{{$question->ques_id}}" /checked>
+                                @endif                              
                             </td>
                         </tr>
                         @endforeach
@@ -64,5 +76,31 @@
                     </body>
                 </table>
     </div>
+
+    <script>
+        $(document).on("change", "input[name='hide']", function () {
+            console.log('this is the check box');
+            var checkbox = $(this);
+            var checked = checkbox.prop('checked');
+            $.ajax({
+                url:"/question/hide",
+                type: 'post',
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    action: 'checkbox-select', 
+                    id: checkbox.data('id'), 
+                    checked: checked
+                        },
+                success: function(data) {
+                    //alert(data);
+                },
+                error: function(data) {
+                    // alert(data);
+                    // Revert
+                    checkbox.attr('checked', !checked);
+                }
+            });
+        });
+    </script>
 
 @endsection
