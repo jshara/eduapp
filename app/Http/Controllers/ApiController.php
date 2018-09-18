@@ -19,12 +19,24 @@ class ApiController extends Controller
         //
     }
 
-    public function login($sid,$pass){
+    public function login(Request $request){
+        $sid = $request->sid;
+        $pass = $request->pass;
+
         $res = file_get_contents("http://mlearn.usp.ac.fj/uspmobile/IEP_authenticate/?username=".$sid."&password=".$pass);
             $res = str_replace('{"auth":','',$res);
             $res = str_replace('}','',$res);
         return $res;
     }
+
+
+    // public function login($sid,$pass){
+    //     $res = file_get_contents("http://mlearn.usp.ac.fj/uspmobile/IEP_authenticate/?username=".$sid."&password=".$pass);
+    //         $res = str_replace('{"auth":','',$res);
+    //         $res = str_replace('}','',$res);
+    //     return $res;
+    // }
+    
 
     //api that returns a list of all categories.
     public function getAllCat(){
