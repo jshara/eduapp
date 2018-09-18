@@ -35,10 +35,10 @@ class QuestionsController extends Controller
         else 
             $ques_num++;
 
-        if($ques_num < 6)
+        // if($ques_num < 6)
             return view('question.add')->with('lev_id',$lid)->with('ques_num',$ques_num);
-        else
-            return redirect('/questions/'.$lid)->with('error', 'ITS FULL');
+        // else
+            // return redirect('/questions/'.$lid)->with('error', 'ITS FULL');
     }
 
     /**
@@ -131,15 +131,9 @@ class QuestionsController extends Controller
         $question->ques_content = $request->input('question');
         $question->save();  
 
-        //  while(!blank($request->input('ans_'.$i)) && $i < 5){
-        //     if($question->answers->ans_num == $i){
-        //         $question->answers->ans_content = $request->input('ans_'.$i);
-        //     }            
-        //     $i ++;
-        //     $question->answers->save();
-        // }
         $answers = Answer::where('ques_id',$id)->get();
         $i =1;
+
         foreach ($answers as $answer) {
             if($answer->ans_num == 1){
                 $answer->ans_correct = 1;
@@ -150,10 +144,8 @@ class QuestionsController extends Controller
                 $answer->ans_content = $request->input('ans_'.$i);
             }
             $answer->save();
-            $i++;
-            
-        }
-        
+            $i++;            
+        }       
 
         return redirect('questions/'.$question->lev_id)->with('success', 'Question updated');
     }
@@ -167,5 +159,18 @@ class QuestionsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function hide(Request $req){   
+        $bool = "0";
+        if($req->checked == "true")
+        $bool = '1';
+    
+        // var_dump($bool);        
+        $question = Question::find($req->id);
+        $question->ques_hide = $bool;
+        $question->save();
+
+        return response()->json($question);
     }
 }
