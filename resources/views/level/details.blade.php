@@ -1,15 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<span class="hidden message" style="visibility:hidden;">
-    <div class='alert alert-success'>
-        <a href="#" class="close" data-dismiss="alert" aria-label="close"><span class="fa fa-close"></span></a>
-        
-    </div>
-</span>
     <div class="row justify-content-end">
         <div class="col nopadding">
                 <a href="/categories" class="btn btn-danger">BACK</a>
+        </div>
+        <div class="col text-center">
+            <h2> <?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></h2>
         </div>
         <div class="col text-right nopadding">
                 <a href="/levels/create/{{$cat_id}}" class="btn btn-success">ADD LEVEL</a>
@@ -20,11 +17,11 @@
             <table id="table" class ="table table-striped table-border table-hover text-center">
                 <thead>
                     <tr>                        
-                        <th><?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></th>
-                        <th> Questions to Show(Max 5)</th>
+                        <th></th>
+                        <th> Questions to Show (Max 5)</th>
                         <th> Possible Questions</th>
                         <th> All Questions</th>
-                        <th> Details </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <body>
@@ -34,7 +31,7 @@
                         <td>  
                             <div class="input-group">                        
                                 <li class="form-control">Level #{{$level->lev_num}}</li>
-                                 <button class="btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
+                                 <button class="edit-modal btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
                                     <span class="fa fa-pencil fa-lg"></span>
                                 </button>
                                 <span class="input-group-addon">                                       
@@ -111,24 +108,12 @@
         });
     </script>
 @include('layouts.modal')
+{{-- @include('layouts.levelmodal') --}}
     
     <script>
         $(document).on('click', '.edit-modal', function() {
-            $('#footer_action_button').text(" Update");
-            $('#footer_action_button').addClass('glyphicon-check');
-            $('#footer_action_button').removeClass('glyphicon-trash');
-            $('.actionBtn').addClass('btn-success');
-            $('.actionBtn').removeClass('btn-danger');
-            $('.actionBtn').addClass('edit');
-            $('.actionBtn').removeClass('delete');
-            $('.modal-title').text('Edit');
-            $('.deleteContent').hide();
-            $('.form-horizontal').show();
-            $('#fid').val($(this).data('id'));
-            $('#n').val($(this).data('name'));
-            $('#myModal').modal('show');
-            //console.log($("#fid").val());
-            //console.log($("#n").val());
+            $('#mapModal').modal('show');
+
         });
         $(document).on('click', '.delete-modal', function() {
             $('#footer_action_button').text(" Delete");

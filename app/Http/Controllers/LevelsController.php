@@ -17,7 +17,12 @@ class LevelsController extends Controller
      */
     public function index($id)    {
         $allLevels = DB:: select('select * from levels where cat_id =? order by lev_num asc',[$id]);
-        return view('level.details')->with('levels',$allLevels)->with('cat_id',$id);
+
+        $cat = Category::find($id);
+        if($cat->published == "0")
+            return view('level.details')->with('levels',$allLevels)->with('cat_id',$id);
+
+        return view('level.detailsdisabled')->with('levels',$allLevels)->with('cat_id',$id);
     }
 
     /**
