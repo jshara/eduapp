@@ -21,6 +21,12 @@ class QuestionsController extends Controller
         return view('question.details')->with('lev_id',$lid)->with('questions',$questions);
     }
 
+    public function indexdisabled($lid)
+    {
+        $questions = Question::where('lev_id',$lid)->orderBy('ques_num','asc')->get();
+        return view('question.detailsdisabled')->with('lev_id',$lid)->with('questions',$questions);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -161,6 +167,26 @@ class QuestionsController extends Controller
         //
     }
 
+    public function ajaxdelete(Request $req)
+    {
+       $allQuestions = Question::where('lev_id',$req->lid)->where('ques_num','>',$req->qnum)->get();
+        foreach ($allQuestions as $question){
+            --$question->ques_num;
+            $question->save();
+        }
+        $currentQuestion = Question::find($req->id);
+        $currentQuestion->delete();
+
+        $level =Level::find($req->lid);
+        $unhidden = DB::table('questions')->where('lev_id',$req->lid)->where('ques_hide','0')->count();
+        if($unhidden < $level->numOfQues){
+            $level->numOfQues = 1;
+            $level->save();
+        }
+        
+        return response()->json($currentQuestion);
+    }
+
     public function hide(Request $req){  
         
         $bool = "0";
@@ -173,11 +199,12 @@ class QuestionsController extends Controller
         $question->save();
         
         $level =Level::find($question->lev_id);
-         var_dump($level->numOfQues);
         $unhidden = DB::table('questions')->where('lev_id',$question->lev_id)->where('ques_hide','0')->count();
-         var_dump($unhidden);
-        if($unhidden < $level->numOfQues){
+        if($unhidden < $level->numOfQues /* || $unhidden == 1 */){
             $level->numOfQues = 1;
+            // if($unhidden == 0){
+            //     $level->numOfQues = 0;
+            // }
             $level->save();
         }
 

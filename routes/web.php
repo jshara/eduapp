@@ -36,12 +36,13 @@ Route::post('level/questions','LevelsController@numOfQues');
 
 //Questions
 Route::get('/questions/{id}','QuestionsController@index');
+Route::get('/questionsd/{id}','QuestionsController@indexdisabled');
 Route::post('/questions','QuestionsController@display');
 Route::post('/questions/{id}', 'QuestionsController@store');
 Route::get('/questions/create/{id}','QuestionsController@create');
 Route::get('/questions/{id}/edit','QuestionsController@edit');
 Route::put('/questions/update/{id}','QuestionsController@update');
-// Route::post('/questions/ajaxdelete', 'QuestionsController@ajaxdelete');
+Route::post('/question/ajaxdelete', 'QuestionsController@ajaxdelete');
 Route::post('/question/hide', 'QuestionsController@hide');
 
 //Answers

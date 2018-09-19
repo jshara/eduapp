@@ -18,57 +18,50 @@
             <thead>
                 <tr>
                     <th> Category Name</th>
+                    <th> Status</th>
                     <th> Level</th>
-                    <th> Status</th>                    
+                    
                 </tr>
             </thead>
             <body>
             @if(count($category) > 0)
                 @foreach($category as $c)
-                <tr class="cat{{$c->cat_id}}">                 
-                    @if($c->published == '0')
-                        <td>
-                            <div class="input-group">
-                                <li class="form-control">{{$c->cat_name}}</li>
-                                <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
-                                    <span class="fa fa-pencil fa-lg"></span>
-                                </button>
-                                <button class="delete-modal btn btn-danger" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
-                                    <span class="fa fa-trash-o fa-lg"></span>
-                                </button>
-                            </div>
-                        </td>   
-                        <td>	
-                            <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
-                            <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
-                        </td>                    
-                        <td>
-                            <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
+                <tr class="cat{{$c->cat_id}}">
+                    <td>
+                        <div class="input-group">
+                            <li class="form-control">{{$c->cat_name}}</li>
+                            <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
+                                <span class="fa fa-pencil fa-lg"></span>
+                            </button>
+                            <button class="delete-modal btn btn-danger" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
+                                <span class="fa fa-trash-o fa-lg"></span>
+                            </button>
+                        </div>
+                    </td>
+
+                    <?php
+                        $link = "/levels/".$c->cat_id;
+                    ?>
+                   
+                    <td>
+                        <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
+                            @if($c->published == '0')
                                 <span style="color:green;"> PUBLISH </span>
-                            </a>
-                        </td>
-                    @else
-                        <td>
-                            <div class="input-group">
-                                <li class="form-control">{{$c->cat_name}}</li>
-                                <button class="btn btn-info disabled" data-toggle="tooltip" title="Unpublish to Edit" style="margin:0 5px 0 5px;">
-                                    <span class="fa fa-pencil fa-lg"></span>
-                                </button>
-                                <button class="btn btn-danger disabled" data-toggle="tooltip" title="Unpublish to Delete">
-                                    <span class="fa fa-trash-o fa-lg"></span>
-                                </button>
-                            </div>
-                        </td>   
-                        <td>	
-                            <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
-                            <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
-                        </td>                    
-                        <td>
-                            <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
+                                <?php
+                                    $link = "/levels/".$c->cat_id;
+                                ?>
+                            @else
                                 <span style="color:red;"> UNPUBLISH </span>
-                            </a>
-                        </td>
-                    @endif
+                                <?php
+                                    $link = "/categories";
+                                ?>
+                            @endif
+                        </a>
+                    </td> 
+                    <td>	
+                        <a href="{{$link}}" class="btn btn-info">DETAILS</a>
+                        <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
+                    </td>
                 </tr>
                 @endforeach
             @else
@@ -83,10 +76,6 @@
     @include('layouts.modal')
 		
 		<script>
-            $(document).ready(function(){
-                $('[data-toggle="tooltip"]').tooltip();   
-            });
-
             $(document).on('click', '.edit-modal', function() {
                 $('#footer_action_button').text(" Update");
                 $('#footer_action_button').addClass('glyphicon-check');
@@ -130,7 +119,7 @@
                         'name': $('#n').val()
                     },
                     success: function(data) {                       
-                        $('.cat' + data.cat_id).replaceWith("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-trash fa-lg'></span></button></span></div></td><td><a href='/levels/" + data.cat_id +"' class='btn btn-info'>DETAILS</a> <a href='/maps/" + data.cat_id + "' class='btn btn-info'>MAP</a> </td><td><a href='/categories/publish/" + data.cat_id + "' class='btn btn-default'><span style='color:green;'> PUBLISH </span></a></td> </tr>");
+                        $('.cat' + data.cat_id).replaceWith("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-trash fa-lg'></span></button></span></div></td><td><a href='/levels/" + data.cat_id +"' class='btn btn-info'>DETAILS</a> <a href='/maps/" + data.cat_id + "' class='btn btn-info'>MAP</a> </td></tr>");
                     }
                 });
             });
