@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+Route::post('/loginUser','ApiController@login');
 Route::get('/login/{sid}&{pass}','ApiController@login');
 Route::get('/cat','ApiController@getAllCat');
 Route::get('/cat={id}','ApiController@getLevel');
