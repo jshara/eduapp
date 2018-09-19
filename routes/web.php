@@ -30,7 +30,7 @@ Route::get('/categories/publish/{cid}', 'CategorysController@checkpublish');
 Route::get('/levels/create/{id}','LevelsController@create');
 Route::post('/levels/{id}','LevelsController@store');
 Route::delete('levels/delete/{lid}/{lnum}/{cid}','LevelsController@destroy');
-// Route::post('/levels/adelete','LevelsController@destroy1');
+Route::post('/level/adelete','LevelsController@destroy1');
 Route::get('levels/{id}','LevelsController@index');
 Route::post('level/questions','LevelsController@numOfQues');
 
