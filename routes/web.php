@@ -46,3 +46,7 @@ ROute::post('/questions/ajaxdelete', 'QuestionsController@ajaxdelete');
 Route::get('/maps/{id}','MapsController@map');
 Route::get('/mapslevel/{id}', 'MapsController@viewLevel');
 Route::put('/mapsupdate', 'MapsController@updateLevel');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

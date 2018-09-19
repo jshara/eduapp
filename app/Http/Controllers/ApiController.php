@@ -56,9 +56,9 @@ class ApiController extends Controller
 
     //check if game continues
     public function checkHowManyLevel($cat_id){
-        
+
         $res;
-    
+
         $numLevels = DB::table('levels')
                      ->select(DB::raw('count(`lev_num`) as numLev'))
                      ->where('cat_id', $cat_id)
@@ -66,7 +66,7 @@ class ApiController extends Controller
                      ->get();
 
         $res = $numLevels;
-    
+
         return response()->json($res);
     }
 
@@ -89,7 +89,7 @@ class ApiController extends Controller
 
     //load the questions and answers of a chosen level by ID
     public function loadQuestion($lev_num,$cat_id){
-        $lev_id = DB::table('levels')              
+        $lev_id = DB::table('levels')
                 ->where('lev_num',$lev_num)
                 ->where('cat_id',$cat_id)
                 ->value('lev_id');
@@ -107,11 +107,10 @@ class ApiController extends Controller
                     -> select ('ans_id','ans_content')
                     ->where('ques_id', $result[$i]->ques_id)
                     ->get();
- 
-            // shuffle($list); 
 
+            // shuffle($list);
         $data[$i] = [
-          
+
             'ID' => $result[$i]->ques_id,
             'Number' => $result[$i]->ques_num,
             'Content' => $result[$i]->ques_content,
@@ -119,7 +118,7 @@ class ApiController extends Controller
             ];
             $data[$i]= json_decode(json_encode($data[$i]), true);
             shuffle($data[$i]['answers'] );
-            
+
         }
 
         shuffle($data);
@@ -129,13 +128,12 @@ class ApiController extends Controller
 
     //check whether answers submitted are correct
     public function checkAns($cid,$lnum, $ans_id = null){
-        $resultSet;     
+        $resultSet;
         if($ans_id == null){
             $data = [
                 'score' => 0
             ];
-    
-    
+
         return response()->json($data);
         }
         else{
@@ -157,22 +155,20 @@ class ApiController extends Controller
                     $resultSet[] = ($result);
                     $numCorrect ++;
                 }
-                else 
+                else
                 {
                     // echo 'wrong '.$result;
                     $resultSet[] = ($result);
                 }
             }
             $score = ($numCorrect/$numQuestions)*100;
-            $score = number_format((float)$score, 0, '.', ''); 
+            $score = number_format((float)$score, 0, '.', '');
             $data = [
                 'score' => $score
             ];
-    
-    
+
         return response()->json($data);
         }
-        
 
 }
 
@@ -215,7 +211,7 @@ class ApiController extends Controller
             $c = 0;
             foreach ($index[0] as $i) {
                 $list[$c] = [
-                   $array[$i]                   
+                   $array[$i]
                 ];
             $c++;
             }
@@ -226,23 +222,23 @@ class ApiController extends Controller
                     'lat' => $data[0],
                     'lng' => $data[1]
                 ];
-             $a++;                  
+             $a++;
             }
 
-            $list = $coords; 
+            $list = $coords;
         }
-       return response()->json($list); 
+       return response()->json($list);
     }
 
     public function shuffle_assoc($list) {
       if (!is_array($list)) return $list;
-    
+
       $keys = array_keys($list);
       shuffle($keys);
       $random = array();
       foreach ($keys as $key)
         $random[$key] = $list[$key];
-    
+
       return $random;
     }
 
@@ -261,7 +257,7 @@ class ApiController extends Controller
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         ]);
-            
+
     }
 
     public function saveGameSession($userId,$cid,$lnum,$score){
@@ -300,7 +296,4 @@ class ApiController extends Controller
         return response()->json($data);
     }
 
-
-    
-    
 }

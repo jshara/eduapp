@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+// Route::post('/login','ApiController@login');
 Route::get('/login/{sid}&{pass}','ApiController@login');
 Route::get('/cat','ApiController@getAllCat');
 Route::get('/cat={id}','ApiController@getLevel');
@@ -30,3 +31,16 @@ Route::get('/createGame/{userId}&{cid}&{lnum}','ApiController@createGameSession'
 Route::get('/saveGame/{userId}&{cid}&{lnum}&{score}','ApiController@saveGameSession');
 Route::get('/loadGame/{userId}&{cid}','ApiController@loadGameSession');
 
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('signup', 'AuthController@signup');
+
+    Route::group([
+        'middleware' => 'auth:api'
+    ], function () {
+        Route::get('logout', 'AuthController@logout');
+        Route::get('user', 'AuthController@user');
+    });
+});
