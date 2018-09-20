@@ -23,6 +23,7 @@ Route::get('/cat','ApiController@getAllCat');
 Route::get('/cat={id}','ApiController@getLevel');
 Route::get('/numLev/{cat_id}','ApiController@checkHowManyLevel');
 Route::get('/nextLevel/current={lev_id}&cat={cat_id}','ApiController@loadNextLevel');
+Route::get('/loadLevel/{catId}&{levNum}&{userId}&{score}','ApiController@loadLevel');
 Route::get('/loadQuestions/{id}&{catid}','ApiController@loadQuestion');
 // Route::get('/checkAns/{id}','ApiController@checkAns');
 Route::get('/checkAns/{cid}&{lnum}&{id?}','ApiController@checkAns');
