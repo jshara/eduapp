@@ -308,6 +308,22 @@ class ApiController extends Controller
         );
     }
 
+    public function endGameSession($userId,$cid,$lnum,$score){
+        $levId = DB::table('levels')
+        ->where('cat_id',$cid)
+        ->where('lev_num',$lnum)
+        ->value('lev_id');
+        DB::table('sessions')
+            ->where('player_id',$userId)
+            ->where('cat_id', $cid)
+            ->update(
+            ['lev_id'  => $levId,
+             'session_score'  => $score,
+             'updated_at'=> Carbon::now()->toDateTimeString()
+             ]
+        );
+    }
+
     public function loadGameSession($userId,$cid){
         $levId = DB::table('sessions')
                 ->where('player_id', $userId)
