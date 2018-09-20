@@ -29,19 +29,8 @@ class ApiController extends Controller
         return $res;
     }
 
-
-    // public function login($sid,$pass){
-    //     $res = file_get_contents("http://mlearn.usp.ac.fj/uspmobile/IEP_authenticate/?username=".$sid."&password=".$pass);
-    //         $res = str_replace('{"auth":','',$res);
-    //         $res = str_replace('}','',$res);
-    //     return $res;
-    // }
-    
-
     //api that returns a list of all categories.
     public function getAllCat(){
-        // $list = Category::select('cat_name')->get();
-        // return response()->json($list);
         $list = DB::table('categories')->select('cat_id','cat_name')->where('published', 1)->get();
         return response()->json($list);
     }
@@ -49,7 +38,7 @@ class ApiController extends Controller
     //check number of levels per category
     //SELECT `categories`.* , count(`levels`.`lev_num`) as NumLevels FROM `categories` LEFT join `levels` on `categories`.cat_id = `levels`.`cat_id` group by `categories`.`cat_id`
 
-    //function that returns level info by getting category id
+    //function that returns first level info by getting category id
     public function getLevel($cat_id){
         $list = DB::table('levels')
             ->where('cat_id',$cat_id)
@@ -66,7 +55,7 @@ class ApiController extends Controller
         return response()->json($coords);
     }
 
-    //check if game continues
+    //check the total level in a category
     public function checkHowManyLevel($cat_id){
         
         $res;
@@ -98,6 +87,30 @@ class ApiController extends Controller
     ];
     return response()->json($coords);
     }
+
+    //load the coordinates of next level (if exists)
+    public function loadLevel($cat_id,$levNum,$userId,$score){
+        $list = DB::table('levels')
+        ->where('cat_id',$cat_id)
+        ->where('lev_num',$levNum)
+        ->select('lev_location')
+        ->get();
+
+    $data = explode(",", $list[0]->lev_location);
+    $coords = [
+        'lat' => $data[0],
+        'lng' => $data[1]
+    ];
+     if($levNum == 1){
+        $this->createGameSession($userId,$cat_id,$levNum);
+     }
+     else{
+         $this->saveGameSession($userId,$cat_id,$levNum,$score);
+     }
+
+    return response()->json($coords);
+    }
+
 
     //load the questions and answers of a chosen level by ID
     public function loadQuestion($lev_num,$cat_id){
