@@ -174,10 +174,9 @@ class ApiController extends Controller
                             ->where('cat_id',$cid)
                             ->where('lev_num',$lnum)
                             ->value('lev_id');
-            $numQuestions = DB::table('questions')
+            $numQuestions = DB::table('levels')
                             ->where('lev_id',$levId)
-                            ->where('ques_hide','0')
-                            ->count();
+                            ->value('numOfQues');
             $numCorrect = 0;
             foreach ($ans_id as $id){
                 $result = DB::table('answers')
