@@ -101,12 +101,10 @@ class ApiController extends Controller
         'lat' => $data[0],
         'lng' => $data[1]
     ];
-     if($levNum == 1){
-        $this->createGameSession($userId,$cat_id,$levNum);
-     }
-     else{
-         $this->saveGameSession($userId,$cat_id,$levNum,$score);
-     }
+
+
+    $this->saveGameSession($userId,$cat_id,$levNum,$score);
+
 
     return response()->json($coords);
     }
@@ -276,10 +274,10 @@ class ApiController extends Controller
       return $random;
     }
 
-    public function createGameSession($userId,$cid,$lnum){
+    public function createGameSession($userId,$cid){
         $levId = DB::table('levels')
             ->where('cat_id',$cid)
-            ->where('lev_num',$lnum)
+            ->where('lev_num',1)
             ->value('lev_id');
         DB::table('sessions')->insert([
             // sample syntax ['email' => 'taylor@example.com', 'votes' => 0]
@@ -291,7 +289,7 @@ class ApiController extends Controller
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         ]);
-            
+           
     }
 
     public function saveGameSession($userId,$cid,$lnum,$score){

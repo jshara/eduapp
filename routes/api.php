@@ -28,7 +28,7 @@ Route::get('/loadQuestions/{id}&{catid}','ApiController@loadQuestion');
 // Route::get('/checkAns/{id}','ApiController@checkAns');
 Route::get('/checkAns/{cid}&{lnum}&{id?}','ApiController@checkAns');
 Route::get('/getRan/{num}','ApiController@getRandomLatLng');
-Route::get('/createGame/{userId}&{cid}&{lnum}','ApiController@createGameSession');
+Route::get('/createGame/{userId}&{cid}','ApiController@createGameSession');
 Route::get('/saveGame/{userId}&{cid}&{lnum}&{score}','ApiController@saveGameSession');
 Route::get('/loadGame/{userId}&{cid}','ApiController@loadGameSession');
 
