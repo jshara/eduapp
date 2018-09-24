@@ -15,7 +15,7 @@ class CreateSessionsTable extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->increments('session_id');
-            $table->integer('player_id')->unsigned();
+            $table->integer('s_id')->unsigned();
             $table->integer('cat_id');
             $table->integer('lev_id');
             $table->bigInteger('session_score');
@@ -24,17 +24,9 @@ class CreateSessionsTable extends Migration
         });
 
         Schema::table('sessions', function(Blueprint $table){
-            $table->foreign('player_id')
-                ->references('player_id')->on('players');
+            $table->foreign('s_id')
+                ->references('s_id')->on('students');
         });
-        // Schema::table('sessions', function(Blueprint $table){
-        //     $table->foreign('cat_id')
-        //         ->references('cat_id')->on('categories');
-        // });
-        // Schema::table('sessions', function(Blueprint $table){
-        //     $table->foreign('lev_id')
-        //         ->references('lev_id')->on('levels');
-        // });
     }
 
     /**

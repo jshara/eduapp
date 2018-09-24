@@ -36,12 +36,15 @@
     
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel bg-success">
+    <div id="app">{{-- #008B8B; --}}
+        <nav class="navbar navbar-expand-md navbar-light navbar-laravel bg-dark" style="min-height:100px">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'EduApp') }}
+                <a class="navbar-brand" href="{{ url('/') }}" style="color:white;">
+                    <h2>EduApp</h2>
                 </a>
+                <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                    <span class="icon-bar">+</span>
+                </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
@@ -51,10 +54,10 @@
                         @else
                              @if(Auth::user()->role == 'coordinator')
                                 <li class="nav-item">
-                                        <a class="nav-link" href="/categories">Categories</a>
+                                        <a class="nav-link text-white" href="/categories">Categories</a>
                                 </li>
                                 <li class="nav-item">
-                                        <a class="nav-link" href="#">Results</a>
+                                        <a class="nav-link text-white" href="#">Results</a>
                                 </li>
                             @else
                                 <li class="nav-item dropdown">
@@ -75,16 +78,16 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 {{-- <input type="button" class="btn btn-success btn-md" value="Login" onclick="location.href ='{{ route('login') }}'"> --}}
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                <a class="nav-link text-white" href="{{ route('register') }}">{{ __('Register') }}</a>
                                {{-- <input type="button" class="btn btn-primary btn-md" value="Register" onclick="location.href ='{{ route('register') }}'"> --}}
                             </li>
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
@@ -107,7 +110,7 @@
         </nav>
 
         <main class="py-4">
-            <div class="container">
+            <div class="container{{-- -fluid --}}">
                 <div class="row justify-content-center">
                     <div class="col-md-10">
                         @include('inc.message')

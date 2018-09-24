@@ -14,7 +14,7 @@
     </div>
     <div class="row">     
             {{-- <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     --}}
-            <table id="table" class ="table table-striped table-border table-hover text-center">
+            <table id="table" class ="table table-striped table-border table-hover text-center ">
                 <thead>
                     <tr>                        
                         <th></th>
@@ -49,10 +49,10 @@
                                 </span>
                             </div> --}}
                         </td>
-                        <td>   
+                        <td style="horizontal-align:center;">   
                             <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     
                             <?php $unhide = DB::table('questions')->where('lev_id',$level->lev_id)->where('ques_hide', '0')->count();?>                     
-                            <select id="number" data-id="{{$level->lev_id}}">
+                            <select class="form-control text-center" id="number" data-id="{{$level->lev_id}}"style="width:70px;">
                                 @for($i = 1; $i <= $unhide; $i++)
                                     @if($i == $level->numOfQues)
                                         <option value="{{$i}}" selected="selected">{{$i}}</option>
