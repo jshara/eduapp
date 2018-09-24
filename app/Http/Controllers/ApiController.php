@@ -319,6 +319,7 @@ class ApiController extends Controller
             ->update(
             ['lev_id'  => $levId,
              'session_score'  => $score,
+             'session_completed' => 1,
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         );
