@@ -35,6 +35,40 @@ class ApiController extends Controller
         return response()->json($list);
     }
 
+    public function getCompletedCat($userId){
+        $cats = DB::table('sessions')->select('cat_id')->where('player_id',$userId)->where('session_completed','1')->get();
+        $i = 0;
+        foreach( $cats as $cat){
+            // echo $cat->cat_id;
+            $list = DB::table('categories')->select('cat_name as Cat')->where('cat_id', $cat->cat_id)->get();
+
+            $data[$i] = [
+                'cat_id' => $cat->cat_id,
+                'cat_name' => $list[0]->Cat
+            ];
+        $i++;
+        }
+        return response()->json($data);
+    }
+
+    public function getSavedCat($userId){
+        $cats = DB::table('sessions')->select('cat_id')->where('player_id',$userId)->where('session_completed','0')->get();
+        $i = 0;
+        foreach( $cats as $cat){
+            // echo $cat->cat_id;
+            $list = DB::table('categories')->select('cat_name as Cat')->where('cat_id', $cat->cat_id)->get();
+
+            $data[$i] = [
+                'cat_id' => $cat->cat_id,
+                'cat_name' => $list[0]->Cat
+            ];
+        $i++;
+        }
+        return response()->json($data);
+    }
+
+    
+
     //check number of levels per category
     //SELECT `categories`.* , count(`levels`.`lev_num`) as NumLevels FROM `categories` LEFT join `levels` on `categories`.cat_id = `levels`.`cat_id` group by `categories`.`cat_id`
 
@@ -262,6 +296,51 @@ class ApiController extends Controller
        return response()->json($list); 
     }
 
+    public function getRandomLatLng2($values){
+        // $array = array();
+        $array = [
+           ' -27.476103, 153.017359',
+            '-27.476775, 153.017421',
+            '-27.476148, 153.017156',
+            '-27.477030, 153.017673',
+            '-27.476722, 153.017851',
+            '-27.476288, 153.016726'
+    ];
+        if ($values == 1){
+            $list =  $array[array_rand($array,$values)] ;
+            $data = explode(",", $list);
+            $coords = [
+                'lat' => $data[0],
+                'lng' => $data[1]
+            ];
+            $list = $coords;
+        }
+        else{
+            $index[] = array_rand($array,$values);
+            $c = 0;
+            foreach ($index[0] as $i) {
+                $list[$c] = [
+                   $array[$i]                   
+                ];
+            $c++;
+            }
+            $a = 0;
+            foreach($list as $item){
+                $data = explode(",",$item[0]);
+                $coords[$a] = [
+                    'lat' => $data[0],
+                    'lng' => $data[1]
+                ];
+             $a++;                  
+            }
+
+            $list = $coords; 
+        }
+       return response()->json($list); 
+    }
+
+
+
     public function shuffle_assoc($list) {
       if (!is_array($list)) return $list;
     
@@ -306,6 +385,8 @@ class ApiController extends Controller
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         );
+
+        return "Game Saved";
     }
 
     public function endGameSession($userId,$cid,$lnum,$score){
@@ -337,6 +418,7 @@ class ApiController extends Controller
         $lnum = DB::table('levels')
             ->where('lev_id',$levId)
             ->value('lev_num');
+        $lnum = $lnum - 1;
         $data = [
             'lnum' => $lnum,
             'score' => $score
