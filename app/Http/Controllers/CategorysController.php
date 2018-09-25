@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
+use App\Course;
 use App\User;
 use DB;
 
@@ -16,9 +17,14 @@ class CategorysController extends Controller
      */
     public function index()
     {
-        $user_id = auth()->user()->id;
-        $user = User::find($user_id);
-        return view('category.view')->with('category',$user->categories);
+        // $user_id = auth()->user()->id;
+        // $user = User::find($user_id);
+        // $course = Course::find("1");
+        // return view('category.view')->with('category',$course->categories);
+
+        $c_id = auth()->user()->course()->c_id;
+        $course = Course::find($c_id);
+        return view('category.view')->with('category',$course->categories);
     }
 
     public function ajaxcreate(Request $req){

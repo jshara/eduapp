@@ -19,6 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+//Courses
+Route::resource('courses','CoursesController');
+
 //Categories
 Route::resource('categories','CategorysController');
 Route::post('/categories/ajax', 'CategorysController@ajax');

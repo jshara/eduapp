@@ -9,11 +9,6 @@ class Category extends Model
 
     public $primaryKey = 'cat_id';
     protected $table = 'categories';
-
-    
-    public function user(){
-        return $this->belongsTo('App\User');
-    }
     
     public function course(){
         return $this->belongsTo('App\Course');

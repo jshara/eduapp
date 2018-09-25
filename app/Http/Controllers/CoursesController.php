@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Category;
+use App\User;
+use DB;
 
 class CoursesController extends Controller
 {
@@ -13,7 +16,9 @@ class CoursesController extends Controller
      */
     public function index()
     {
-        //
+        $user_id = auth()->user()->id;
+        $user = User::find($user_id);
+        return view('course.details')->with('courses',$user->courses);
     }
 
     /**
