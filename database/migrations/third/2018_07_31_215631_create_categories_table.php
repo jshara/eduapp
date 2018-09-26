@@ -31,18 +31,6 @@ class CreateCategoriesTable extends Migration
                 ->references('c_id')->on('courses')
                 ->onDelete('cascade');
         });
-
-        // DB::table('categories')->insert([
-        //     [
-        //         'cat_name'=> 'Science',
-        //     ],
-        //     [
-        //         'cat_name'=> 'Physics',
-        //     ],
-        //     [
-        //         'cat_name'=> 'Math',
-        //     ]
-        // ]);
     }
 
     /**

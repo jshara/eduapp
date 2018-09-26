@@ -84,6 +84,14 @@ class CategorysController extends Controller
         return redirect('categories')->with($type, $message);
     }
 
+    public function setCourse(Request $request){
+        $category = Category::find($request->id);
+        $category->c_id = $request->course;
+        $category->save();
+
+        return response()->json($category);
+    }
+
     // /**
     //  * Show the form for creating a new resource.
     //  *
