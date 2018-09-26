@@ -24,6 +24,9 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    {{-- Sweet Alert --}}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     {{-- CK editor --}}
     <script src="https://cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
 

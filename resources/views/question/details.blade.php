@@ -64,9 +64,9 @@
                     <td>
                         <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">  
                         @if($question->ques_hide == '0')
-                            <input type="checkbox" name="hide" id="hide" data-id="{{$question->ques_id}}" />
+                            <input  class="form-control" type="checkbox" name="hide" id="hide" data-id="{{$question->ques_id}}" />
                         @else
-                            <input type="checkbox" name="hide" id="hide" data-id="{{$question->ques_id}}" /checked>
+                            <input  class="form-control" type="checkbox" name="hide" id="hide" data-id="{{$question->ques_id}}" /checked>
                         @endif                              
                     </td>
                 </tr>

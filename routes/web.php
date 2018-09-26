@@ -19,12 +19,17 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+//Courses
+Route::resource('courses','CoursesController');
+Route::post('/course/ajaxcreate', 'CoursesController@ajaxcreate');
+
 //Categories
 Route::resource('categories','CategorysController');
 Route::post('/categories/ajax', 'CategorysController@ajax');
 Route::post('/categories/ajaxdelete', 'CategorysController@ajaxdelete');
 Route::post('/categories/ajaxcreate', 'CategorysController@ajaxcreate');
 Route::get('/categories/publish/{cid}', 'CategorysController@checkpublish');
+Route::post('category/course','CategorysController@setCourse');
 
 //Levels
 Route::get('/levels/create/{id}','LevelsController@create');
@@ -44,6 +49,10 @@ Route::get('/questions/{id}/edit','QuestionsController@edit');
 Route::put('/questions/update/{id}','QuestionsController@update');
 Route::post('/question/ajaxdelete', 'QuestionsController@ajaxdelete');
 Route::post('/question/hide', 'QuestionsController@hide');
+
+//Students
+Route::get('/student/{cid}','StudentsController@index');
+Route::post('/student/ajaxcreate', 'StudentsController@ajaxcreate');
 
 //Answers
 // Route::post('/ques/hide', 'AnswersController@hide');

@@ -31,14 +31,14 @@
                         <td>  
                             <div class="input-group">                        
                                 <li class="form-control">Level #{{$level->lev_num}}</li>
-                                 <button class="edit-modal btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
+                                <button class="edit-modal btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
                                     <span class="fa fa-pencil fa-lg"></span>
                                 </button>
-                                <span class="input-group-addon">                                       
+                                {{-- <span class="input-group-addon">                                        --}}
                                 <button class="delete-modal btn btn-danger" data-id="{{$level->lev_id}}" data-name="Level #{{$level->lev_num}}" data-lnum="{{$level->lev_num}}" data-cid="{{$cat_id}}">
-                                        <span class="fa fa-trash-o fa-lg"></span>
-                                    </button>
-                                </span>
+                                    <span class="fa fa-trash-o fa-lg"></span>
+                                </button>
+                                {{-- </span> --}}
                             </div>
                             {{-- <div class="input-group">  
                                 <li class="form-control">Level #{{$level->lev_num}}</li>
@@ -88,7 +88,7 @@
 
     <script>
         $(document).on("change", "#number", function () {
-            var select = $("#number").val();
+            var select = $(this).val();
             $.ajax({
                 url:"/level/questions",
                 type: 'post',

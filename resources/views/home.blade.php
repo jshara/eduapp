@@ -59,7 +59,7 @@
                     <a style="text-decoration:none; color:black; border:none" href="/categories">
                         <img class="card-img-top" src="/img/circle_plus.png" alt="Category Button">
                         <div class="card-body">
-                            <h2 class="card-text text-center">Categories</h2>
+                            <h2 class="card-text text-center">Create Game</h2>
                         </div>
                     </a>
                 </div>
@@ -67,10 +67,10 @@
 
             <div class="col-md-4">
                 <div class="joseph card" style="width: 18rem; margin-right:10px; border:none">
-                    <a style="text-decoration:none; color:black; border:none" href="#">
+                    <a style="text-decoration:none; color:black; border:none" href="/courses">
                         <img class="card-img-top" src="/img/books.png" alt="Courses Button">
                         <div class="card-body">
-                            <h2 class="card-text text-center">Courses</h2>
+                            <h2 class="card-text text-center">Manage Courses</h2>
                         </div>
                     </a>
                 </div>
@@ -80,7 +80,7 @@
                     <a style="text-decoration:none; color:black; border:none" href="#">
                         <img class="card-img-top" src="/img/results.png" alt="Results Button">
                         <div class="card-body">
-                            <h2 class="card-text text-center">Results</h2>
+                            <h2 class="card-text text-center">View Results</h2>
                         </div>
                     </a>
                 </div>
