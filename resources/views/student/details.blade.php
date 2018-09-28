@@ -28,19 +28,13 @@
             <table id="table" class ="table table-striped table-border table-hover text-center ">
                 <body>
                 @if(count($s_ids) > 0)
-                {{-- <php 
-                    foreach($s_ids as $s_id){
-                        echo $s_id->s_id."this is sids"; 
-                    }
-                    
-                ?> --}}
                     @foreach($s_ids as $s_id)
-                    <?php $student = DB::table('students')->select('student_id')->where('s_id',$s_id->s_id)->get(); ?>
+                    <?php $student_id = DB::table('students')->where('s_id',$s_id->s_id)->value('student_id'); ?>
                     <tr class="student{{$s_id->s_id}}">
                         <td>  
                             <div class="input-group">                        
-                                <li class="form-control">{{$student[0]->student_id}}</li>
-                                <button class="delete-modal btn btn-danger" data-id="{{$s_id->s_id}}" >
+                                <li class="form-control">{{$student_id}}</li>
+                                <button class="delete-modal btn btn-danger" data-id="{{$s_id->s_id}}" data-cid="{{$c_id}}" data-name="{{$student_id}}" >
                                     <span class="fa fa-trash-o fa-lg"></span>
                                 </button>
                             </div>
@@ -55,7 +49,7 @@
                 </body>
             </table>
         </div>
-
+        @include('layouts.modal')
         <script>
             $(document).on('click', '.delete-modal', function() {
                 $('#footer_action_button').text(" Delete");
@@ -67,10 +61,25 @@
                 $('.actionBtn').removeClass('edit');
                 $('.modal-title').text('Delete');
                 $('.did').text($(this).data('id'));
+                $('.cid').text($(this).data('cid'));
                 $('.deleteContent').show();
                 $('.form-horizontal').hide();
                 $('.dname').html($(this).data('name'));
                 $('#myModal').modal('show');
+            });
+            $(document).on('click', '.delete', function() {
+                $.ajax({
+                    type: 'post',
+                    url: '/student/ajaxdelete',
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'sid': $('.did').text(),
+                        'cid': $('.cid').text()
+                    },
+                    success: function(data) {
+                        $('.student' + $('.did').text()).remove();
+                    }
+                });
             });
 
             $(document).on('click', '.newstudentbtn', function() {
@@ -89,6 +98,8 @@
                         }
                         else {
                             $('.error').addClass('hidden');
+                            $('#table').append("<tr class='student"+ data.student.s_id +"'><td><div class='input-group'><li class='form-control'>"+ data.student.student_id +
+                            "</li><button class='delete-modal btn btn-danger' data-id='"+  data.student.s_id +"'  data-cid='"+ data.enrolment.c_id +"' data-name='"+ data.student.student_id +"'><span class='fa fa-trash-o fa-lg'></span></button></div></td></tr>");
                         }
                     },
 

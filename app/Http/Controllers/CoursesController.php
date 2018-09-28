@@ -32,6 +32,21 @@ class CoursesController extends Controller
         return response()->json($course);
     }
 
+    public function ajaxdelete(Request $request){
+        $course = Course::find($request->id);
+        $course->delete();
+                
+        return response()->json($course);
+    }
+
+    public function ajaxedit(Request $request){
+        $course = Course::find($request->id);
+        $course->course_code = $request->course_code;
+        $course->save();
+                
+        return response()->json($course);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

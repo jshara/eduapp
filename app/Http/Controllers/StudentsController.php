@@ -22,9 +22,9 @@ class StudentsController extends Controller
 
     public function ajaxcreate(Request $request){
         $e = new Enrolment();
+        $s = new Student();
 
         if(DB::table('students')->where('student_id',$request->student_id)->doesntExist()){
-            $s = new Student();
             $s->student_id = $request->student_id;
             $s->save();
            
@@ -33,13 +33,27 @@ class StudentsController extends Controller
             $e->save();
         }else{
             $sid = Student::where('student_id',$request->student_id)->value('s_id');
-            // dd($s);
             $e->s_id = $sid;
             $e->c_id = $request->c_id;
             $e->save();
         }      
+        return response()->json(['student' => $s, 'enrolment' => $e]);
+        // return response()->json($s);
+    }
 
-        return response()->json($e);
+    public function ajaxdelete(Request $request){
+        $number = DB::table('enrolments')->where('s_id',$request->sid)->count();
+        if($number == '1'){
+            $student = Student::find($request->sid);
+            // dd($student);
+            $student->delete();
+        }else{
+            $eid = DB::table('enrolments')->where('c_id',$request->cid)->where('s_id',$request->sid)->value('e_id');
+            $enrolment = Enrolment::find($eid);
+            // dd($enrolment);
+            $enrolment->delete();
+        }
+        return response()->json($number);
     }
 
     /**
