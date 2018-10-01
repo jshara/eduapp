@@ -57,6 +57,7 @@ Route::post('/question/hide', 'QuestionsController@hide');
 Route::get('/student/{cid}','StudentsController@index');
 Route::post('/student/ajaxcreate', 'StudentsController@ajaxcreate');
 Route::post('/student/ajaxdelete', 'StudentsController@ajaxdelete');
+Route::post('/student/file', 'StudentsController@fileupload');
 
 //Answers
 // Route::post('/ques/hide', 'AnswersController@hide');

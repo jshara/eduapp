@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Student;
 use App\Enrolment;
+use Illuminate\Support\Facades\Storage;
 use DB;
+use File;   
 
 class StudentsController extends Controller
 {
@@ -54,6 +56,46 @@ class StudentsController extends Controller
             $enrolment->delete();
         }
         return response()->json($number);
+    }
+
+    public function fileupload(Request $request){
+        $this->validate($request,[
+            'csvfile'=> 'required|mimes:csv,txt' 
+        ]);
+
+
+        if($request->hasFile('csvfile')){
+            $filename = $request->file('csvfile')->getClientOriginalName();
+            $path = $request->file('csvfile')->storeAs('public/studentid',$filename);
+            $openfile = fopen('storage/studentid/'.$filename,"r");
+            // $openfile = fopen($path,"r");
+            
+            while( ($data = fgetcsv($openfile, 1000, ",")) != FALSE){
+                foreach ($data as $student){
+                   echo "id: ". $student ;
+                    $e = new Enrolment();
+                    $s = new Student();
+
+                    if(DB::table('students')->where('student_id',$student)->doesntExist()){
+                        $s->student_id = $student;
+                        $s->save();
+                    
+                        $e->s_id = $s->s_id;
+                        $e->c_id = $request->c_id;
+                        $e->save();
+                    }else{
+                        $sid = Student::where('student_id',$student)->value('s_id');
+                        $e->s_id = $sid;
+                        $e->c_id = $request->c_id;
+                        $e->save();
+                    }  
+                }
+            }
+        }else{
+            dd('YOHO');
+        }
+        Storage::delete('storage/studentid/'.$filename);
+        return redirect('/student/'.$request->c_id)->with('success', 'CSV file Imported');
     }
 
     /**
