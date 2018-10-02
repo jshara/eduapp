@@ -10,10 +10,10 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
-    <div class="row"> 
-        <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">    
+    <div class="row">
+        <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">
         <table id="table" class ="table table-striped table-border table-hover text-center">
             <thead>
                 <tr>
@@ -37,16 +37,16 @@
                             </button>
                         </div>
                     </td>
-                    <td>	
+                    <td>
                         <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
                         <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
                     </td>
                     <td>
                         <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
                             @if($c->published == '0')
-                            <span style="color:green;"> PUBLISH </span>
+                            <button class="btn" style="background-color:#fd7e14; color:white;">PUBLISH </button>
                             @else
-                                <span style="color:red;"> UNPUBLISH </span>
+                            <button class="btn" style="background-color:#fd7e14; color:white;">UNPUBLISH </button>
                             @endif
                         </a>
                     </td>
@@ -62,7 +62,7 @@
     </div>
 
     @include('layouts.modal')
-		
+
 		<script>
             $(document).on('click', '.edit-modal', function() {
                 $('#footer_action_button').text(" Update");
@@ -106,7 +106,7 @@
                         'id': $("#fid").val(),
                         'name': $('#n').val()
                     },
-                    success: function(data) {                       
+                    success: function(data) {
                         $('.cat' + data.cat_id).replaceWith("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + "' data-name='" + data.cat_name + "'><span class='fa fa-trash fa-lg'></span></button></span></div></td><td><a href='/levels/" + data.cat_id +"' class='btn btn-info'>DETAILS</a> <a href='/maps/" + data.cat_id + "' class='btn btn-info'>MAP</a> </td></tr>");
                     }
                 });

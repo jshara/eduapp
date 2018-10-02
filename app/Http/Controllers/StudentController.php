@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\User;
+use App\Student;
 
-class AuthController extends Controller
+class StudentController extends Controller
 {
     /**
      * Create user
@@ -21,18 +21,18 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed'
+            'student_id' => 'required|string',
+            // 'email' => 'required|string|email|unique:users',
+            'password' => 'required|string'
         ]);
 
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
+        $student = new Student([
+            'student_id' => $request->student_id,
+            // 'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
 
-        $user->save();
+        $student->save();
 
         return response()->json([
             'message' => 'Successfully created user!'
@@ -52,21 +52,27 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'student_id' => 'required|string',
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
 
-        $credentials = request(['email', 'password']);
+        $student = Student::where('student_id', $request->student_id)->first();
+        // dd($student);
 
-        if(!Auth::attempt($credentials))
+
+        $credentials = request(['student_id', 'password']);
+        // dd($credentials);
+        if (!Auth::attempt($credentials))
             return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+            'message' => 'Unauthorized'
+        ], 401);
 
-        $user = $request->user();
+        //  dd($request->user());
+        $student = $request->student();
+        $student = Student::where('student_id', $request->student_id)->first();
 
-        $tokenResult = $user->createToken('Personal Access Token');
+        $tokenResult = $student->createToken('Personal Access Token');
         $token = $tokenResult->token;
         $token->expires_at = Carbon::now()->addDays(10);
 
@@ -101,8 +107,8 @@ class AuthController extends Controller
      *
      * @return [json] user object
      */
-    public function user(Request $request)
+    public function student(Request $request)
     {
-        return response()->json($request->user());
+        return response()->json($request->student());
     }
 }
