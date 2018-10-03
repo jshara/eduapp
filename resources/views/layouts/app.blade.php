@@ -30,6 +30,10 @@
     {{-- CK editor --}}
     <script src="https://cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
 
+    {{-- Datatables --}}
+    <script src="{{ asset('DataTables/datatables.js') }}" defer></script>
+
+
     <style>
     .nopadding {
         padding: 0 !important;
