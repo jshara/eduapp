@@ -58,7 +58,6 @@ class ApiController extends Controller
         // die($output);
         return $data;
 
-
     }
 
     public function login(Request $request)
@@ -221,20 +220,52 @@ class ApiController extends Controller
 
     }
     //api that returns a list of all categories.
-    public function getAllCat()
-    {
-        // $list = Category::select('cat_name')->get();
-        // return response()->json($list);
-        $list = DB::table('categories')->select('cat_id', 'cat_name')->where('published', 1)->get();
+  
+    public function getAllCat(){
+        $list = DB::table('categories')->select('cat_id','cat_name')->where('published', 1)->get();
         return response()->json($list);
     }
+
+    public function getCompletedCat($userId){
+        $cats = DB::table('sessions')->select('cat_id')->where('player_id',$userId)->where('session_completed','1')->get();
+        $i = 0;
+        foreach( $cats as $cat){
+            // echo $cat->cat_id;
+            $list = DB::table('categories')->select('cat_name as Cat')->where('cat_id', $cat->cat_id)->get();
+
+            $data[$i] = [
+                'cat_id' => $cat->cat_id,
+                'cat_name' => $list[0]->Cat
+            ];
+        $i++;
+        }
+        return response()->json($data);
+    }
+
+    public function getSavedCat($userId){
+        $cats = DB::table('sessions')->select('cat_id')->where('player_id',$userId)->where('session_completed','0')->get();
+        $i = 0;
+        foreach( $cats as $cat){
+            // echo $cat->cat_id;
+            $list = DB::table('categories')->select('cat_name as Cat')->where('cat_id', $cat->cat_id)->get();
+
+            $data[$i] = [
+                'cat_id' => $cat->cat_id,
+                'cat_name' => $list[0]->Cat
+            ];
+        $i++;
+        }
+        return response()->json($data);
+    }
+
+    
 
     //check number of levels per category
     //SELECT `categories`.* , count(`levels`.`lev_num`) as NumLevels FROM `categories` LEFT join `levels` on `categories`.cat_id = `levels`.`cat_id` group by `categories`.`cat_id`
 
-    //function that returns level info by getting category id
-    public function getLevel($cat_id)
-    {
+
+    //function that returns first level info by getting category id
+    public function getLevel($cat_id){
         $list = DB::table('levels')
             ->where('cat_id', $cat_id)
             ->where('lev_num', 1)
@@ -250,10 +281,9 @@ class ApiController extends Controller
         return response()->json($coords);
     }
 
-    //check if game continues
-    public function checkHowManyLevel($cat_id)
-    {
 
+    //check the total level in a category
+    public function checkHowManyLevel($cat_id){
         $res;
 
         $numLevels = DB::table('levels')
@@ -285,42 +315,69 @@ class ApiController extends Controller
         return response()->json($coords);
     }
 
+    //load the coordinates of next level (if exists)
+    public function loadLevel($cat_id,$levNum,$userId,$score){
+        $list = DB::table('levels')
+        ->where('cat_id',$cat_id)
+        ->where('lev_num',$levNum)
+        ->select('lev_location')
+        ->get();
+
+    $data = explode(",", $list[0]->lev_location);
+    $coords = [
+        'lat' => $data[0],
+        'lng' => $data[1]
+    ];
+
+
+    $this->saveGameSession($userId,$cat_id,$levNum,$score);
+
+
+    return response()->json($coords);
+    }
+
+
     //load the questions and answers of a chosen level by ID
-    public function loadQuestion($lev_num, $cat_id)
-    {
-        $lev_id = DB::table('levels')
-            ->where('lev_num', $lev_num)
-            ->where('cat_id', $cat_id)
-            ->value('lev_id');
-        $max = DB::table('questions')
-            ->select(DB::raw('max(ques_num) as max'))
-            ->where('lev_id', $lev_id)
-            ->get();
+    public function loadQuestion($lev_num,$cat_id){
+        $lev_id = DB::table('levels')              
+                ->where('lev_num',$lev_num)
+                ->where('cat_id',$cat_id)
+                ->value('lev_id');
+                $max = DB::table('questions')
+                ->where('lev_id',$lev_id)
+                ->where('ques_hide','0')
+                ->count();
+        $num = DB::table('levels')
+                ->where('lev_id',$lev_id)
+                ->value('numOfQues');
         $result = DB::table('questions')
-            ->select('questions.ques_id', 'questions.ques_num', 'questions.ques_content')
-            ->where('questions.lev_id', $lev_id)
-            ->get();
-        $data2 = null;
-        for ($i = 0; $i < $max[0]->max; $i++) {
+        ->select('questions.ques_id','questions.ques_num', 'questions.ques_content')
+        ->where('questions.lev_id',$lev_id)
+        ->where('ques_hide','0')
+        ->get();
+
+        $data2=null;
+        for($i = 0;$i < $max ; $i++){
             $list = DB::table('answers')
-                ->select('ans_id', 'ans_content')
-                ->where('ques_id', $result[$i]->ques_id)
-                ->get();
+                    -> select ('ans_id','ans_content')
+                    ->where('ques_id', $result[$i]->ques_id)
+                    ->get();
+ 
 
-            // shuffle($list);
-            $data[$i] = [
-
+            $data[$i] = [            
                 'ID' => $result[$i]->ques_id,
                 'Number' => $result[$i]->ques_num,
                 'Content' => $result[$i]->ques_content,
                 'answers' => $list
-            ];
-            $data[$i] = json_decode(json_encode($data[$i]), true);
-            shuffle($data[$i]['answers']);
-
+                ];
+                $data[$i]= json_decode(json_encode($data[$i]), true);
+                shuffle($data[$i]['answers'] );
+                shuffle($data[$i]['answers'] );
+                shuffle($data[$i]['answers'] );            
         }
 
         shuffle($data);
+        $data = array_slice($data, 0, $num);
         return response()->json($data);
 
     }
@@ -338,12 +395,13 @@ class ApiController extends Controller
         } else {
             $ans_id = explode(',', $ans_id);
             $levId = DB::table('levels')
-                ->where('cat_id', $cid)
-                ->where('lev_num', $lnum)
-                ->value('lev_id');
-            $numQuestions = DB::table('questions')
-                ->where('lev_id', $levId)
-                ->count();
+                            ->where('cat_id',$cid)
+                            ->where('lev_num',$lnum)
+                            ->value('lev_id');
+          
+            $numQuestions = DB::table('levels')
+                            ->where('lev_id',$levId)
+                            ->value('numOfQues');
             $numCorrect = 0;
             foreach ($ans_id as $id) {
                 $result = DB::table('answers')
@@ -427,24 +485,68 @@ class ApiController extends Controller
         return response()->json($list);
     }
 
-    public function shuffle_assoc($list)
-    {
-        if (!is_array($list)) return $list;
 
-        $keys = array_keys($list);
-        shuffle($keys);
-        $random = array();
-        foreach ($keys as $key)
-            $random[$key] = $list[$key];
+    public function getRandomLatLng2($values){
+        // $array = array();
+        $array = [
+           ' -27.476103, 153.017359',
+            '-27.476775, 153.017421',
+            '-27.476148, 153.017156',
+            '-27.477030, 153.017673',
+            '-27.476722, 153.017851',
+            '-27.476288, 153.016726'
+    ];
+        if ($values == 1){
+            $list =  $array[array_rand($array,$values)] ;
+            $data = explode(",", $list);
+            $coords = [
+                'lat' => $data[0],
+                'lng' => $data[1]
+            ];
+            $list = $coords;
+        }
+        else{
+            $index[] = array_rand($array,$values);
+            $c = 0;
+            foreach ($index[0] as $i) {
+                $list[$c] = [
+                   $array[$i]                   
+                ];
+            $c++;
+            }
+            $a = 0;
+            foreach($list as $item){
+                $data = explode(",",$item[0]);
+                $coords[$a] = [
+                    'lat' => $data[0],
+                    'lng' => $data[1]
+                ];
+             $a++;                  
+            }
 
-        return $random;
+            $list = $coords; 
+        }
+       return response()->json($list); 
     }
 
-    public function createGameSession($userId, $cid, $lnum)
-    {
+
+
+    public function shuffle_assoc($list) {
+      if (!is_array($list)) return $list;
+    
+      $keys = array_keys($list);
+      shuffle($keys);
+      $random = array();
+      foreach ($keys as $key)
+        $random[$key] = $list[$key];
+    
+      return $random;
+    }
+
+    public function createGameSession($userId,$cid){
         $levId = DB::table('levels')
-            ->where('cat_id', $cid)
-            ->where('lev_num', $lnum)
+            ->where('cat_id',$cid)
+            ->where('lev_num',1)
             ->value('lev_id');
         DB::table('sessions')->insert([
             // sample syntax ['email' => 'taylor@example.com', 'votes' => 0]
@@ -457,7 +559,6 @@ class ApiController extends Controller
                 'updated_at' => Carbon::now()->toDateTimeString()
             ]
         ]);
-
     }
 
     public function saveGameSession($userId, $cid, $lnum, $score)
@@ -470,12 +571,30 @@ class ApiController extends Controller
             ->where('player_id', $userId)
             ->where('cat_id', $cid)
             ->update(
-                [
-                    'lev_id' => $levId,
-                    'session_score' => $score,
-                    'updated_at' => Carbon::now()->toDateTimeString()
-                ]
-            );
+            ['lev_id'  => $levId,
+             'session_score'  => $score,
+             'updated_at'=> Carbon::now()->toDateTimeString()
+             ]
+        );
+
+        return "Game Saved";
+    }
+
+    public function endGameSession($userId,$cid,$lnum,$score){
+        $levId = DB::table('levels')
+        ->where('cat_id',$cid)
+        ->where('lev_num',$lnum)
+        ->value('lev_id');
+        DB::table('sessions')
+            ->where('player_id',$userId)
+            ->where('cat_id', $cid)
+            ->update(
+            ['lev_id'  => $levId,
+             'session_score'  => $score,
+             'session_completed' => 1,
+             'updated_at'=> Carbon::now()->toDateTimeString()
+             ]
+        );
     }
 
     public function loadGameSession($userId, $cid)
@@ -491,6 +610,7 @@ class ApiController extends Controller
         $lnum = DB::table('levels')
             ->where('lev_id', $levId)
             ->value('lev_num');
+        $lnum = $lnum - 1;
         $data = [
             'lnum' => $lnum,
             'score' => $score

@@ -18,6 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->string('cat_name');
             $table->boolean('published')->default('0');
             $table->integer('user_id')->unsigned();
+            $table->integer('c_id')->default('1')->unsigned();
             $table->timestamps();
         });
         Schema::table('categories',function (Blueprint $table){
@@ -25,18 +26,11 @@ class CreateCategoriesTable extends Migration
                 ->references('id')->on('users')
                 ->onDelete('cascade');
         });
-
-        // DB::table('categories')->insert([
-        //     [
-        //         'cat_name'=> 'Science',
-        //     ],
-        //     [
-        //         'cat_name'=> 'Physics',
-        //     ],
-        //     [
-        //         'cat_name'=> 'Math',
-        //     ]
-        // ]);
+        Schema::table('categories',function (Blueprint $table){
+            $table->foreign('c_id')
+                ->references('c_id')->on('courses')
+                ->onDelete('cascade');
+        });
     }
 
     /**

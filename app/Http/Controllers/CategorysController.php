@@ -58,7 +58,7 @@ class CategorysController extends Controller
             $levels = DB:: select('select * from levels where cat_id =? order by lev_num asc',[$cid]);
             if(count($levels) > 0){                
                 foreach($levels as $level){
-                    if(DB::table('questions')->where('lev_id',$level->lev_id)->doesntExist()){
+                    if(DB::table('questions')->where('lev_id',$level->lev_id)->where('ques_hide','0')->doesntExist()){
                         $adequate = false;
                         $emptyLevels .= $level->lev_num .", ";
                     }
@@ -82,6 +82,14 @@ class CategorysController extends Controller
             $message .= 'unpublished.';
         }
         return redirect('categories')->with($type, $message);
+    }
+
+    public function setCourse(Request $request){
+        $category = Category::find($request->id);
+        $category->c_id = $request->course;
+        $category->save();
+
+        return response()->json($category);
     }
 
     // /**

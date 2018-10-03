@@ -17,7 +17,12 @@ class LevelsController extends Controller
      */
     public function index($id)    {
         $allLevels = DB:: select('select * from levels where cat_id =? order by lev_num asc',[$id]);
-        return view('level.details')->with('levels',$allLevels)->with('cat_id',$id);
+
+        $cat = Category::find($id);
+        if($cat->published == "0")
+            return view('level.details')->with('levels',$allLevels)->with('cat_id',$id);
+
+        return view('level.detailsdisabled')->with('levels',$allLevels)->with('cat_id',$id);
     }
 
     /**
@@ -98,13 +103,27 @@ class LevelsController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $req)
+    // /**
+    //  * Remove the specified resource from storage.
+    //  *
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function destroy(Request $req)
+    // {
+    //    $allLevel = Level::where('cat_id',$req->cid)->where('lev_num','>',$req->lnum)->get();
+    //     foreach ($allLevel as $level){
+    //         --$level->lev_num;
+    //         $level->save();
+    //     }
+
+    //     $currentLevel = Level::find($req->lid);
+    //     $currentLevel->delete();
+
+    //     return redirect('/levels/'.$req->cid)->with('success', 'Level Deleted');
+    // }
+
+    public function destroy1(Request $req)
     {
        $allLevel = Level::where('cat_id',$req->cid)->where('lev_num','>',$req->lnum)->get();
         foreach ($allLevel as $level){
@@ -112,28 +131,17 @@ class LevelsController extends Controller
             $level->save();
         }
 
-        $currentLevel = Level::find($req->lid);
-        $currentLevel->delete();
-
-        return redirect('/levels/'.$req->cid)->with('success', 'Level Deleted');
-    }
-
-    public function destroy1(Request $req)
-    {
-         dd($req);
-        // var_dump($req->lid);
-
-    //    $allLevel = Level::where('cat_id',$req->cid)->where('lev_num','>',$req->lnum)->get();
-    //     foreach ($allLevel as $level){
-    //         --$level->lev_num;
-    //         $level->save();
-    //     }
-
         $currentLevel = Level::find($req->id);
         $currentLevel->delete();
-
         return response()->json($currentLevel);
+    }
 
+    public function numOfQues(Request $req){
+        $level = Level::find($req->id);
+        $level->numOfQues = $req->number;
+        $level->save();
+
+        return response()->json($level);
     }
 }
 

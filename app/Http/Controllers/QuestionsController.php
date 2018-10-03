@@ -21,6 +21,12 @@ class QuestionsController extends Controller
         return view('question.details')->with('lev_id',$lid)->with('questions',$questions);
     }
 
+    public function indexdisabled($lid)
+    {
+        $questions = Question::where('lev_id',$lid)->orderBy('ques_num','asc')->get();
+        return view('question.detailsdisabled')->with('lev_id',$lid)->with('questions',$questions);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -35,10 +41,10 @@ class QuestionsController extends Controller
         else 
             $ques_num++;
 
-        if($ques_num < 6)
+        // if($ques_num < 6)
             return view('question.add')->with('lev_id',$lid)->with('ques_num',$ques_num);
-        else
-            return redirect('/questions/'.$lid)->with('error', 'ITS FULL');
+        // else
+            // return redirect('/questions/'.$lid)->with('error', 'ITS FULL');
     }
 
     /**
@@ -131,15 +137,9 @@ class QuestionsController extends Controller
         $question->ques_content = $request->input('question');
         $question->save();  
 
-        //  while(!blank($request->input('ans_'.$i)) && $i < 5){
-        //     if($question->answers->ans_num == $i){
-        //         $question->answers->ans_content = $request->input('ans_'.$i);
-        //     }            
-        //     $i ++;
-        //     $question->answers->save();
-        // }
         $answers = Answer::where('ques_id',$id)->get();
         $i =1;
+
         foreach ($answers as $answer) {
             if($answer->ans_num == 1){
                 $answer->ans_correct = 1;
@@ -150,10 +150,8 @@ class QuestionsController extends Controller
                 $answer->ans_content = $request->input('ans_'.$i);
             }
             $answer->save();
-            $i++;
-            
-        }
-        
+            $i++;            
+        }       
 
         return redirect('questions/'.$question->lev_id)->with('success', 'Question updated');
     }
@@ -167,5 +165,49 @@ class QuestionsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function ajaxdelete(Request $req)
+    {
+       $allQuestions = Question::where('lev_id',$req->lid)->where('ques_num','>',$req->qnum)->get();
+        foreach ($allQuestions as $question){
+            --$question->ques_num;
+            $question->save();
+        }
+        $currentQuestion = Question::find($req->id);
+        $currentQuestion->delete();
+
+        $level =Level::find($req->lid);
+        $unhidden = DB::table('questions')->where('lev_id',$req->lid)->where('ques_hide','0')->count();
+        if($unhidden < $level->numOfQues){
+            $level->numOfQues = 1;
+            $level->save();
+        }
+        
+        return response()->json($currentQuestion);
+    }
+
+    public function hide(Request $req){  
+        
+        $bool = "0";
+        if($req->checked == "true"){
+            $bool = '1';
+        }
+        // var_dump($bool);        
+        $question = Question::find($req->id);       
+        $question->ques_hide = $bool;
+        $question->save();
+        
+        $level =Level::find($question->lev_id);
+        $unhidden = DB::table('questions')->where('lev_id',$question->lev_id)->where('ques_hide','0')->count();
+        if($unhidden < $level->numOfQues /* || $unhidden == 1 */){
+            $level->numOfQues = 1;
+            // if($unhidden == 0){
+            //     $level->numOfQues = 0;
+            // }
+            $level->save();
+        }
+
+        return response()->json($question);
     }
 }

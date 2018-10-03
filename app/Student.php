@@ -8,7 +8,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Student extends Authenticatable
+class Student extends Model
 {
     use HasApiTokens, Notifiable;
 
@@ -19,6 +19,7 @@ class Student extends Authenticatable
      *
      * @var string
      */
+    public $primaryKey = 's_id';
     protected $table = 'students';
 
     /**
@@ -50,5 +51,9 @@ class Student extends Authenticatable
     public function getRouteKeyName()
     {
         return 'token';
+    }
+  
+    public function enrolments(){
+        return $this->hasMany('App\Enrolment');
     }
 }

@@ -20,25 +20,27 @@
                 <div id="map" style="height:500px; width:100%;"> </div>
             </div><br>
 
-            <div class="row">
-                <div class="col-md-4 offset-md-4">
-                    <div class="form-group">
-                        {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!}
-                        {{Form::label('location', 'Location of the level',['class'=> 'form-control', 'for'=>'latlng'])}}  
-                        {{Form::text('location','',['class' => 'form-control','placeholder'=>'Move Marker to input','id'=>'latlng','readonly'=>'true'])}}
+            {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!}
+                <div class="row">
+                    <div class="col-md-4 offset-md-4">
+                        <div class="form-group">
+                            {{-- {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!} --}}
+                            {{Form::label('location', 'Location of the level',['class'=> 'form-control', 'for'=>'latlng'])}}  
+                            {{Form::text('location','',['class' => 'form-control','placeholder'=>'Move Marker to input','id'=>'latlng','readonly'=>'true'])}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{Form::label('position', 'Position of the level',['class'=> 'form-control', 'for'=>'position'])}}  
+                            {!!Form::selectRange('position',1,$newLevel,['class' => 'form-control',$newLevel,'id'=>'position','style'=>'color:red;size:15;']) !!} 
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        {{Form::label('position', 'Position of the level',['class'=> 'form-control', 'for'=>'position'])}}  
-                        {!!Form::selectRange('position',1,$newLevel,['class' => 'form-control',$newLevel,'id'=>'position','style'=>'color:red;size:15;']) !!} 
-                    </div>
+                <div class="row float-right nopadding">
+                    {{Form::submit('Add',['class'=>'btn btn-primary'])}}
+                    {{-- {!! Form::close() !!} --}}
                 </div>
-            </div>
-            <div class="row float-right nopadding">
-                {{Form::submit('Add',['class'=>'btn btn-primary'])}}
-                {!! Form::close() !!}
-            </div>
+            {!! Form::close() !!}
         </div>         
 
 
