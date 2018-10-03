@@ -22,6 +22,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 //Courses
 Route::resource('courses','CoursesController');
 Route::post('/course/ajaxcreate', 'CoursesController@ajaxcreate');
+Route::post('/course/ajaxdelete', 'CoursesController@ajaxdelete');
+Route::post('/course/ajaxedit', 'CoursesController@ajaxedit');
+
 
 //Categories
 Route::resource('categories','CategorysController');
@@ -53,6 +56,7 @@ Route::post('/question/hide', 'QuestionsController@hide');
 //Students
 Route::get('/student/{cid}','StudentsController@index');
 Route::post('/student/ajaxcreate', 'StudentsController@ajaxcreate');
+Route::post('/student/ajaxdelete', 'StudentsController@ajaxdelete');
 
 //Answers
 // Route::post('/ques/hide', 'AnswersController@hide');

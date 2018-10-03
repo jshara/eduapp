@@ -28,7 +28,7 @@
                 @foreach($category as $c)
                 <tr class="cat{{$c->cat_id}}">                 
                     @if($c->published == '0')
-                        <td>
+                        <td id ="column{{$c->cat_id}}">
                             <div class="input-group">
                                 <li class="form-control">{{$c->cat_name}}</li>
                                 <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
@@ -78,7 +78,7 @@
                         </td>
                         <td>
                             <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
-                            <select class="form-control text-center" id="course" data-id="{{$c->cat_id}}" style="width:150px;">                                
+                            <select class="form-control text-center" data-toggle="tooltip" title="Unpublish to Select" style="width:150px;" disabled>                                
                                 @foreach($courses as $course)                                
                                     @if($course->c_id == $c->c_id)
                                         <option value="{{$course->c_id}}" selected="selected">{{$course->course_code}}</option>
@@ -174,15 +174,9 @@
                         'id': $("#fid").val(),
                         'name': $('#n').val()
                     },
-                    success: function(data) {                       
-                        $('.cat' + data.cat_id).replaceWith("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + 
-                        "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='" + data.cat_id + 
-                        "' data-name='" + data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + 
-                        "' data-name='" + data.cat_name + "'><span class='fa fa-trash fa-lg'></span></button></span></div></td><td><a href='/levels/" + data.cat_id +
-                        "' class='btn btn-info'>DETAILS</a> <a href='/maps/" + data.cat_id + 
-                        "' class='btn btn-info'>MAP</a> </td><td><?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?><select class='form-control text-center' id='course' data-id='"+ data.cat_id +"'style='width:100px;'> @foreach($courses as $course)@if($course->c_id =="+ data.c_id +")<option value='{{$course->c_id}}' selected='selected'>{{$course->course_code}}</option> @else<option value='{{$course->c_id}}'>{{$course->course_code}}</option> @endif @endforeach </select></td><td><a href='/categories/publish/" + data.cat_id + 
-                        "' class='btn btn-default'><span style='color:green;'> PUBLISH </span></a></td> </tr>");
-                        swal("Awesome!", "Successfully updated!", "success");
+                    success: function(data) { 
+                        $('#column' + data.cat_id).replaceWith("<td id ='column"+ data.cat_id + "'><div class='input-group'><li class='form-control'>"+ data.cat_name + "</li><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='"+ data.cat_id + "' data-name='"+ data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button><button class='delete-modal btn btn-danger' data-id='"+ data.cat_id + "' data-name='"+ data.cat_name + "'><span class='fa fa-trash-o fa-lg'></span></button></div></td>");
+                        // swal("Awesome!", "Successfully updated!", "success");
                     }   
                 });
             });
@@ -202,12 +196,13 @@
                         else {
                             $('.error').addClass('hidden');
                             $('#newcat').val("");
-                            $('#table').append("<tr class='cat" + data.cat_id + "'><td><div class='input-group'><li class='form-control'>" + data.cat_name + 
+                            $('#table').append("<tr class='cat" + data.cat_id + "'><td id ='column"+ data.cat_id + "'><div class='input-group'><li class='form-control'>" + data.cat_name + 
                             "</li><span class='input-group-addon'><button class='edit-modal btn btn-info' style='margin:0 5px 0 5px;' data-id='" + data.cat_id + 
                             "' data-name='" + data.cat_name + "'><span class='fa fa-pencil fa-lg'></span></button></span><span class='input-group-addon'><button class='delete-modal btn btn-danger' data-id='" + data.cat_id + 
                             "' data-name='" + data.cat_name + "'><span class='fa fa-trash fa-lg'></span></button></span></div></td><td><a href='/levels/" + data.cat_id +
                             "' class='btn btn-info'>DETAILS</a> <a href='/maps/" + data.cat_id + 
-                            "' class='btn btn-info'>MAP</a> </td><td><?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?><select class='form-control text-center' id='course' data-id='"+ data.cat_id +"'style='width:100px;'> @foreach($courses as $course)@if($course->c_id == $c->c_id)<option value='{{$course->c_id}}' selected='selected'>{{$course->course_code}}</option> @else<option value='{{$course->c_id}}'>{{$course->course_code}}</option> @endif @endforeach </select></td><td><a href='/categories/publish/" + data.cat_id + 
+                            "' class='btn btn-info'>MAP</a> </td><td><?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?><select class='form-control text-center' id='course' data-id='"+ data.cat_id +
+                            "'style='width:150px;'> @foreach($courses as $course)@if($course->c_id ==" + data.c_id +")<option value='{{$course->c_id}}' selected='selected'>{{$course->course_code}}</option> @else<option value='{{$course->c_id}}'>{{$course->course_code}}</option> @endif @endforeach </select></td><td><a href='/categories/publish/" + data.cat_id + 
                             "' class='btn btn-default'><span style='color:green;'> PUBLISH </span></a></td></tr>");
                         }
                     },
