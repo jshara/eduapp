@@ -4,8 +4,9 @@
     </IfModule>
 
     RewriteEngine On
-    Header add Access-Control-Allow-Origin "*"
-
+    # Header add Access-Control-Allow-Origin "*"
+    # Header add Access-Control-Allow-Headers "Origin, X-REQUESTED-WITH, CONTENT-TYPE"
+    # Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

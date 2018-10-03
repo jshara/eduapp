@@ -10,10 +10,10 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
-    <div class="row"> 
-        <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">    
+    <div class="row">
+        <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">
         <table id="table" class ="table table-striped table-border table-hover text-center">
             <thead>
                 <tr>
@@ -106,7 +106,7 @@
     </div>
 
     @include('layouts.modal')
-		
+
 		<script>
             $(document).on("change", "#course", function () {
                 var select = $(this).val();
