@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-md-4 offset-md-4">
                         <div class="form-group">
-                            {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!}
+                            {{-- {!! Form::open(['action' => ['LevelsController@store',$cat_id],'method'=>'POST']) !!} --}}
                             {{Form::label('location', 'Location of the level',['class'=> 'form-control', 'for'=>'latlng'])}}  
                             {{Form::text('location','',['class' => 'form-control','placeholder'=>'Move Marker to input','id'=>'latlng','readonly'=>'true'])}}
                         </div>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="row float-right nopadding">
                     {{Form::submit('Add',['class'=>'btn btn-primary'])}}
-                    {!! Form::close() !!}
+                    {{-- {!! Form::close() !!} --}}
                 </div>
             {!! Form::close() !!}
         </div>         

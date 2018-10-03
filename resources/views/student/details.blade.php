@@ -1,18 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-end">
+    <div class="row ">
         <div class="col nopadding">
                 <a href="/courses" class="btn btn-danger">BACK</a>
         </div>
-        <div class="col text-center">
+        <div class="col">
             <h2>Add Students</h2>
         </div>
     </div>
+
     <div class="row">
         <h3>CSV FILE</h3>
-
+        {!! Form::open(['action' => 'StudentsController@fileupload','method'=>'post', 'enctype'=> 'multipart/form-data']) !!}
+            <div class="row">
+                {{ Form::hidden('c_id', $c_id) }}
+                {{Form::label('csvfile', 'Add students by CSV',['class'=> 'form-control', 'for'=>'jo'])}}  
+                {{Form::file('csvfile',['class'=> 'form-control', 'id'=>'jo'])}}
+                {{Form::submit('Add',['class'=>'btn btn-primary'])}}
+            </div>
+        {!! Form::close() !!}
+ 
     </div>
+
 
     <div class="row justify-content-end">
         <div class="form-inline">
