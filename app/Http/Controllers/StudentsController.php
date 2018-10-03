@@ -25,22 +25,45 @@ class StudentsController extends Controller
     public function ajaxcreate(Request $request){
         $e = new Enrolment();
         $s = new Student();
+        $message = $request->student_id." successfully enrolled";
+        $type = "success";
 
-        if(DB::table('students')->where('student_id',$request->student_id)->doesntExist()){
+        if(DB::table('students')->where('student_id',$request->student_id)->Exists()){                   //If students Exists
+            $sid = Student::where('student_id',$request->student_id)->value('s_id');
+            if(DB::table('enrolments')->where('s_id',$sid)->where('c_id', $request->c_id)->Exists()){    //If enrolment Exists
+                $message = "The Student ".$request->student_id." is already enrolled";
+                $type = "error";
+            }
+            else{                                                                                       //Enrol Student
+                $e->s_id = $sid;
+                $e->c_id = $request->c_id;
+                $e->save();
+            }
+        }else{                                                                                          //Add student then Enrol
             $s->student_id = $request->student_id;
             $s->save();
            
             $e->s_id = $s->s_id;
             $e->c_id = $request->c_id;
             $e->save();
-        }else{
-            $sid = Student::where('student_id',$request->student_id)->value('s_id');
-            $e->s_id = $sid;
-            $e->c_id = $request->c_id;
-            $e->save();
-        }      
-        return response()->json(['student' => $s, 'enrolment' => $e]);
-        // return response()->json($s);
+        } 
+
+        // if(DB::table('students')->where('student_id',$request->student_id)->doesntExist()){
+        //     $s->student_id = $request->student_id;
+        //     $s->save();
+           
+        //     $e->s_id = $s->s_id;
+        //     $e->c_id = $request->c_id;
+        //     $e->save();
+        //     $message = "I created a student then added the enrolment";
+        // }else{
+        //     $sid = Student::where('student_id',$request->student_id)->value('s_id');
+        //     $e->s_id = $sid;
+        //     $e->c_id = $request->c_id;
+        //     $e->save();
+        //     $message = "I only added the enrolment";
+        // }      
+        return response()->json(['student' => $s, 'enrolment' => $e, 'message' => $message, 'type' => $type]);
     }
 
     public function ajaxdelete(Request $request){
@@ -62,40 +85,55 @@ class StudentsController extends Controller
         $this->validate($request,[
             'csvfile'=> 'required|mimes:csv,txt' 
         ]);
+        $message = "Successfully Imported! ";
+        $type = "success";
+        $list ="";
+        $ending ="";
 
 
         if($request->hasFile('csvfile')){
-            $filename = $request->file('csvfile')->getClientOriginalName();
-            $path = $request->file('csvfile')->storeAs('public/studentid',$filename);
-            $openfile = fopen('storage/studentid/'.$filename,"r");
+            $filenameWithExt = $request->file('csvfile')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            $extension = $request->file('csvfile')->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $path = $request->file('csvfile')->storeAs('public/studentid',$fileNameToStore);
+            $openfile = fopen('storage/studentid/'.$fileNameToStore,"r");
             // $openfile = fopen($path,"r");
             
             while( ($data = fgetcsv($openfile, 1000, ",")) != FALSE){
                 foreach ($data as $student){
-                   echo "id: ". $student ;
+                //    echo "id: ". $student ;
                     $e = new Enrolment();
                     $s = new Student();
 
-                    if(DB::table('students')->where('student_id',$student)->doesntExist()){
+                    if(DB::table('students')->where('student_id',$student)->Exists()){                            //If students Exists
+                        $sid = Student::where('student_id',$student)->value('s_id');
+                        if(DB::table('enrolments')->where('s_id',$sid)->where('c_id', $request->c_id)->Exists()){ //If enrolment Exists
+                            $except = "Except ";
+                            $list .= $student.", ";
+                            $ending ="Already existed in course";
+                        }
+                        else{                                                                                       //Enrol Student
+                            $e->s_id = $sid;
+                            $e->c_id = $request->c_id;
+                            $e->save();
+                        }
+                    }else{                                                                                          //Add student then Enrol
                         $s->student_id = $student;
                         $s->save();
-                    
+                       
                         $e->s_id = $s->s_id;
-                        $e->c_id = $request->c_id;
-                        $e->save();
-                    }else{
-                        $sid = Student::where('student_id',$student)->value('s_id');
-                        $e->s_id = $sid;
                         $e->c_id = $request->c_id;
                         $e->save();
                     }  
                 }
             }
         }else{
-            dd('YOHO');
+            $type ="error";
+            $message ="Something went wrong, Please try again";
         }
         Storage::delete('storage/studentid/'.$filename);
-        return redirect('/student/'.$request->c_id)->with('success', 'CSV file Imported');
+        return redirect('/student/'.$request->c_id)->with($type, $message.$list.$ending);
     }
 
     /**
