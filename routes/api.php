@@ -2,23 +2,7 @@
 
 use Illuminate\Http\Request;
 
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 Route::post('/loginUser','ApiController@login');
-Route::get('/login/{sid}&{pass}','ApiController@login');
 Route::get('/cat','ApiController@getAllCat');
 Route::get('/CompCat/{userId}','ApiController@getCompletedCat');
 Route::get('/SavedCat/{userId}','ApiController@getSavedCat');
@@ -35,4 +19,3 @@ Route::get('/createGame/{userId}&{cid}','ApiController@createGameSession');
 Route::get('/saveGame/{userId}&{cid}&{lnum}&{score}','ApiController@saveGameSession');
 Route::get('/endGame/{userId}&{cid}&{lnum}&{score}','ApiController@endGameSession');
 Route::get('/loadGame/{userId}&{cid}','ApiController@loadGameSession');
-
