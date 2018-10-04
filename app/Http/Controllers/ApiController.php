@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Student;
+use Illuminate\Support\Str;
 
 class ApiController extends Controller
 {
@@ -25,8 +26,6 @@ class ApiController extends Controller
     public function credentials($sid, $pass)
     {
 
-        // $res = file_get_contents("http://mlearn.usp.ac.fj/uspmobile/IEP_authenticate/?username=" . $sid . "&password=" . $pass);
-        // create curl resource
         $ch = curl_init();
 
         // set url
@@ -41,21 +40,9 @@ class ApiController extends Controller
         // close curl resource to free up system resources
         curl_close($ch);
 
-        // $res = str_replace('{"auth":',null, $res);
-        // $res = str_replace('}',null, $res);
-        // // dd($res);
-        // $res = json_decode(json_encode($res),true);
-        // $res = str_replace('ufeff', null, $res);
-        // var_dump($res);
-
-        // $output = json_encode($output);
-        // var_dump($output);
-        // die($output);
         $exploded = explode(':',$output);
         $data = str_replace('}','',$exploded[1]);
-        // die($data);
 
-        // die($output);
         return $data;
 
     }
@@ -63,32 +50,12 @@ class ApiController extends Controller
     public function login(Request $request)
     {
 
-        // $request->validate([
-        //     'student_id' => 'required|string',
-        //     'password' => 'required|string',
-        // ]);
-
-        // $student = new Student([
-        //     'student_id' => $request->student_id,
-        //     'token' => $request->access_token,
-        //     'token_type' => $request->token_type,
-        //     'expires_at' => $request->expires_at
-        // ]);
-
-        // $student = $request->student();
-
         $student = Student::where('student_id', $request->student_id)->first();
-        // dd($student);
-        // if (!$student) {
-
-        //     return response()->json(['status' => 'error', 'message' => 'Student ID Not Found.']);
-
-        // }
 
         if ($student) {
 
-            $has_token = DB::table('students')->where('id', $student->id)->where('token', null)->doesntExist();
-            $expiry_token = DB::table('students')->where('id', $student->id)->value('expires_at');
+            $has_token = DB::table('students')->where('s_id', $student->s_id)->where('token', null)->doesntExist();
+            $expiry_token = DB::table('students')->where('s_id', $student->s_id)->value('expires_at');
 
             if (Carbon::now() > $expiry_token) {
                 $check_token = false;
@@ -105,94 +72,49 @@ class ApiController extends Controller
                     'status' => 422,
                     'error' => 'Session Expired, Try Again'
                 ];
-                // return response($response, 422); // Unprocessable Entity
+
                 return response()->json($response); // Unprocessable Entity
 
-                // $tokenResult = $student->createToken('Personal Access Token');
-                // // dd($tokenResult->accessToken);
-                // $token = $tokenResult->token;
-                // $token->expires_at = Carbon::now()->addDays(10);
-
-                // $student->token = $tokenResult->accessToken;
-                // $student->token_type = "Bearer";
-                // $student->expires_at = Carbon::now()->addDays(10);
-                // $student->save();
-
-                // if ($request->remember_me)
-                //     $token->expires_at = Carbon::now()->addDays(10);
-
-                // $token->save();
-
-                // return response()->json([
-                //     'access_token' => $tokenResult->accessToken,
-                //     'token_type' => 'Bearer',
-                //     'expires_at' => Carbon::parse(
-                //         $tokenResult->token->expires_at
-                //     )->toDateTimeString()
-                // ]);
             } else {
 
                 $response = [
-                    'status' => 201,
+                    'status' => 200,
                     'message' => 'Login Attempt Successful'
                 ];
-                // return response($response, 422); // Unprocessable Entity
+
                 return response()->json($response); // Unprocessable Entity
 
             }
-            // if (Carbon::parse($this->attributes['expires_at']) < Carbon::now())
-            //if ($request->token !== $check_token)
-            //{
-            //    dd($token);
-            //}
+
         } else {
 
             $response = $this->credentials($request->student_id, $request->password);
-            // die($response);
-            // $data = [
-            //     'auth' => $response
-            // ];
-            // $response = $data['auth'];
-
-
-            // var_dump($response);
-            // die();
-            // $response = (int) $response;
-            // echo gettype($response);
-        //      var_dump
-        //      ( $data['auth']
-        // );
-        // die();
-
 
             if ($response == '0') {
 
                 $student = new Student([
                     'student_id' => $request->student_id,
                     'token' => $request->access_token,
-                    'token_type' => $request->token_type,
                     'expires_at' => $request->expires_at
                 ]);
 
-                $tokenResult = $student->createToken('Personal Access Token');
-                $token = $tokenResult->token;
-                $token->expires_at = Carbon::now()->addDays(10);
+                // $tokenResult = $student->createToken('Personal Access Token');
+                $tokenResult = Str::random(24) . $request->student_id . Str::random(40);
+                // dd($tokenResult);
+                // $token = $tokenResult->token;
+                // $token->expires_at = Carbon::now()->addDays(10);
 
-                $student->token = $tokenResult->accessToken;
-                $student->token_type = "Bearer";
+                $student->token = $tokenResult;
                 $student->expires_at = Carbon::now()->addDays(10);
                 $student->save();
 
-                if ($request->remember_me)
-                    $token->expires_at = Carbon::now()->addDays(10);
-
-                $token->save();
+                // $token->save();
 
                 $response = [
-                    'status' => 201,
+                    'status' => 200,
                     'message' => 'Logged In'
                 ];
-                // return response($response, 422); // Unprocessable Entity
+
                 return response()->json($response); // Unprocessable Entity
 
             } else if ($response == '1') {
@@ -209,25 +131,48 @@ class ApiController extends Controller
             }
 
         }
-        // dd($student);
-
-        // $request->validate([
-        //     'student_id' => 'required|string',
-        //     'password' => 'required|string',
-        //     'remember_me' => 'boolean'
-        // ]);
-
-
     }
+
+
     //api that returns a list of all categories.
+
+    public function getCat(){
+        $cat = DB::table('categories')->select('cat_id','cat_name')->where('published', 1)->get();  
+
+        return response()->json($cat);
+    }
   
-    public function getAllCat(){
-        $list = DB::table('categories')->select('cat_id','cat_name')->where('published', 1)->get();
+    public function getAllCat($userId){
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+        $cids = DB::table('enrolments')->select('c_id')->where('s_id',$sid)->get();
+
+        $i = 0;
+        foreach($cids as $cid){
+            $cats = DB::table('categories')->select('cat_id','cat_name')->where('c_id',$cid->c_id)->where('published', 1)->get();  
+
+            if(!$cats->isEmpty()){
+                foreach ($cats as $cat){
+                    $list[$i] = [
+                        'cat_id' => $cat->cat_id,
+                        'cat_name' => $cat->cat_name
+                    ]; 
+                    $i++;
+                }
+
+
+            }
+            
+        }
+
         return response()->json($list);
     }
 
     public function getCompletedCat($userId){
-        $cats = DB::table('sessions')->select('cat_id')->where('player_id',$userId)->where('session_completed','1')->get();
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
+        $cats = DB::table('sessions')->select('cat_id')->where('s_id',$sid)->where('session_completed','1')->get();
         $i = 0;
         foreach( $cats as $cat){
             // echo $cat->cat_id;
@@ -243,7 +188,10 @@ class ApiController extends Controller
     }
 
     public function getSavedCat($userId){
-        $cats = DB::table('sessions')->select('cat_id')->where('player_id',$userId)->where('session_completed','0')->get();
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
+        $cats = DB::table('sessions')->select('cat_id')->where('s_id',$sid)->where('session_completed','0')->get();
         $i = 0;
         foreach( $cats as $cat){
             // echo $cat->cat_id;
@@ -544,6 +492,9 @@ class ApiController extends Controller
     }
 
     public function createGameSession($userId,$cid){
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
         $levId = DB::table('levels')
             ->where('cat_id',$cid)
             ->where('lev_num',1)
@@ -551,7 +502,7 @@ class ApiController extends Controller
         DB::table('sessions')->insert([
             // sample syntax ['email' => 'taylor@example.com', 'votes' => 0]
             [
-                'player_id' => $userId,
+                's_id' => $sid,
                 'cat_id' => $cid,
                 'lev_id' => $levId,
                 'session_score' => '0',
@@ -563,12 +514,15 @@ class ApiController extends Controller
 
     public function saveGameSession($userId, $cid, $lnum, $score)
     {
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
         $levId = DB::table('levels')
             ->where('cat_id', $cid)
             ->where('lev_num', $lnum)
             ->value('lev_id');
         DB::table('sessions')
-            ->where('player_id', $userId)
+            ->where('s_id', $sid)
             ->where('cat_id', $cid)
             ->update(
             ['lev_id'  => $levId,
@@ -581,12 +535,15 @@ class ApiController extends Controller
     }
 
     public function endGameSession($userId,$cid,$lnum,$score){
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
         $levId = DB::table('levels')
         ->where('cat_id',$cid)
         ->where('lev_num',$lnum)
         ->value('lev_id');
         DB::table('sessions')
-            ->where('player_id',$userId)
+            ->where('s_id',$sid)
             ->where('cat_id', $cid)
             ->update(
             ['lev_id'  => $levId,
@@ -599,12 +556,15 @@ class ApiController extends Controller
 
     public function loadGameSession($userId, $cid)
     {
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
         $levId = DB::table('sessions')
-            ->where('player_id', $userId)
+            ->where('s_id', $sid)
             ->where('cat_id', $cid)
             ->value('lev_id');
         $score = DB::table('sessions')
-            ->where('player_id', $userId)
+            ->where('s_id', $sid)
             ->where('cat_id', $cid)
             ->value('session_score');
         $lnum = DB::table('levels')

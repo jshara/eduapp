@@ -17,6 +17,7 @@ class CreateStudentsTable extends Migration
             $table->increments('s_id');
             $table->string('student_id');
             $table->string('token')->default(NULL);
+            $table->dateTime('expires_at');
             $table->timestamps();
         });
     }

@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 
 Route::post('/loginUser','ApiController@login');
-Route::get('/cat','ApiController@getAllCat');
+Route::get('/cat','ApiController@getCat');
+Route::get('/catGet/{id}','ApiController@getAllCat');
 Route::get('/CompCat/{userId}','ApiController@getCompletedCat');
 Route::get('/SavedCat/{userId}','ApiController@getSavedCat');
 Route::get('/cat={id}','ApiController@getLevel');
