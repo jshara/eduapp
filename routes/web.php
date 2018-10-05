@@ -62,6 +62,11 @@ Route::post('/student/file', 'StudentsController@fileupload');
 //Answers
 // Route::post('/ques/hide', 'AnswersController@hide');
 
+//Results
+Route::get('/results','ResultsController@index');
+Route::get('/stats/{id}','ResultsController@displaystats');
+Route::get('/perform/{id}','ResultsController@perform');
+
 //Maps
 Route::get('/maps/{id}','MapsController@map');
 Route::get('/mapslevel/{id}', 'MapsController@viewLevel');
