@@ -30,35 +30,35 @@
         </div>
     </div>
     <div class="row">   
-            <table id="table" class ="table table-striped table-border table-hover text-center ">
-                <thead>
-                    <th>
+        <table id="table" class ="table table-striped table-border table-hover text-center ">
+            <thead>
+                <th>
 
-                    </th>
-                </thead>
-                <tbody>
-                @if(count($s_ids) > 0)
-                    @foreach($s_ids as $s_id)
-                    <?php $student_id = DB::table('students')->where('s_id',$s_id->s_id)->value('student_id'); ?>
-                    <tr class="student{{$s_id->s_id}}">
-                        <td>  
-                            <div class="input-group">                        
-                                <li class="form-control">{{$student_id}}</li>
-                                <button class="delete-modal btn btn-danger" data-id="{{$s_id->s_id}}" data-cid="{{$c_id}}" data-name="{{$student_id}}" >
-                                    <span class="fa fa-trash-o fa-lg"></span>
-                                </button>
-                            </div>
-                        </td>                               
-                    </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td>Add Students to Course</td>
-                    </tr>
-                @endif
-                </tbody>
-            </table>
-        </div>
+                </th>
+            </thead>
+            <tbody>
+            @if(count($s_ids) > 0)
+                @foreach($s_ids as $s_id)
+                <?php $student_id = DB::table('students')->where('s_id',$s_id->s_id)->value('student_id'); ?>
+                <tr class="student{{$s_id->s_id}}">
+                    <td>  
+                        <div class="input-group">                        
+                            <li class="form-control">{{$student_id}}</li>
+                            <button class="delete-modal btn btn-danger" data-id="{{$s_id->s_id}}" data-cid="{{$c_id}}" data-name="{{$student_id}}" >
+                                <span class="fa fa-trash-o fa-lg"></span>
+                            </button>
+                        </div>
+                    </td>                               
+                </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td>Add Students to Course</td>
+                </tr>
+            @endif
+            </tbody>
+        </table>
+    </div>
         @include('layouts.modal')
         <script>
             $(document).ready(function(){

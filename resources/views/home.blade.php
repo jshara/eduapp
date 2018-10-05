@@ -77,7 +77,7 @@
             </div>
             <div class="col-md-4">  
                 <div class="joseph card" style="width: 18rem; border:none">
-                    <a style="text-decoration:none; color:black; border:none" href="#">
+                    <a style="text-decoration:none; color:black; border:none" href="/results">
                         <img class="card-img-top" src="/img/results.png" alt="Results Button">
                         <div class="card-body">
                             <h2 class="card-text text-center">View Results</h2>
