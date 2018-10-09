@@ -41,6 +41,7 @@ Route::delete('levels/delete/{lid}/{lnum}/{cid}','LevelsController@destroy');
 Route::post('/level/adelete','LevelsController@destroy1');
 Route::get('levels/{id}','LevelsController@index');
 Route::post('level/questions','LevelsController@numOfQues');
+Route::post('level/points','LevelsController@maxPoints');
 
 //Questions
 Route::get('/questions/{id}','QuestionsController@index');
@@ -66,6 +67,7 @@ Route::post('/student/file', 'StudentsController@fileupload');
 Route::get('/results','ResultsController@index');
 Route::get('/stats/{id}','ResultsController@displaystats');
 Route::get('/perform/{id}','ResultsController@perform');
+Route::get('/resultsget/{id}','ResultsController@resultsget');
 
 //Maps
 Route::get('/maps/{id}','MapsController@map');

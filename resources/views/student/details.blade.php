@@ -60,6 +60,7 @@
         </table>
     </div>
         @include('layouts.modal')
+        
         <script>
             $(document).ready(function(){
                 $('[data-toggle="tooltip"]').tooltip();   
@@ -114,6 +115,7 @@
                             $('.error').text(data.errors.name);
                         }
                         else if(data.type == "success"){
+                            console.log('ID: '+data.student.s_id+' Name:'+ data.student.student_id);
                             $('.error').addClass('hidden');
                             $('#table').append("<tr class='student"+ data.student.s_id +"'><td><div class='input-group'><li class='form-control'>"+ data.student.student_id +
                             "</li><button class='delete-modal btn btn-danger' data-id='"+  data.student.s_id +"'  data-cid='"+ data.enrolment.c_id +"' data-name='"+ data.student.student_id +"'><span class='fa fa-trash-o fa-lg'></span></button></div></td></tr>");

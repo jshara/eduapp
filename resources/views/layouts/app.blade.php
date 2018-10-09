@@ -34,10 +34,10 @@
     <script src="{{ asset('DataTables/datatables.js') }}" defer></script>
 
     {{-- Highcharts --}}
-    {{-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> --}}
-   <script src="https://code.highcharts.com/highcharts.js"></script>
-   <script src="https://code.highcharts.com/modules/exporting.js"></script>
-   <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
 
     <style>
@@ -67,10 +67,13 @@
                         @else
                              @if(Auth::user()->role == 'coordinator')
                                 <li class="nav-item">
-                                        <a class="nav-link text-white" href="/categories">Categories</a>
+                                    <a class="nav-link text-white" href="/categories">Categories</a>
                                 </li>
                                 <li class="nav-item">
-                                        <a class="nav-link text-white" href="#">Results</a>
+                                    <a class="nav-link text-white" href="/courses">Courses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" href="/results">Results</a>
                                 </li>
                             @else
                                 <li class="nav-item dropdown">

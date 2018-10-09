@@ -1,18 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+.table tr:hover td{
+    background-color:#b3d9ff;
+}
+.table1 tr:hover td{
+    background-color:#e6f2ff;
+}
+</style>
+
 <?php use App\Category;
       use App\Student;?>
+
+<div class="row ">
+    <div class="col-md-4 offset-md-4">
+        <h2><b> RESULTS</b></h2>
+    </div>
+</div>
 <div class="row">
-
-
-
-<table id="resultstable" class ="table table-border table-hover text-center">
-    <thead>
+<table id="resultstable" class ="table table-bordered border-dark table-hover text-center"{{--  style="border:1px solid black" --}}>
+    {{-- <thead>
         <th>
 
         </th>
-    </thead>
+    </thead> --}}
     <tbody>
         @if(count($courses)>0)
             @foreach($courses as $course)
@@ -21,7 +33,7 @@
                         {{$course->course_code}}
                     </td>
                     <td>
-                        <table class ="table table-hover text-center">
+                        <table class ="table1 table-hover text-center">
                             <?php $cats = $course->categories;?>
                             @if(count($cats)>0)                            
                                 @foreach($cats as $cat)
@@ -48,6 +60,15 @@
                                                     Student Preformance
                                                 </a>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <?php $completed = DB::table('categories')->where('cat_id',$cat->cat_id)->value('completed'); ?>
+                                            @if($completed)
+                                                <span style="color:red;"> Completed </span>
+                                            @else
+                                                <span style="color:green;"> In Progess</span>
+                                            @endif
+
                                         </td>
                                     </tr>                        
                                 @endforeach                            
@@ -140,11 +161,11 @@
             </body>
         </table>
     </div> --}}
-<script>
+{{-- <script>
 $(document).ready(function(){
     console.log("Yo i am not working");
     $('#resultstable').DataTable();   
 });
-</script>
+</script> --}}
 
 @endsection
