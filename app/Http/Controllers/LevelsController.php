@@ -143,5 +143,12 @@ class LevelsController extends Controller
 
         return response()->json($level);
     }
+    public function maxPoints(Request $req){
+        $level = Level::find($req->id);
+        $level->max_points = $req->points;
+        $level->save();
+
+        return response()->json($level);
+    }
 }
 

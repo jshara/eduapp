@@ -20,6 +20,7 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
-        "glyphicons-only-bootstrap": "^1.0.1"
+        "glyphicons-only-bootstrap": "^1.0.1",
+        "pc-bootstrap4-datetimepicker": "^4.17.50"
     }
 }

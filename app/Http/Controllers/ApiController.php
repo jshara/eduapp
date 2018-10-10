@@ -350,6 +350,10 @@ class ApiController extends Controller
             $numQuestions = DB::table('levels')
                             ->where('lev_id',$levId)
                             ->value('numOfQues');
+            
+            $maxPoints = DB::table('levels')        //maxpoints added
+                            ->where('lev_id',$levId)//
+                            ->value('max_points');     //          
             $numCorrect = 0;
             foreach ($ans_id as $id) {
                 $result = DB::table('answers')
@@ -364,7 +368,7 @@ class ApiController extends Controller
                     $resultSet[] = ($result);
                 }
             }
-            $score = ($numCorrect / $numQuestions) * 100;
+            $score = ($numCorrect / $numQuestions) * $maxPoints;//small change here
             $score = number_format((float)$score, 0, '.', '');
             $data = [
                 'score' => $score

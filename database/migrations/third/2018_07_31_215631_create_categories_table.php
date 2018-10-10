@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->increments('cat_id');
             $table->string('cat_name');
             $table->boolean('published')->default('0');
+            $table->boolean('completed')->default('0');
             $table->integer('user_id')->unsigned();
             $table->integer('c_id')->default('1')->unsigned();
             $table->timestamps();
