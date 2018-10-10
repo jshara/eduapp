@@ -18,6 +18,7 @@ class CreateLevelsTable extends Migration
             $table->integer('lev_num');
             $table->string('lev_location');
             $table->integer('numOfQues')->default('1');
+            $table->integer('max_points')->default('10');
             $table->integer('cat_id')->unsigned();
             $table->timestamps();
         });

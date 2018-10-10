@@ -9,9 +9,9 @@
 			<div class="modal-body">
 				<form class="form-horizontal" role="form">
 					<div class="form-group">
-						<label class="control-label col-sm-2" for="id">ID:</label>
+						{{-- <label class="control-label col-sm-2" for="id">ID:</label> --}}
 						<div class="col-sm-10">
-							<input class="form-control" id="fid" disabled="" type="text">
+							<input class="form-control" id="fid" disabled="" type="hidden">
 						</div>
 					</div>
 					<div class="form-group">

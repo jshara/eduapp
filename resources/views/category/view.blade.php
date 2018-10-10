@@ -1,26 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-end">
-        <div class="form-inline">
-            <div class="form-group">
-                <div style="margin:5px;">
-                    <input type="text" name="newcat" id="newcat" placeholder ="New Category Name" style="width:300px;"class="form-control" for="newcatbtn">
-                    <button id ="newcatbtn" class=" newcatbtn btn btn-success">CREATE </button>
-                </div>
-            </div>
+    <div class="row justify-content-center">
+        <h2><b> CREATE AND MANAGE GAME</b></h2>
+    </div>
+    <div class="row justify-content-end form-inline">
+        <div class="form-group">
+            <input type="text" name="newcat" id="newcat" placeholder ="New Category Name" style="width:300px; margin:5px;"class="form-control" for="newcatbtn">
+            <button id ="newcatbtn" class=" newcatbtn btn btn-success">CREATE </button>
         </div>
-
     </div>
     <div class="row">
         <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">
-        <table id="table" class ="table table-striped table-border table-hover text-center">
+        <table id="table" class ="table table-striped table-border table-hover text-center" style="height:50%; overflow-y: scroll;">
             <thead>
                 <tr>
-                    <th> Category Name</th>
+                    <th> Game Name</th>
                     <th> Level</th>
                     <th> Course</th>
-                    <th> Status</th>                    
+                    <th> Status</th>
                 </tr>
             </thead>
             <body>
@@ -41,7 +39,7 @@
                         </td>   
                         <td>	
                             <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
-                            <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
+                            <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAPS</a>
                         </td>  
                         <td>
                             <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
@@ -90,7 +88,7 @@
                         </td>                  
                         <td>
                             <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
-                                <span style="color:red;"> UNPUBLISH </span>
+                                <span style="color:red;"> END GAME </span>
                             </a>
                         </td>
                     @endif
@@ -106,7 +104,6 @@
     </div>
 
     @include('layouts.modal')
-
 		<script>
             $(document).on("change", "#course", function () {
                 var select = $(this).val();

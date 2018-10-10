@@ -6,7 +6,7 @@
                 <a href="/categories" class="btn btn-danger">BACK</a>
         </div>
         <div class="col text-center">
-            <h2> <?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></h2>
+            <h2><b><?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name');?> Details</b></h2>
         </div>
         <div class="col text-right nopadding">
                 <a href="/levels/create/{{$cat_id}}" class="btn btn-success">ADD LEVEL</a>
@@ -14,13 +14,13 @@
     </div>
     <div class="row">     
             {{-- <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     --}}
-            <table id="table" class ="table table-striped table-border table-hover text-center ">
+            <table id="table" class ="table table-striped table-border table-hover">
                 <thead>
                     <tr>                        
                         <th></th>
                         <th> Questions to Show (Max 5)</th>
-                        <th> Possible Questions</th>
-                        <th> All Questions</th>
+                        <th> Possible/All Questions</th>
+                        <th> Max Points</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -30,15 +30,13 @@
                 <tr class="lev{{$level->lev_id}}">
                         <td>  
                             <div class="input-group">                        
-                                <li class="form-control">Level #{{$level->lev_num}}</li>
+                                <input class="form-control" value="Level #{{$level->lev_num}}" style="width:4em" {{-- style="background-color:white" --}} readonly/>
                                 <button class="edit-modal btn btn-info" onclick="location.href = '/mapslevel/{{$level->lev_id}}'" style="margin:0 5px 0 5px;">
                                     <span class="fa fa-pencil fa-lg"></span>
                                 </button>
-                                {{-- <span class="input-group-addon">                                        --}}
                                 <button class="delete-modal btn btn-danger" data-id="{{$level->lev_id}}" data-name="Level #{{$level->lev_num}}" data-lnum="{{$level->lev_num}}" data-cid="{{$cat_id}}">
                                     <span class="fa fa-trash-o fa-lg"></span>
                                 </button>
-                                {{-- </span> --}}
                             </div>
                             {{-- <div class="input-group">  
                                 <li class="form-control">Level #{{$level->lev_num}}</li>
@@ -49,7 +47,7 @@
                                 </span>
                             </div> --}}
                         </td>
-                        <td style="horizontal-align:center;">   
+                        <td>   
                             <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     
                             <?php $unhide = DB::table('questions')->where('lev_id',$level->lev_id)->where('ques_hide', '0')->count();?>                     
                             <select class="form-control text-center" id="number" data-id="{{$level->lev_id}}"style="width:70px;">
@@ -67,11 +65,26 @@
                             </select>
                         </td> 
                         <td>                                                      
-                            <li class="form-control" style="width:50px;"><?php echo $unhide; ?></li>
+                            <input type="text" class="form-control" style="width:60px;" 
+                            value="<?php echo $unhide; ?>/<?php echo DB::table('questions')->where('lev_id',$level->lev_id)->count(); ?>" readonly/>
                         </td> 
-                        <td>                                                      
-                            <li class="form-control" style="width:50px;"><?php echo DB::table('questions')->where('lev_id',$level->lev_id)->count(); ?></li>
-                        </td> 
+                        <td>   
+                            <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">     
+                            <?php $max_points = DB::table('levels')->where('lev_id',$level->lev_id)->value('max_points');?>                     
+                            <select class="form-control text-center" id="points" data-id="{{$level->lev_id}}"style="width:70px;">
+                                @for($i = 1; $i <= 10; $i++)
+                                    <?php
+                                    $j =$i;
+                                    number_format($j=$j*10);
+                                    ?>
+                                    @if($j == $level->max_points)
+                                        <option value="{{$j}}" selected="selected">{{$j}}</option>
+                                    @else
+                                        <option value="{{$j}}">{{$j}}</option>
+                                    @endif                                  
+                                @endfor
+                            </select>
+                        </td>
                         <td>                           
                             <a href="/questions/{{$level->lev_id}}" class="btn btn-info">Question[s]</a>
                         </td>                                
@@ -96,6 +109,25 @@
                     '_token': $('input[name=_token]').val(),
                     id: $(this).data('id'), 
                     number: select
+                },
+                success: function(data) {
+                    //alert(data);
+                },
+                error: function(data) {
+                    // alert(data);
+                    // Revert
+                }
+            });
+        });
+        $(document).on("change", "#points", function () {
+            var select = $(this).val();
+            $.ajax({
+                url:"/level/points",
+                type: 'post',
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    id: $(this).data('id'), 
+                    points: select
                 },
                 success: function(data) {
                     //alert(data);

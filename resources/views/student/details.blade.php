@@ -5,8 +5,8 @@
         <div class="col-md-2 nopadding">
                 <a href="/courses" class="btn btn-danger">BACK</a>
         </div>
-        <div class="col-md-3 offset-md-1">
-            <h2>STUDENTS</h2>
+        <div class="col-md-6 offset-md-2">
+            <h2><b>MANAGE STUDENTS</b></h2>
         </div>
     </div>
 
@@ -30,36 +30,37 @@
         </div>
     </div>
     <div class="row">   
-            <table id="table" class ="table table-striped table-border table-hover text-center ">
-                <thead>
-                    <th>
+        <table id="table" class ="table table-striped table-border table-hover text-center ">
+            <thead>
+                <th>
 
-                    </th>
-                </thead>
-                <tbody>
-                @if(count($s_ids) > 0)
-                    @foreach($s_ids as $s_id)
-                    <?php $student_id = DB::table('students')->where('s_id',$s_id->s_id)->value('student_id'); ?>
-                    <tr class="student{{$s_id->s_id}}">
-                        <td>  
-                            <div class="input-group">                        
-                                <li class="form-control">{{$student_id}}</li>
-                                <button class="delete-modal btn btn-danger" data-id="{{$s_id->s_id}}" data-cid="{{$c_id}}" data-name="{{$student_id}}" >
-                                    <span class="fa fa-trash-o fa-lg"></span>
-                                </button>
-                            </div>
-                        </td>                               
-                    </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td>Add Students to Course</td>
-                    </tr>
-                @endif
-                </tbody>
-            </table>
-        </div>
+                </th>
+            </thead>
+            <tbody>
+            @if(count($s_ids) > 0)
+                @foreach($s_ids as $s_id)
+                <?php $student_id = DB::table('students')->where('s_id',$s_id->s_id)->value('student_id'); ?>
+                <tr class="student{{$s_id->s_id}}">
+                    <td>  
+                        <div class="input-group">                        
+                            <li class="form-control">{{$student_id}}</li>
+                            <button class="delete-modal btn btn-danger" data-id="{{$s_id->s_id}}" data-cid="{{$c_id}}" data-name="{{$student_id}}" >
+                                <span class="fa fa-trash-o fa-lg"></span>
+                            </button>
+                        </div>
+                    </td>                               
+                </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td>Add Students to Course</td>
+                </tr>
+            @endif
+            </tbody>
+        </table>
+    </div>
         @include('layouts.modal')
+        
         <script>
             $(document).ready(function(){
                 $('[data-toggle="tooltip"]').tooltip();   
@@ -114,6 +115,7 @@
                             $('.error').text(data.errors.name);
                         }
                         else if(data.type == "success"){
+                            console.log('ID: '+data.student.s_id+' Name:'+ data.student.student_id);
                             $('.error').addClass('hidden');
                             $('#table').append("<tr class='student"+ data.student.s_id +"'><td><div class='input-group'><li class='form-control'>"+ data.student.student_id +
                             "</li><button class='delete-modal btn btn-danger' data-id='"+  data.student.s_id +"'  data-cid='"+ data.enrolment.c_id +"' data-name='"+ data.student.student_id +"'><span class='fa fa-trash-o fa-lg'></span></button></div></td></tr>");
