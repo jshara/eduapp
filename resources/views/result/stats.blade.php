@@ -6,7 +6,7 @@
             <a href="/results" class="btn btn-danger">BACK</a>
     </div>
     <div class="col-md-3 offset-md-1">
-        <h2> <?php echo DB::table('categories')->where('cat_id',$id)->value('cat_name'); ?></h2>
+        <h2><b> <?php echo DB::table('categories')->where('cat_id',$id)->value('cat_name'); ?></b></h2>
     </div>
 </div>
 {{-- <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div> --}}

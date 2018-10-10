@@ -1,23 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row justify-content-end">
-        <div class="form-inline">
-            <div class="form-group">
-                <div style="margin:5px;">
-                    <input type="text" name="newcat" id="newcat" placeholder ="New Category Name" style="width:300px;"class="form-control" for="newcatbtn">
-                    <button id ="newcatbtn" class=" newcatbtn btn btn-success">CREATE </button>
-                </div>
-            </div>
+    <div class="row justify-content-center">
+        <h2><b> CREATE AND MANAGE GAME</b></h2>
+    </div>
+    <div class="row justify-content-end form-inline">
+        <div class="form-group">
+            <input type="text" name="newcat" id="newcat" placeholder ="New Category Name" style="width:300px; margin:5px;"class="form-control" for="newcatbtn">
+            <button id ="newcatbtn" class=" newcatbtn btn btn-success">CREATE </button>
         </div>
-
     </div>
     <div class="row">
         <input name="_token" value="eRYFMqxeGXyGy7Kn1AU7af7qbGlt4uEp8RtYb4Vx" type="hidden">
         <table id="table" class ="table table-striped table-border table-hover text-center" style="height:50%; overflow-y: scroll;">
             <thead>
                 <tr>
-                    <th> Category Name</th>
+                    <th> Game Name</th>
                     <th> Level</th>
                     <th> Course</th>
                     <th> Status</th>

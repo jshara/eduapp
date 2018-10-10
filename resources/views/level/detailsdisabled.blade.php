@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<span class="hidden message" style="visibility:hidden;">
+{{-- <span class="hidden message" style="visibility:hidden;">
     <div class='alert alert-success'>
         <a href="#" class="close" data-dismiss="alert" aria-label="close"><span class="fa fa-close"></span></a>
         
     </div>
-</span>
+</span> --}}
     <div class="row justify-content-end">
         <div class="col nopadding">
                 <a href="/categories" class="btn btn-danger">BACK</a>

@@ -5,11 +5,11 @@
 
     <body>
         <div class="row">
-            <div class="col-3">
+            <div class="col-md-2">
                 <a href="/categories" class="btn btn-danger">BACK</a>
             </div>
-            <div class="col-9">
-                <h1>Category Map for: {{$cat_name}}</h1>
+            <div class="col-md-6 offset-md-2">
+                <h2><b> Map for: {{$cat_name}}</b></h2>
             </div>
         </div>
         <div class="row">

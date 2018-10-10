@@ -7,7 +7,7 @@
             <a href="/levels/{{$cid}}" class="btn btn-danger">BACK</a>
         </div>
         <div class="col text-center">            
-            <h2> Level <?php echo DB::table('levels')->where('lev_id', $lev_id)->value('lev_num'); ?></h2>
+            <h2><b> Level <?php echo DB::table('levels')->where('lev_id', $lev_id)->value('lev_num'); ?></b></h2>
         </div>
         <div class="col text-right">            
         <a href="/questions/create/{{$lev_id}}" class="btn btn-success">Add Question</a>

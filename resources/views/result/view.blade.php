@@ -13,10 +13,8 @@
 <?php use App\Category;
       use App\Student;?>
 
-<div class="row ">
-    <div class="col-md-4 offset-md-4">
-        <h2><b> RESULTS</b></h2>
-    </div>
+<div class="row justify-content-center">
+    <h2><b> RESULTS</b></h2>
 </div>
 <div class="row">
 <table id="resultstable" class ="table table-bordered border-dark table-hover text-center"{{--  style="border:1px solid black" --}}>

@@ -3,11 +3,11 @@
 @section('content')
     <body>
         <div class="row">
-            <div class="col-4">
+            <div class="col-md-2">
                 <a href="/levels/{{$cat_id}}" class="btn btn-danger">BACK</a>
             </div>
-            <div class="col-8 float-left">
-                    <h1>Edit Level {{$location->lev_num}}</h1>
+            <div class="col-md-6 offset-md-2">
+                    <h2><b> Edit Level {{$location->lev_num}}</b></h2>
             </div>
         </div>       
        

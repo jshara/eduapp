@@ -5,8 +5,8 @@
         <div class="col-md-2 nopadding">
                 <a href="/courses" class="btn btn-danger">BACK</a>
         </div>
-        <div class="col-md-3 offset-md-1">
-            <h2>STUDENTS</h2>
+        <div class="col-md-6 offset-md-2">
+            <h2><b>MANAGE STUDENTS</b></h2>
         </div>
     </div>
 
