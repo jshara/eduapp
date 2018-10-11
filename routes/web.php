@@ -74,6 +74,9 @@ Route::get('/maps/{id}','MapsController@map');
 Route::get('/mapslevel/{id}', 'MapsController@viewLevel');
 Route::put('/mapsupdate', 'MapsController@updateLevel');
 
- Auth::routes();
+//server push service
+
+
+Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

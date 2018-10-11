@@ -20,3 +20,9 @@ Route::get('/createGame/{userId}&{cid}','ApiController@createGameSession');
 Route::get('/saveGame/{userId}&{cid}&{lnum}&{score}','ApiController@saveGameSession');
 Route::get('/endGame/{userId}&{cid}&{lnum}&{score}','ApiController@endGameSession');
 Route::get('/loadGame/{userId}&{cid}','ApiController@loadGameSession');
+
+
+Route::get('/game-over/{cat_id}', function($cat_id){
+    event(new \App\Events\gameOver($cat_id));
+    // return redirect('categories');
+});
