@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Course;
+use App\Category;
+use App\Enrolment;
+use App\Student;
 use App\Level;
 use App\Session;
 
@@ -45,7 +48,15 @@ class ResultsController extends Controller
         return response()->json($sendingData);
     }
 
-    public function perform($id){
-        return view('result.perform')->with('id',$id);   
+    public function perform($cat_id){
+        $c_id = Category::where('cat_id',$cat_id)->value('c_id');
+        $students = Enrolment::where('c_id',$c_id)->select('s_id')->get();
+
+        $student_ids;
+        foreach($students as $student){
+            $student_ids[]= Student::where('s_id',$student['s_id'])->select('student_id')->get();
+        }
+        //dd($c_id);
+        return view('result.perform')->with('id',$cat_id)->with('student_ids',$student_ids);
     }
 }

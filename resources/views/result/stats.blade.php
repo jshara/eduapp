@@ -5,26 +5,23 @@
     <div class="col-md-2  nopadding">
             <a href="/results" class="btn btn-danger">BACK</a>
     </div>
-    <div class="col-md-3 offset-md-1">
+    <div class="col-md-6 offset-md-2">
         <h2><b> <?php echo DB::table('categories')->where('cat_id',$id)->value('cat_name'); ?></b></h2>
     </div>
-</div>
+</div><br>
 {{-- <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div> --}}
 
 <div id="container2" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-<script>  
 
+
+<script>
 $(document).ready(()=>{
     console.log('i am inside ');
     $.ajax({
         type: "GET",
         url: "/resultsget/{{$id}}",
-
         success: function (data) { 
-            // console.log(data);
             makeChart(data) ; 
-        // console.log(myvalue.date);
-
         }
     });
 });
@@ -96,7 +93,7 @@ $(document).ready(()=>{
 // }
 
 function makeChart(data1){
-    console.log('this is the level numbers: '+data1.num);
+    //console.log('this is the level numbers: '+data1.num);
 Highcharts.chart('container2', {
     chart: {
         type: 'scatter',
@@ -156,7 +153,7 @@ Highcharts.chart('container2', {
         }
     },
     series: [{
-        name: 'Category Stats',
+        name: 'Scores per Level',
         color: 'rgba(40, 40, 235,.5)',
         data: data1.score
     }]
