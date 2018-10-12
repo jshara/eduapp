@@ -75,7 +75,10 @@ Route::get('/mapslevel/{id}', 'MapsController@viewLevel');
 Route::put('/mapsupdate', 'MapsController@updateLevel');
 
 //server push service
-
+Route::get('/game-over/{cat_id}', function($cat_id){
+    event(new \App\Events\gameOver($cat_id));
+    return redirect('categories');
+});
 
 Auth::routes();
 
