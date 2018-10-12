@@ -32,7 +32,7 @@ class ResultsController extends Controller
             $num[]= $levelnum->lev_num;
        }
        
-       $scores = Session::where('cat_id',$cat_id)->select('scoreString','s_id')->get();       
+       $scores = Session::where('cat_id',$cat_id)->select('scoreString')->get();       
        $data;
        foreach($scores as $score){
             $studentScores = explode(',',$score['scoreString']);
@@ -54,9 +54,10 @@ class ResultsController extends Controller
 
         $student_ids;
         foreach($students as $student){
-            $student_ids[]= Student::where('s_id',$student['s_id'])->select('student_id')->get();
+            $student_ids[]= Student::where('s_id',$student['s_id'])->value('student_id');
         }
-        //dd($c_id);
-        return view('result.perform')->with('id',$cat_id)->with('student_ids',$student_ids);
+
+        $numLevel = Level::where('cat_id',$cat_id)->count();
+        return view('result.perform')->with('id',$cat_id)->with('student_ids',$student_ids)->with('numLevel',$numLevel);
     }
 }

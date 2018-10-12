@@ -77,9 +77,10 @@ class CategorysController extends Controller
             }
             
         }else{
-            $cat->published = 0;
+            $cat->completed = 1;
             $cat->save();
-            $message .= 'unpublished.';
+            $message .= 'ended.';
+            event(new \App\Events\gameOver($cid));
         }
         return redirect('categories')->with($type, $message);
     }

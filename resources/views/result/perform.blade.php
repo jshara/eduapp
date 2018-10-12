@@ -15,9 +15,10 @@
         <thead>
             <tr>
                 <th> Student</th>
-                <th> Level</th>
-                <th> Course</th>
-                <th> Status</th>
+                @for($i = 0; $i < $numLevel; $i++)
+                <th> Level {{$i + 1}}</th>
+                @endfor
+                <th> Total</th>
             </tr>
         </thead>
         <body>
@@ -25,7 +26,7 @@
             @foreach($student_ids as $student_id)
             <tr>                 
                 <td>
-                    <li class="form-control">{{$student_id->student_id}}</li>
+                    <li class="form-control">{{$student_id}}</li>
                 </td>   
                 <td>	
                     2nd

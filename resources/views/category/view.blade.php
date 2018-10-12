@@ -24,79 +24,142 @@
             <body>
             @if(count($category) > 0)
                 @foreach($category as $c)
-                <tr class="cat{{$c->cat_id}}">                 
-                    @if($c->published == '0')
-                        <td id ="column{{$c->cat_id}}">
-                            <div class="input-group">
-                                <li class="form-control">{{$c->cat_name}}</li>
-                                <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
-                                    <span class="fa fa-pencil fa-lg"></span>
-                                </button>
-                                <button class="delete-modal btn btn-danger" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
-                                    <span class="fa fa-trash-o fa-lg"></span>
-                                </button>
-                            </div>
-                        </td>   
-                        <td>	
-                            <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
-                            <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAPS</a>
-                        </td>  
-                        <td>
-                            <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
-                            <select class="form-control text-center" id="course" data-id="{{$c->cat_id}}" style="width:150px;">                                
-                                @foreach($courses as $course)                                
-                                    @if($course->c_id == $c->c_id)
-                                        <option value="{{$course->c_id}}" selected="selected">{{$course->course_code}}</option>
-                                    @else
-                                        <option value="{{$course->c_id}}">{{$course->course_code}}</option>
-                                    @endif                             
-                                @endforeach
-                            </select>    
-                        </td>               
-                        <td>
-                            <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
-                                <span style="color:green;"> PUBLISH </span>
-                            </a>
-                        </td>
-                    @else
-                        <td>
-                            <div class="input-group">
-                                <li class="form-control">{{$c->cat_name}}</li>
-                                <button class="btn btn-info disabled" data-toggle="tooltip" title="Unpublish to Edit" style="margin:0 5px 0 5px;">
-                                    <span class="fa fa-pencil fa-lg"></span>
-                                </button>
-                                <button class="btn btn-danger disabled" data-toggle="tooltip" title="Unpublish to Delete">
-                                    <span class="fa fa-trash-o fa-lg"></span>
-                                </button>
-                            </div>
-                        </td>   
-                        <td>	
-                            <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
-                            <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
-                        </td>
-                        <td>
-                            <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
-                            <select class="form-control text-center" data-toggle="tooltip" title="Unpublish to Select" style="width:150px;" disabled>                                
-                                @foreach($courses as $course)                                
-                                    @if($course->c_id == $c->c_id)
-                                        <option value="{{$course->c_id}}" selected="selected">{{$course->course_code}}</option>
-                                    @else
-                                        <option value="{{$course->c_id}}">{{$course->course_code}}</option>
-                                    @endif                             
-                                @endforeach
-                            </select>    
-                        </td>                  
-                        <td>
-                            <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
-                                <span style="color:red;"> END GAME </span>
-                            </a>
-                        </td>
+                <tr class="cat{{$c->cat_id}}">   
+                    @if($c->completed == '0')              
+                        @if($c->published == '0')
+                            <td id ="column{{$c->cat_id}}">
+                                <div class="input-group">
+                                    <li class="form-control">{{$c->cat_name}}</li>
+                                    <button class="edit-modal btn btn-info" style="margin:0 5px 0 5px;" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
+                                        <span class="fa fa-pencil fa-lg"></span>
+                                    </button>
+                                    <button class="delete-modal btn btn-danger" data-id="{{$c->cat_id}}" data-name="{{$c->cat_name}}">
+                                        <span class="fa fa-trash-o fa-lg"></span>
+                                    </button>
+                                </div>
+                            </td>   
+                            <td>	
+                                <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
+                                <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAPS</a>
+                            </td>  
+                            <td>
+                                <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
+                                <select class="form-control text-center" id="course" data-id="{{$c->cat_id}}" style="width:150px;">                                
+                                    @foreach($courses as $course)                                
+                                        @if($course->c_id == $c->c_id)
+                                            <option value="{{$course->c_id}}" selected="selected">{{$course->course_code}}</option>
+                                        @else
+                                            <option value="{{$course->c_id}}">{{$course->course_code}}</option>
+                                        @endif                             
+                                    @endforeach
+                                </select>    
+                            </td>               
+                            <td>
+                                <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
+                                    <span style="color:green;"> PUBLISH </span>
+                                </a>
+                            </td>
+                        @else
+                            <td>
+                                <div class="input-group">
+                                    <li class="form-control">{{$c->cat_name}}</li>
+                                    <button class="btn btn-info disabled" data-toggle="tooltip" title="Unpublish to Edit" style="margin:0 5px 0 5px;">
+                                        <span class="fa fa-pencil fa-lg"></span>
+                                    </button>
+                                    <button class="btn btn-danger disabled" data-toggle="tooltip" title="Unpublish to Delete">
+                                        <span class="fa fa-trash-o fa-lg"></span>
+                                    </button>
+                                </div>
+                            </td>   
+                            <td>	
+                                <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
+                                <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
+                            </td>
+                            <td>
+                                <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
+                                <select class="form-control text-center" data-toggle="tooltip" title="Unpublish to Select" style="width:150px;" disabled>                                
+                                    @foreach($courses as $course)                                
+                                        @if($course->c_id == $c->c_id)
+                                            <option value="{{$course->c_id}}" selected="selected">{{$course->course_code}}</option>
+                                        @else
+                                            <option value="{{$course->c_id}}">{{$course->course_code}}</option>
+                                        @endif                             
+                                    @endforeach
+                                </select>    
+                            </td>                  
+                            <td>
+                                <a href="/categories/publish/{{$c->cat_id}}" class="btn btn-default">
+                                    <span style="color:red;"> END GAME </span>
+                                </a>
+                            </td>
+                        @endif
                     @endif
                 </tr>
                 @endforeach
             @else
                 <tr>
                     <td>Create your first category</td>
+                </tr>
+            @endif
+            </body>
+        </table>
+    </div><br>
+
+    <div class="row justify-content-center">
+            <h2><b> COMPLETED GAMES</b></h2>
+        </div>
+
+    <div class="row">
+        <table id="tablecompleted" class ="table table-striped table-hover text-center" style="height:50%; overflow-y: scroll;">
+            <thead>
+                <tr>
+                    <th> Games Completed</th>
+                    <th> Level</th>
+                    <th> Course</th>
+                    <th> Action</th>
+                </tr>
+            </thead>
+            <body>
+            <?php $none = true; ?>
+            @if(count($category) > 0)
+                @foreach($category as $c)
+                    @if($c->completed == 1)
+                        <?php $none = false; ?>
+                        <tr>                 
+                            <td style="width: 320px">
+                                <li class="form-control">{{$c->cat_name}}</li>
+                            </td>   
+                            <td>	
+                                <a href="/levels/{{$c->cat_id}}" class="btn btn-info">DETAILS</a>
+                                <a href="/maps/{{$c->cat_id}}" class="btn btn-info">MAP</a>
+                            </td>
+                            <td>
+                                <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
+                                <select class="form-control text-center" style="width:150px;" disabled>                                
+                                    @foreach($courses as $course)                                
+                                        @if($course->c_id == $c->c_id)
+                                            <option value="{{$course->c_id}}" selected="selected">{{$course->course_code}}</option>
+                                        @endif                             
+                                    @endforeach
+                                </select>    
+                            </td> 
+                            <td>
+                                <a href="/results" class="btn btn-default">
+                                    <span style="color:green;">RESULTS </span>
+                                </a>
+                            </td>                 
+                        </tr>
+                    @endif
+                @endforeach
+            @else
+            <?php $none = false; ?>
+                <tr>
+                    <td>No Games Completed</td>
+                </tr>
+            @endif
+            @if($none)
+                <tr>
+                    <td>No Games Completed</td>
                 </tr>
             @endif
             </body>
