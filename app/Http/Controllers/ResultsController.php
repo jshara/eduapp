@@ -55,7 +55,7 @@ class ResultsController extends Controller
         $student_ids;
         foreach($students as $student){
             $student_ids[]= Student::where('s_id',$student['s_id'])->value('student_id');
-        }
+        }       
 
         $numLevel = Level::where('cat_id',$cat_id)->count();
         return view('result.perform')->with('id',$cat_id)->with('student_ids',$student_ids)->with('numLevel',$numLevel);
