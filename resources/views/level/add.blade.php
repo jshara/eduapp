@@ -71,7 +71,13 @@
                     new google.maps.LatLng(-18.149194,178.447424),
                     new google.maps.LatLng(-18.149347,178.448250),
                     new google.maps.LatLng(-18.149347,178.448250)];
-                
+                var outBounds = [
+                    new google.maps.LatLng(-18.148509, 178.445285),
+                    new google.maps.LatLng(-18.148608, 178.445504),
+                    new google.maps.LatLng(-18.148707, 178.445444),
+                    new google.maps.LatLng(-18.148628, 178.445235),
+                    new google.maps.LatLng(-18.148509, 178.445285)                    
+                ];
 
                 var coord = {lat: -18.149767 ,lng:  178.443921};
                     var map = new google.maps.Map(document.getElementById('map'), {
@@ -93,10 +99,11 @@
 
                 // Construct the polygon.
                 var bounds = new google.maps.Polygon({
-                    paths: polyline,
+                    paths: [polyline,outBounds],
                     strokeColor: '#ff0000',
                     strokeOpacity: 1,
-                    fillOpacity: 0                    
+                    fillColor: '#0000ff',
+                    fillOpacity: 0.20                    
                     });
                 bounds.setMap(map);
 
