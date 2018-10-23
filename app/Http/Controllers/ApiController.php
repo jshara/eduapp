@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Student;
+use App\Enrolment;
 use Illuminate\Support\Str;
 
 class ApiController extends Controller
@@ -107,6 +108,11 @@ class ApiController extends Controller
                 $student->token = $tokenResult;
                 $student->expires_at = Carbon::now()->addDays(10);
                 $student->save();
+
+                $enrolOpen = new Enrolment();                                                               // Enrol in Open course (default)
+                $enrolOpen->s_id = $student->s_id;
+                $enrolOpen->c_id = 1;
+                $enrolOpen->save();
 
                 // $token->save();
 

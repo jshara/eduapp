@@ -55,7 +55,7 @@
                                                     Statistics
                                                 </a>
                                                 <a class="btn btn-info" href="/perform/{{$cat->cat_id}}">
-                                                    Student Preformance
+                                                    Mark Sheet
                                                 </a>
                                             </div>
                                         </td>

@@ -46,23 +46,13 @@ class StudentsController extends Controller
             $e->s_id = $s->s_id;
             $e->c_id = $request->c_id;
             $e->save();
-        } 
 
-        // if(DB::table('students')->where('student_id',$request->student_id)->doesntExist()){
-        //     $s->student_id = $request->student_id;
-        //     $s->save();
-           
-        //     $e->s_id = $s->s_id;
-        //     $e->c_id = $request->c_id;
-        //     $e->save();
-        //     $message = "I created a student then added the enrolment";
-        // }else{
-        //     $sid = Student::where('student_id',$request->student_id)->value('s_id');
-        //     $e->s_id = $sid;
-        //     $e->c_id = $request->c_id;
-        //     $e->save();
-        //     $message = "I only added the enrolment";
-        // }      
+            $enrolOpen = new Enrolment();                                                           // Enrol in Open course (default)
+            $enrolOpen->s_id = $s->s_id;
+            $enrolOpen->c_id = 1;
+            $enrolOpen->save();
+        } 
+     
         return response()->json(['student' => $s, 'enrolment' => $e, 'message' => $message, 'type' => $type]);
     }
 
@@ -125,6 +115,11 @@ class StudentsController extends Controller
                         $e->s_id = $s->s_id;
                         $e->c_id = $request->c_id;
                         $e->save();
+
+                        $enrolOpen = new Enrolment();                                                           // Enrol in Open course (default)
+                        $enrolOpen->s_id = $s->s_id;
+                        $enrolOpen->c_id = 1;
+                        $enrolOpen->save();
                     }  
                 }
             }
