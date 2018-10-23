@@ -19,9 +19,9 @@ class CreateSessionsTable extends Migration
             $table->integer('cat_id');
             $table->integer('lev_id');
             $table->bigInteger('session_score');
-            $table->string('scoreString');
-            $table->string('questionString');
-            $table->string('answerString');
+            $table->string('scoreString')->default(NULL);
+            $table->string('questionString')->default(NULL);
+            $table->string('answerString')->default(NULL);
             $table->boolean('session_completed')->default('0');
             $table->timestamps();
         });
