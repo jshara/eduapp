@@ -337,17 +337,17 @@ class ApiController extends Controller
     }
 
     //check whether answers submitted are correct
-    public function checkAns($cid, $lnum, $ans_id = null)
+    public function checkAns($userId,$cid, $lnum, $ans_str = null)
     {
         $resultSet;
-        if ($ans_id == null) {
+        if ($ans_str == null) {
             $data = [
                 'score' => 0
             ];
 
             return response()->json($data);
         } else {
-            $ans_id = explode(',', $ans_id);
+            $ans_id = explode(',', $ans_str);
             $levId = DB::table('levels')
                             ->where('cat_id',$cid)
                             ->where('lev_num',$lnum)
@@ -361,10 +361,17 @@ class ApiController extends Controller
                             ->where('lev_id',$levId)//
                             ->value('max_points');     //          
             $numCorrect = 0;
+
+            $ques_id;
             foreach ($ans_id as $id) {
                 $result = DB::table('answers')
                     ->where('ans_id', $id)
                     ->value('ans_correct');
+                $ques_id[] = DB::table('answers')
+                  ->where('ans_id',$id)
+                  ->value('ques_id');
+                  
+
                 if ($result == 1) {
                     // echo 'correct ' . $result;
                     $resultSet[] = ($result);
@@ -376,9 +383,74 @@ class ApiController extends Controller
             }
             $score = ($numCorrect / $numQuestions) * $maxPoints;//small change here
             $score = number_format((float)$score, 0, '.', '');
+            
             $data = [
                 'score' => $score
             ];
+
+            $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
+            $levId = DB::table('levels')
+                ->where('cat_id', $cid)
+                ->where('lev_num', $lnum)
+                ->value('lev_id');
+
+            $scoreString = DB::table('sessions')
+                ->where('s_id', $sid)
+                ->where('cat_id', $cid)
+                ->value('scoreString');
+
+            $qString = DB::table('sessions')
+                ->where('s_id', $sid)
+                ->where('cat_id', $cid)
+                ->value('questionString');
+                
+
+            $aString = DB::table('sessions')
+                ->where('s_id', $sid)
+                ->where('cat_id', $cid)
+                ->value('answerString');
+
+                $ques_id = join(',' , $ques_id);
+                
+                if ($scoreString == null){
+                    $scoreString = $score;
+                    // $ques_id = $qString;
+                    // $ans_str = $aString;
+                }
+                else{
+                    $scoreString = $scoreString.',' .$score;
+                    $ques_id = $qString.','.$ques_id;
+                    $ans_str = $aString.','.$ans_str;
+                }
+               
+
+
+
+            DB::table('sessions')
+                ->where('s_id', $sid)
+                ->where('cat_id', $cid)
+                ->update(
+                ['lev_id'  => $levId,
+                'session_score'  => $score,
+                'answerString' => $ans_str,
+                'questionString' => $ques_id,
+                'scoreString' => $scoreString,
+                'updated_at'=> Carbon::now()->toDateTimeString()
+                ]
+            );
+
+            $val = db::table('students')
+            ->where('s_id',$sid)
+            ->where('student_id',$userId)
+            ->value('scoreTotal');    
+
+            db::table('students')
+            ->where('s_id',$sid)
+            ->where('student_id',$userId)
+            ->update([
+                'scoreTotal' => ($val + $score)
+            ]);
 
             return response()->json($data);
         }
@@ -516,6 +588,9 @@ class ApiController extends Controller
                 'cat_id' => $cid,
                 'lev_id' => $levId,
                 'session_score' => '0',
+                'scoreString' => null,
+                'questionString' => null,
+                'answerString' => null,
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'updated_at' => Carbon::now()->toDateTimeString()
             ]
@@ -562,6 +637,7 @@ class ApiController extends Controller
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         );
+        return "Game Finished";
     }
 
     public function loadGameSession($userId, $cid)

@@ -13,7 +13,7 @@ Route::get('/nextLevel/current={lev_id}&cat={cat_id}','ApiController@loadNextLev
 Route::get('/loadLevel/{catId}&{levNum}&{userId}&{score}','ApiController@loadLevel');
 Route::get('/loadQuestions/{id}&{catid}','ApiController@loadQuestion');
 // Route::get('/checkAns/{id}','ApiController@checkAns');
-Route::get('/checkAns/{cid}&{lnum}&{id?}','ApiController@checkAns');
+Route::get('/checkAns/{sid}&{cid}&{lnum}&{aid?}','ApiController@checkAns');
 Route::get('/getRan/{num}','ApiController@getRandomLatLng');
 Route::get('/getRan2/{num}','ApiController@getRandomLatLng2');
 Route::get('/createGame/{userId}&{cid}','ApiController@createGameSession');
