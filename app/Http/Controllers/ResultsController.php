@@ -27,9 +27,10 @@ class ResultsController extends Controller
     }
 
     public function resultsget($cat_id){
-        $levelNums = Level::where('cat_id',$cat_id)->select('lev_num')->get();
+        $levelNums = Level::where('cat_id',$cat_id)->select('lev_num','max_points')->get();
        foreach($levelNums as $levelnum){
             $num[]= $levelnum->lev_num;
+            $max[]= $levelnum->max_points;
        }
        
        $scores = Session::where('cat_id',$cat_id)->select('scoreString')->get();       
@@ -37,8 +38,9 @@ class ResultsController extends Controller
        foreach($scores as $score){
             $studentScores = explode(',',$score['scoreString']);
             $i =1;
-            foreach($studentScores as $studentScore){               
-                $data[] = [$i,(int)$studentScore];
+            foreach($studentScores as $studentScore){   
+                $insert = ((int)$studentScore/$max[$i])*100;
+                $data[] = [$i,$insert];
                 $i++;
             }
        }

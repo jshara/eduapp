@@ -20,6 +20,7 @@ Route::get('/createGame/{userId}&{cid}','ApiController@createGameSession');
 Route::get('/saveGame/{userId}&{cid}&{lnum}&{score}','ApiController@saveGameSession');
 Route::get('/endGame/{userId}&{cid}&{lnum}&{score}','ApiController@endGameSession');
 Route::get('/loadGame/{userId}&{cid}','ApiController@loadGameSession');
+Route::get('/results/{userId}&{cid}','ApiController@loadResults');
 
 
 Route::get('/game-over1/{cat_id}', function($cat_id){

@@ -10,6 +10,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Student;
 use App\Enrolment;
+use App\Category;
 use Illuminate\Support\Str;
 
 class ApiController extends Controller
@@ -660,6 +661,106 @@ class ApiController extends Controller
         $data = [
             'lnum' => $lnum,
             'score' => $score
+        ];
+
+        return response()->json($data);
+    }
+
+    public function loadResults($userId,$cat_id){
+
+        $category = category::find($cat_id)->value('cat_name');
+
+        $maxScores;
+
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
+        $totalEarned = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('session_score');
+        $timeStarted = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('created_at'));
+        $timeFinished = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('updated_at'));
+        $totalTime = $timeFinished->diff($timeStarted)->format('%H:%I:%S');
+
+        $scoreString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('scoreString');
+        $qString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('questionString');
+        $aString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('answerString');
+
+        $numLevels = DB::table('levels')->where('cat_id',$cat_id)->count();
+
+
+        for ($x = 1; $x <= $numLevels ; $x++){
+            $maxScores[$x] = DB::table('levels')->where('cat_id',$cat_id)->where('lev_num',$x)->value('max_points');
+            // $numofQues[$x] = DB::table('levels')->where('cat_id',$cat_id)->where('lev_num',$x)->value('numOfQues');
+        }
+
+        // $numQuestions = DB::table('levels')->where('lev_id',$lev_id)->value('numOfQues');
+        $levIds = DB::table('levels')->where('cat_id',$cat_id)->select('lev_id')->get();
+        // dd($levIds);
+        // die();
+
+        $scoresPerLevel = explode(',',$scoreString);
+        $questionsDone = explode(',',$qString);
+        $answersGiven = explode(',',$aString);
+
+        $res;
+        $ques;
+        // var_dump($scoresPerLevel);
+        // die();
+
+        $a = 0;
+        foreach($scoresPerLevel as $score){
+            $x = 0;
+            foreach($questionsDone as $question){
+                $quesContent= DB::table('questions')->where('lev_id',$levIds[$a]->lev_id)->where('ques_id',$question)->value('ques_content');
+
+                if ($quesContent != null){
+                    $correctAns = DB::table('answers')->where('ques_id',$question)->where('ans_correct','1')->value('ans_content');
+                    $ansGiven = DB::table('answers')->where('ques_id', $question)->where('ans_id',array_shift($answersGiven))->value('ans_content');
+                    $correct = false;
+                    if($correctAns == $ansGiven){
+                        $correct = true;
+                    }
+    
+                    $ques[$x] = [
+                        'number' => ($x+1),
+                        'content' => $quesContent,
+                        'correctAns' => $correctAns,
+                        'ansGiven' => $ansGiven,
+                        'correct' => $correct
+                    ];
+                    $x++;
+                }
+
+            }
+
+            $res[$a] = [
+                'MaxScore' => $maxScores[$a+1],
+                'ScoreEarned' => $score,
+                'Level' => ($a + 1),
+                'Questions' => $ques 
+            ];
+
+            $a++;
+        }
+
+        $percentage = $totalEarned/array_sum($maxScores) * 100;
+        $comment;
+        if ($percentage >= 80){
+            $comment = "Excellent! Keep It Up";
+        }
+        else if($percentage >= 50){
+            $comment = "Good Work. Keep Trying Harder!";
+        }
+        else{
+            $comment = "Better Luck Next Time!";
+        }
+
+        $data = [
+            'Category' => $category,
+            'time' => $totalTime,
+            'score' => $totalEarned,
+            'Percentage' => $percentage,
+            'Comment' => $comment,
+            'TotalPossibleScore' => array_sum($maxScores),
+            'results' => $res
         ];
 
         return response()->json($data);
