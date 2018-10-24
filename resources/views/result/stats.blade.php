@@ -27,69 +27,69 @@ $(document).ready(()=>{
 });
 
 // function makeChart(data){
-    Highcharts.chart('container', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Category Analysis'
-        },
-        xAxis: {
-            // categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-            // categories: data
-            type: 'category',
-            categories : data.num,
-            title: {
-                text: 'Level #'
-            },
+    // Highcharts.chart('container', {
+    //     chart: {
+    //         type: 'column'
+    //     },
+    //     title: {
+    //         text: 'Category Analysis'
+    //     },
+    //     xAxis: {
+    //         // categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+    //         // categories: data
+    //         type: 'category',
+    //         // categories : data.num,
+    //         title: {
+    //             text: 'Level #'
+    //         },
             
-            // console.log(categories);
-        },
-        yAxis: {
+    //         // console.log(categories);
+    //     },
+    //     yAxis: {
             
-            title: {
-                text: 'Percentage of correct response'
-            },
-            labels: {
-                format: '{value}%'
-            },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                }
-            }
-        },
-        legend: {
-            align: 'right',
-            x: -30,
-            verticalAlign: 'top',
-            y: 25,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: false
-        },
-        tooltip: {
-            headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-        },
-        plotOptions: {
-            column: {
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-                }
-            }
-        },
-        series: [{
-            name: 'Percentage',
-            data: data.num
-        }]
-    });
+    //         title: {
+    //             text: 'Percentage of correct response'
+    //         },
+    //         labels: {
+    //             format: '{value}%'
+    //         },
+    //         stackLabels: {
+    //             enabled: true,
+    //             style: {
+    //                 fontWeight: 'bold',
+    //                 color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+    //             }
+    //         }
+    //     },
+    //     legend: {
+    //         align: 'right',
+    //         x: -30,
+    //         verticalAlign: 'top',
+    //         y: 25,
+    //         floating: true,
+    //         backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+    //         borderColor: '#CCC',
+    //         borderWidth: 1,
+    //         shadow: false
+    //     },
+    //     tooltip: {
+    //         headerFormat: '<b>{point.x}</b><br/>',
+    //         pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    //     },
+    //     plotOptions: {
+    //         column: {
+    //             stacking: 'normal',
+    //             dataLabels: {
+    //                 enabled: true,
+    //                 color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+    //             }
+    //         }
+    //     },
+    //     series: [{
+    //         name: 'Percentage',
+    //         data: data.num
+    //     }]
+    // });
 // }
 
 function makeChart(data1){

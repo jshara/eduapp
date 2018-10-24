@@ -343,7 +343,8 @@ class ApiController extends Controller
         $resultSet;
         if ($ans_str == null) {
             $data = [
-                'score' => 0
+                'score' => 0,
+                'percentage' => 0
             ];
 
             return response()->json($data);
@@ -383,10 +384,12 @@ class ApiController extends Controller
                 }
             }
             $score = ($numCorrect / $numQuestions) * $maxPoints;//small change here
+            $percentage =  ($numCorrect / $numQuestions) * 100; 
             $score = number_format((float)$score, 0, '.', '');
             
             $data = [
-                'score' => $score
+                'score' => $score,
+                'percentage' => $percentage
             ];
 
             $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
@@ -668,7 +671,8 @@ class ApiController extends Controller
 
     public function loadResults($userId,$cat_id){
 
-        $category = category::find($cat_id)->value('cat_name');
+        // $category = category::find($cat_id)->value('cat_name');
+        $category = DB::table('categories')->where('cat_id',$cat_id)->value('cat_name');
 
         $maxScores;
 
