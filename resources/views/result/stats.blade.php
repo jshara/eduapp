@@ -116,18 +116,21 @@ Highcharts.chart('container2', {
     yAxis: {
         title: {
             text: 'Percentage (%)'
-        }
+        },
+        min:0,
+        max: 100,
+        // endOnTick: false,
     },
-    legend: {
-        layout: 'vertical',
-        align: 'left',
-        verticalAlign: 'top',
-        x: 100,
-        y: 70,
-        floating: true,
-        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-        borderWidth: 1
-    },
+    // legend: {
+    //     layout: 'vertical',
+    //     align: 'right',
+    //     verticalAlign: 'top',
+    //     x:  6,
+    //     y: 90,
+    //     floating: true,
+    //     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+    //     borderWidth: 1
+    // },
     plotOptions: {
         scatter: {
             marker: {

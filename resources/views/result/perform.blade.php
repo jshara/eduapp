@@ -11,7 +11,7 @@ use App\Session;
             <a href="/results" class="btn btn-danger">BACK</a>
     </div>
     <div class="col-md-6 offset-md-2">
-        <h2><b> <?php echo DB::table('categories')->where('cat_id',$id)->value('cat_name'); ?></b></h2>
+        <h2><b> <?php echo DB::table('categories')->where('cat_id',$cat_id)->value('cat_name'); ?></b></h2>
     </div>
 </div><br>
 
@@ -29,14 +29,14 @@ use App\Session;
         <tbody>
         @if(count($student_ids) > 0)
             @foreach($student_ids as $student_id)
-            <tr>                 
-                <td>
-                    <li class="form-control">{{$student_id}}</li>
-                </td> 
+            <tr>   
                 <?php                 
                 $s_id = Student::where('student_id',$student_id)->value('s_id');
-                $check = Session::where('s_id',$s_id)->where('cat_id',$id)->exists();
-                $total =0;?>
+                $check = Session::where('s_id',$s_id)->where('cat_id',$cat_id)->exists();
+                $total =0;?>              
+                <td>
+                    <a href="/resultsstudents/{{$student_id}}/{{$cat_id}}">{{$student_id}}</a>
+                </td> 
                 @if($check)
                    <?php $scores = Session::where('s_id',$s_id)->value('scoreString'); 
                     $score= explode(',',$scores);?>
