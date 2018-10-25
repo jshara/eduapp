@@ -792,10 +792,14 @@ class ApiController extends Controller
             'lat3' => $coords3[0],
             'lng3' => $coords3[1]
         ];
-
-
-
         return response()->json($data);
+    }
+
+    public function visitCoco($userId,$coco){
+
+        DB::table('students')->where('student_id',$userId)->update([
+            $coco => 0
+        ]);
     }
 
     /**

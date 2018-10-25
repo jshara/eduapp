@@ -22,6 +22,7 @@ Route::get('/endGame/{userId}&{cid}&{lnum}&{score}','ApiController@endGameSessio
 Route::get('/loadGame/{userId}&{cid}','ApiController@loadGameSession');
 Route::get('/results/{userId}&{cid}','ApiController@loadResults');
 Route::get('/update/{userId}','Apicontroller@refreshCoconuts');
+Route::get('/visit/{userId}&{cocos}','ApiController@visitCoco');
 
 
 Route::get('/game-over1/{cat_id}', function($cat_id){
