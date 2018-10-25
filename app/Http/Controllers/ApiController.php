@@ -797,9 +797,15 @@ class ApiController extends Controller
 
     public function visitCoco($userId,$coco){
 
+        $coconuts = DB::table('students')->where('student_id',$userId)->value('coconuts');
+        $coconuts = $coconuts + 10;
+        //add reference to config table here
+
         DB::table('students')->where('student_id',$userId)->update([
-            $coco => 0
+            $coco => 0,
+            'coconuts' => $coconuts
         ]);
+
     }
 
     /**
