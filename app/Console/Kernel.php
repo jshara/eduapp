@@ -24,10 +24,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('word:day')
-                //  ->everyMinute()
-                 ->cron('*/2 * * * *')
-                 ->withoutOverlapping();
+        // $schedule->command('word:day')
+        //         //  ->everyMinute()
+        //          ->cron('*/2 * * * *')
+        //          ->withoutOverlapping();
+
+        $schedule->call(function(){
+            event(new \App\Events\refreshCoconuts);
+        })->everyFiveMinutes();
     }
 
     /**

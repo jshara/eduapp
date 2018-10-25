@@ -770,6 +770,34 @@ class ApiController extends Controller
         return response()->json($data);
     }
 
+    public function refreshCoconuts($userId){
+        $cocos = DB::table('students')->where('student_id',$userId)->select('coco1','coco2','coco3')->get();
+        $coords1 = DB::table('coordinates')->where('sequence',1)->value('location');
+        $coords2 = DB::table('coordinates')->where('sequence',2)->value('location');
+        $coords3 = DB::table('coordinates')->where('sequence',3)->value('location');
+
+        $coords1 = explode(',', $coords1);
+        $coords2 = explode(',', $coords2);
+        $coords3 = explode(',', $coords3);
+
+
+        $data = [
+            'coco1' => $cocos[0]->coco1,
+            'coco2' => $cocos[0]->coco2,
+            'coco3' => $cocos[0]->coco3,
+            'lat1' => $coords1[0],
+            'lng1' => $coords1[1],
+            'lat2' => $coords2[0],
+            'lng2' => $coords2[1],
+            'lat3' => $coords3[0],
+            'lng3' => $coords3[1]
+        ];
+
+
+
+        return response()->json($data);
+    }
+
     /**
      * Get the authenticated User
      *

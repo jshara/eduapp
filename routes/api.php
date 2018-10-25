@@ -21,9 +21,15 @@ Route::get('/saveGame/{userId}&{cid}&{lnum}&{score}','ApiController@saveGameSess
 Route::get('/endGame/{userId}&{cid}&{lnum}&{score}','ApiController@endGameSession');
 Route::get('/loadGame/{userId}&{cid}','ApiController@loadGameSession');
 Route::get('/results/{userId}&{cid}','ApiController@loadResults');
+Route::get('/update/{userId}','Apicontroller@refreshCoconuts');
 
 
 Route::get('/game-over1/{cat_id}', function($cat_id){
     event(new \App\Events\gameOver($cat_id));
+    // return redirect('categories');
+});
+
+Route::get('/refresh', function(){
+    event(new \App\Events\refreshCoconuts);
     // return redirect('categories');
 });
