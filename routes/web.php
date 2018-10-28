@@ -68,6 +68,7 @@ Route::get('/results','ResultsController@index');
 Route::get('/stats/{id}','ResultsController@displaystats');
 Route::get('/perform/{id}','ResultsController@perform');
 Route::get('/resultsget/{id}','ResultsController@resultsget');
+Route::get('/resultsstudents/{sid}/{cat_id}','ResultsController@loadResults');
 
 //Maps
 Route::get('/maps/{id}','MapsController@map');

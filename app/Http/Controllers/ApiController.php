@@ -685,7 +685,6 @@ class ApiController extends Controller
 
     public function loadResults($userId,$cat_id){
 
-        // $category = category::find($cat_id)->value('cat_name');
         $category = DB::table('categories')->where('cat_id',$cat_id)->value('cat_name');
 
         $maxScores;
@@ -706,13 +705,9 @@ class ApiController extends Controller
 
         for ($x = 1; $x <= $numLevels ; $x++){
             $maxScores[$x] = DB::table('levels')->where('cat_id',$cat_id)->where('lev_num',$x)->value('max_points');
-            // $numofQues[$x] = DB::table('levels')->where('cat_id',$cat_id)->where('lev_num',$x)->value('numOfQues');
         }
 
-        // $numQuestions = DB::table('levels')->where('lev_id',$lev_id)->value('numOfQues');
         $levIds = DB::table('levels')->where('cat_id',$cat_id)->select('lev_id')->get();
-        // dd($levIds);
-        // die();
 
         $scoresPerLevel = explode(',',$scoreString);
         $questionsDone = explode(',',$qString);
@@ -720,8 +715,6 @@ class ApiController extends Controller
 
         $res;
         $ques;
-        // var_dump($scoresPerLevel);
-        // die();
 
         $a = 0;
         foreach($scoresPerLevel as $score){
