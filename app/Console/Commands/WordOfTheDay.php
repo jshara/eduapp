@@ -39,9 +39,7 @@ class WordOfTheDay extends Command
      */
     public function handle()
     {
-        $t =Carbon::now();
-        // date_timezone_set('Pacific/Fiji');
-        
-        DB::table('crontest')->insert(['name'=> $t]);
+        // $request = Request::create('/refresh', 'GET');
+        event(new \App\Events\refreshCoconuts);
     }
 }

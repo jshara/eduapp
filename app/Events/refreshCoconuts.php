@@ -10,6 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use DB;
+use Carbon\Carbon;
 
 class refreshCoconuts implements ShouldBroadcast
 {
@@ -25,11 +26,13 @@ class refreshCoconuts implements ShouldBroadcast
         DB::table('students')->update([
             'coco1' => 1,
             'coco2' => 1,
-            'coco3' => 1
+            'coco3' => 1,
+            'updated_at' => Carbon::now()
         ]);
         DB::table('coordinates')->update([
             'active' => 0,
-            'sequence' => null
+            'sequence' => null,
+            'updated_at' => Carbon::now()
         ]);
         $id;
         $id = DB::table('coordinates')->select('id')->get();
@@ -45,7 +48,8 @@ class refreshCoconuts implements ShouldBroadcast
         foreach($ids as $i){
             DB::table('coordinates')->where('id',$i+1)->update([
                 'active' => 1,
-                'sequence' => $x + 1
+                'sequence' => $x + 1,
+                'updated_at' => Carbon::now()
             ]);
 
             $loc = DB::table('coordinates')->where('id',$i+1)->value('location');

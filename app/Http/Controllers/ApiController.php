@@ -140,6 +140,20 @@ class ApiController extends Controller
         }
     }
 
+    //api that returns score and details of user
+    public function init($userId){
+        $points = DB::table('students')->where('student_id',$userId)->value('scoreTotal');
+        $coconuts = DB::table('students')->where('student_id',$userId)->value('coconuts');
+
+        $data = [
+            'points' => $points,
+            'coconuts' => $coconuts
+        ];
+
+        return response()->json($data);
+
+    }
+
 
     //api that returns a list of all categories.
 

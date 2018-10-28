@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+// use Illuminate\Events\refreshCoconuts;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,14 +25,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('word:day')
-        //         //  ->everyMinute()
+        $schedule->command('word:day')
+                 ->everyFiveMinutes();
         //          ->cron('*/2 * * * *')
         //          ->withoutOverlapping();
 
-        $schedule->call(function(){
-            event(new \App\Events\refreshCoconuts);
-        })->everyFiveMinutes();
+        // $schedule->call(function(){
+        //     $request = Request::create('/refresh', 'GET');
+        //     event(new \App\Events\refreshCoconuts);
+        // })->everyMinute();
     }
 
     /**
