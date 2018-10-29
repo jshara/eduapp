@@ -9,6 +9,7 @@
         <h2><b>{{$data['Category']}}</b></h2>
     </div>
 </div><br>
+@if($data != 0)
 
 <div class="row">
     <div class="col-md-4">
@@ -22,8 +23,6 @@
     </div>
 </div><br>
 
-{{-- <php echo count($data['results']); ?> --}}
-
 <table class="table table-striped table-hover text-left">
     @foreach($data['results'] as $level)
         <tr>
@@ -32,10 +31,10 @@
                <h5>{{$level['ScoreEarned']}}/{{$level['MaxScore']}} </h5> 
             </td>
             <td>
-                <table class="table table-striped table-hover text-left">
+                <table class="table table-hover text-left">
                     @foreach($level['Questions'] as $Questions)
                         <tr>
-                            <td>
+                            <td style = "width:45%;">
                                 <p><span>Question {{$Questions['number']}}. {!!$Questions['content']!!} </span></p>
                             </td>
                             @if($Questions['correct'])
@@ -44,7 +43,8 @@
                                 </td>
                             @else
                                 <td style="background-color:pink;">
-                                    Selected Answer: {{$Questions['givenAns']}}
+                                    Selected Answer: {{$Questions['givenAns']}} <br>
+                                    Correct Answer: {{$Questions['correctAns']}}
                                 </td>
                             @endif
                         </tr>
@@ -58,17 +58,7 @@
 
     @endforeach
 </table>
-
-{{--                   
-     <ion-item *ngFor="let question of data.Questions">
-        <ion-item>
-            <span><strong> Question {{question.number}}  </strong><div [innerHTML]="question.content"> </div> </span>
-        </ion-item>
-        <ion-item>
-            <div *ngIf="question.correct == true" class="correct"> Your Answer: {{question.ansGiven}} <ion-icon  name="checkmark"></ion-icon> </div>
-            <div *ngIf="question.correct == false" class="inCorrect"> Your Answer: {{question.ansGiven}} <ion-icon  name="close"></ion-icon> </div>
-            <div *ngIf="question.correct == false" class="yellow"> Correct Answer: {{question.correctAns}}</div>
---}}
-{{-- <php dd ($data['results'][0]['Questions'][0]['content']);?> --}}
-
+@else
+    <h4>This student has not participated in the game.</h4>
+@endif
 @endsection
