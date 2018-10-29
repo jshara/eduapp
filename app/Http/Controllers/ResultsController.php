@@ -66,12 +66,11 @@ class ResultsController extends Controller
     }
 
     public function loadResults($userId,$cat_id){
-
         $category = DB::table('categories')->where('cat_id',$cat_id)->value('cat_name');
-
         $maxScores;
-
         $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+
+        if(DB::table('sessions')->where('s_id',$sid)->Exists()){
 
         $totalEarned = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('session_score');
         $timeStarted = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('created_at'));
@@ -155,7 +154,10 @@ class ResultsController extends Controller
             'results' => $res
         ];
 
-        // return response()->json($data);
-        return view('result.studentdetails')/* ->with('data',$data) */->with('cat_id',$cat_id)->with('data',$data);
+        return view('result.studentdetails')->with('cat_id',$cat_id)->with('data',$data);
+    }else{
+        $data = 0;
+        return view('result.studentdetails')->with('cat_id',$cat_id)->with('data',$data);
+    }
     }
 }
