@@ -53,12 +53,6 @@
                             <button class="delete-modal btn btn-danger" data-id="{{$question->ques_id}}" data-lid="{{$lev_id}}" data-qnum="{{$question->ques_num}}" data-display="Question {{$question->ques_num}}">
                                     <span class="fa fa-trash-o fa-lg"></span>
                                 </button>
-                            {{-- <span class="form-control"><a href="/questions/{{$question->ques_id}}/edit" class="btn"><i class="fa fa-pencil fa-lg"></i></a></span> --}}
-                            {{-- {!!Form::open(['action'=>['QuestionsController@destroy', $question->ques_id,$level->lev_num, $cat_id], 'method'=>'POST', 'class'=>'pull-right'])!!}
-                                {{Form::hidden('_method','DELETE')}}
-                                {{-- {{Form::submit('Delete',['class'=> 'fa fa-trash-o fa-lg'])}} -}}
-                                {!! Form::button( '<i class="fa fa-trash-o fa-lg" style="color:#FF0000;"></i>', ['type' => 'submit'] ) !!}
-                            {!!Form::close()!!} --}}
                         </div>
                     </td>
                     <td>

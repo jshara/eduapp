@@ -81,6 +81,10 @@ Route::get('/game-over/{cat_id}', function($cat_id){
     return redirect('categories');
 });
 
+// //admin page
+// Route::get('/admin', 'HomeController@index')->name('home');
+
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
