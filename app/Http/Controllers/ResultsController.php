@@ -115,7 +115,7 @@ class ResultsController extends Controller
                         'number' => ($x+1),
                         'content' => $quesContent,
                         'correctAns' => $correctAns,
-                        'ansGiven' => $ansGiven,
+                        'givenAns' => $ansGiven,
                         'correct' => $correct
                     ];
                     $x++;
@@ -156,6 +156,6 @@ class ResultsController extends Controller
         ];
 
         // return response()->json($data);
-        return view('result.studentdetails')/* ->with('data',$data) */->with('cat_id',$cat_id)->with('data',response()->json($data));
+        return view('result.studentdetails')/* ->with('data',$data) */->with('cat_id',$cat_id)->with('data',$data);
     }
 }
