@@ -3,17 +3,19 @@
 use Illuminate\Http\Request;
 
 Route::post('/loginUser','ApiController@login');
+Route::post('/updateDetails','ApiController@updateDetails');
 Route::get('/init/{userId}','Apicontroller@init');
 Route::get('/cat','ApiController@getCat');
 Route::get('/catGet/{id}','ApiController@getAllCat');
 Route::get('/CompCat/{userId}','ApiController@getCompletedCat');
 Route::get('/SavedCat/{userId}','ApiController@getSavedCat');
+Route::get('/removeSavedGame/{userId}&{catId}','ApiController@removeSaved');
+Route::get('/getLineChart/{userId}','ApiController@getLineChart');
 Route::get('/cat={id}','ApiController@getLevel');
 Route::get('/numLev/{cat_id}','ApiController@checkHowManyLevel');
 Route::get('/nextLevel/current={lev_id}&cat={cat_id}','ApiController@loadNextLevel');
 Route::get('/loadLevel/{catId}&{levNum}&{userId}&{score}','ApiController@loadLevel');
 Route::get('/loadQuestions/{id}&{catid}','ApiController@loadQuestion');
-// Route::get('/checkAns/{id}','ApiController@checkAns');
 Route::get('/checkAns/{sid}&{cid}&{lnum}&{aid?}','ApiController@checkAns');
 Route::get('/getRan/{num}','ApiController@getRandomLatLng');
 Route::get('/getRan2/{num}','ApiController@getRandomLatLng2');

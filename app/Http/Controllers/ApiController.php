@@ -144,14 +144,44 @@ class ApiController extends Controller
     public function init($userId){
         $points = DB::table('students')->where('student_id',$userId)->value('scoreTotal');
         $coconuts = DB::table('students')->where('student_id',$userId)->value('coconuts');
+        $fName = DB::table('students')->where('student_id',$userId)->value('fName');
+        $lName = DB::table('students')->where('student_id',$userId)->value('lName');
+        $photo = DB::table('students')->where('student_id',$userId)->value('photo');
+        if($photo == null){
+            $photo = null;
+        }
+        else{
+            $photo = base64_encode($photo);
+        }
+
+        // dd($photo);
 
         $data = [
             'points' => $points,
-            'coconuts' => $coconuts
+            'coconuts' => $coconuts,
+            'fName' => $fName,
+            'lName' => $lName,
+            'photo' => $photo
         ];
-
+        
         return response()->json($data);
 
+    }
+
+    public function updateDetails(Request $request){
+        $userId = $request->student_id;
+        $fName = $request->fName;
+        $lName = $request->lName;
+        $photo = $request->photo;
+
+        $photo = base64_decode($photo);
+        DB::table('students')->where('student_id', $userId)->update([
+            'fName' => $fName,
+            'lName' => $lName,
+            'photo' => $photo
+        ]);
+
+            return ;
     }
 
 
@@ -168,22 +198,28 @@ class ApiController extends Controller
         $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
         $cids = DB::table('enrolments')->select('c_id')->where('s_id',$sid)->get();
 
+        $list = [];
+
         $i = 0;
         foreach($cids as $cid){
-            $cats = DB::table('categories')->select('cat_id','cat_name')->where('c_id',$cid->c_id)->where('published', 1)->get();  
+            $cats = DB::table('categories')->select('cat_id','cat_name')->where('c_id',$cid->c_id)->where('published', 1)->get();
 
             if(!$cats->isEmpty()){
                 foreach ($cats as $cat){
-                    $list[$i] = [
-                        'cat_id' => $cat->cat_id,
-                        'cat_name' => $cat->cat_name
-                    ]; 
-                    $i++;
+                    $result = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat->cat_id)->exists();
+                    if ($result != true){
+                        $list[$i] = [
+                            'cat_id' => $cat->cat_id,
+                            'cat_name' => $cat->cat_name
+                        ]; 
+                        $i++;
+                    }
+
                 }
 
 
             }
-            
+
         }
 
         return response()->json($list);
@@ -227,7 +263,58 @@ class ApiController extends Controller
         return response()->json($data);
     }
 
-    
+    public function removeSaved($userId,$catId){
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+        db::table('sessions')->where('s_id',$sid)->where('cat_id',$catId)->delete();
+
+        return;
+    }
+
+    public function getLineChart($userId){
+        //find the id associated with the student id
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+        $cids = DB::table('enrolments')->select('c_id')->where('s_id',$sid)->get();
+
+        $list1 = [];
+        $list2 = [];
+
+        $i = 0;
+        foreach($cids as $cid){
+            $score = '0';
+            $cats = DB::table('categories')->select('cat_id','cat_name')->where('c_id',$cid->c_id)->where('published', 1)->get();
+
+            if(!$cats->isEmpty()){
+                foreach ($cats as $cat){
+                    
+                    $result = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat->cat_id)->exists();
+                    if ($result == true){
+                        $score = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat->cat_id)->value('session_score');
+                        $list1[$i] = [                           
+                            $cat->cat_name
+                        ]; 
+                        $list2[$i] = [
+                            $score
+                        ];
+                        $i++;
+                    }
+                    else{
+                        $list1[$i] = [
+                            $cat->cat_name
+                        ]; 
+                        $list2[$i]=[
+                            0
+                        ];
+                        $i++;
+                    }
+
+                }
+
+
+            }
+
+        }
+        return response()->json([$list1, $list2]);
+    }
 
     //check number of levels per category
     //SELECT `categories`.* , count(`levels`.`lev_num`) as NumLevels FROM `categories` LEFT join `levels` on `categories`.cat_id = `levels`.`cat_id` group by `categories`.`cat_id`
