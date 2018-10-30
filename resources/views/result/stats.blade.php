@@ -10,8 +10,21 @@
     </div>
 </div><br>
 {{-- <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div> --}}
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-6 text-center" style="background-color:lightgreen; padding-right:15px;">
+            <img  src="/img/people.png" height="150" alt="people icon">
+            <h4>PARTICIPANTS: <h2><b>{{$participants}}</b></h2> </h4>            
+        </div>
+        <div class="col-md-6 text-center" style="background-color:lightblue;">
+            <img  src="/img/stopwatch.png" height="150" alt="stopwatch icon">
+            <h4><span class="fa fa-stopwatch"></span>AVERAGE TIME TO COMPLETION: <h2><b>{{$time}}</b></h2> </h4>
+        </div>
 
-<div id="container2" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"> There are no stats to show</div>
+    </div> <br>
+    <div id="container2" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto" class="border border-primary"> There are no stats to show</div>
+</div>
+
 
 
 <script>
@@ -100,7 +113,7 @@ Highcharts.chart('container2', {
         zoomType: 'xy'
     },
     title: {
-        text: 'Category results per Level'
+        text: 'CATEGORY RESULTS PER LEVEL'
     },
     xAxis: {
         title: {
@@ -156,8 +169,8 @@ Highcharts.chart('container2', {
         }
     },
     series: [{
-        name: 'Scores per Level',
-        color: 'rgba(40, 40, 235,.5)',
+        name: '% per Level',
+        color: 'rgba(207, 0, 15,.5)',
         data: data1.score
     }]
 });
