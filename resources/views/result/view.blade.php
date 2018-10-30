@@ -26,7 +26,7 @@
     <tbody>
         @if(count($courses)>0)
             @foreach($courses as $course)
-                <tr>
+                <tr style="background-color:#e6ffff;">
                     <td>
                         {{$course->course_code}}
                     </td>
@@ -35,7 +35,7 @@
                             <?php $cats = $course->categories;?>
                             @if(count($cats)>0)                            
                                 @foreach($cats as $cat)
-                                    <tr>
+                                    <tr style="background-color:#ffe6ff;"   >
                                         <td style = "width:20em;">
                                             {{$cat->cat_name}}
                                         </td>

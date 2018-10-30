@@ -25,7 +25,15 @@ class ResultsController extends Controller
     }
 
     public function displaystats($id){
-        return view('result.stats')->with('id',$id);   
+        //find total participants
+        $participants = DB::table('sessions')->where('cat_id',$id)->count();
+
+        //calculate the average total time to complete this category
+        $time_difference = DB::select(DB::raw("SELECT AVG(TIME_TO_SEC(updated_at) - TIME_TO_SEC(created_at)) as time
+                        FROM `sessions` WHERE `cat_id`= $id"));
+        $time_difference = gmdate("H:i:s", $time_difference[0]->time);
+
+        return view('result.stats')->with('id',$id)->with('participants',$participants)->with('time', $time_difference);   
     }
 
     public function resultsget($cat_id){
@@ -59,7 +67,8 @@ class ResultsController extends Controller
         $student_ids;
         foreach($students as $student){
             $student_ids[]= Student::where('s_id',$student['s_id'])->value('student_id');
-        }       
+        }     
+
 
         $numLevel = Level::where('cat_id',$cat_id)->count();
         return view('result.perform')->with('cat_id',$cat_id)->with('student_ids',$student_ids)->with('numLevel',$numLevel);
