@@ -181,7 +181,7 @@ class ApiController extends Controller
             'photo' => $photo
         ]);
 
-            return ;
+            return true ;
     }
 
 
@@ -840,6 +840,7 @@ class ApiController extends Controller
         }
 
         $percentage = $totalEarned/array_sum($maxScores) * 100;
+        $percentage = round($percentage,2);
         $comment;
         if ($percentage >= 80){
             $comment = "Excellent! Keep It Up";

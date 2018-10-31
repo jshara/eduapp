@@ -103,7 +103,7 @@
                     strokeColor: '#ff0000',
                     strokeOpacity: 1,
                     fillColor: '#0000ff',
-                    fillOpacity: 0.20                    
+                    fillOpacity: 0                    
                     });
                 bounds.setMap(map);
 
@@ -134,7 +134,7 @@
                 
             }
         </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjTZpMJds--UcfE_WqFDszvnHIskZc2PQ&callback=initMap"
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBA1f-kQy07jvdtV3Ix4OQB47oiG3k4MZ4&callback=initMap"
         async defer></script> 
 
 @endsection
