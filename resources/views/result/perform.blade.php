@@ -34,7 +34,7 @@ use App\Session;
             <tr>   
                 <?php                 
                 $s_id = Student::where('student_id',$student_id)->value('s_id');
-                $check = Session::where('s_id',$s_id)->where('cat_id',$cat_id)->exists();
+                $check = Session::where('s_id',$s_id)->where('cat_id',$cat_id)->where('scoreString','!=',null)->exists();
                 $total =0; ?>    
                 <td id="pos{{$jo}}"> </td> 
                 <td>
