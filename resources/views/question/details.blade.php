@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="row">
-        <table class ="table table-border table-hover">
+        <table class ="table table-border table-hover" style="table-layout:fixed;">
             <thead>
                 <tr>                        
                     <th>#</th>
@@ -31,7 +31,7 @@
                     <td>                           
                         <p class="text-center">{{$question->ques_num}}</p>                            
                     </td>
-                    <td>                          
+                    <td style="word-wrap:break-word;">                          
                         <p class="text-center">{!!($question->ques_content)!!} </p>                        
                     </td>
                     <td>                               

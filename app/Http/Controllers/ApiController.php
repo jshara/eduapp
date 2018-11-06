@@ -52,27 +52,34 @@ class ApiController extends Controller
     public function login(Request $request)
     {
 
-        $student = Student::where('student_id', $request->student_id)->first();
+        $student = Student::where('student_id', $request->student_id)->get();
 
-        if ($student) {
 
-            $has_token = DB::table('students')->where('s_id', $student->s_id)->where('token', null)->doesntExist();
-            $expiry_token = DB::table('students')->where('s_id', $student->s_id)->value('expires_at');
+        if (!$student->isEmpty()) {
+            // dd($student[0]->s_id);
+
+            $has_token = DB::table('students')->where('s_id', $student[0]->s_id)->where('token', null)->doesntExist();
+            $expiry_token = DB::table('students')->where('s_id', $student[0]->s_id)->value('expires_at');
 
             if (Carbon::now() > $expiry_token) {
                 $check_token = false;
             } else {
                 $check_token = true;
             }
-            // dd($check_token);
+            
             if (!$check_token) {
 
-                $student->token;
-                $student->delete();
+                $tokenResult = Str::random(24) . $student[0]->student_id . Str::random(40);
+
+                // db::table('students')->where()
+
+                $student[0]->token = $tokenResult;
+                $student[0]->expires_at = Carbon::now()->addDays(10);
+                $student[0]->save();
 
                 $response = [
-                    'status' => 422,
-                    'error' => 'Session Expired, Try Again'
+                    'status' => 200,
+                    'message' => 'Login Attempt Successful'
                 ];
 
                 return response()->json($response); // Unprocessable Entity
@@ -95,22 +102,17 @@ class ApiController extends Controller
             if ($response == '0') {
 
                 $student = new Student([
-                    'student_id' => $request->student_id,
-                    'token' => $request->access_token,
-                    'expires_at' => $request->expires_at
+                    'student_id' => $request->student_id
                 ]);
 
-                // $tokenResult = $student->createToken('Personal Access Token');
                 $tokenResult = Str::random(24) . $request->student_id . Str::random(40);
-                // dd($tokenResult);
-                // $token = $tokenResult->token;
-                // $token->expires_at = Carbon::now()->addDays(10);
 
                 $student->token = $tokenResult;
                 $student->expires_at = Carbon::now()->addDays(10);
                 $student->save();
 
-                $enrolOpen = new Enrolment();                                                               // Enrol in Open course (default)
+
+                $enrolOpen = new Enrolment();   // Enrol in Open course (default)
                 $enrolOpen->s_id = $student->s_id;
                 $enrolOpen->c_id = 1;
                 $enrolOpen->save();
@@ -130,10 +132,10 @@ class ApiController extends Controller
                     'status' => 422,
                     'error' => 'Incorrect Credentials, Try Again'
                 ];
-                // return response($response, 422); // Unprocessable Entity
+
                 return response()->json($response); // Unprocessable Entity
 
-                // return response($response, 422); // Unprocessable Entity
+
 
             }
 
@@ -153,8 +155,6 @@ class ApiController extends Controller
         else{
             $photo = base64_encode($photo);
         }
-
-        // dd($photo);
 
         $data = [
             'points' => $points,
@@ -188,7 +188,7 @@ class ApiController extends Controller
     //api that returns a list of all categories.
 
     public function getCat(){
-        $cat = DB::table('categories')->select('cat_id','cat_name')->where('published', 1)->get();  
+        $cat = DB::table('categories')->select('cat_id','cat_name')->where('published', 1)->where('completed',0)->get();  
 
         return response()->json($cat);
     }
@@ -202,7 +202,7 @@ class ApiController extends Controller
 
         $i = 0;
         foreach($cids as $cid){
-            $cats = DB::table('categories')->select('cat_id','cat_name')->where('c_id',$cid->c_id)->where('published', 1)->get();
+            $cats = DB::table('categories')->select('cat_id','cat_name')->where('c_id',$cid->c_id)->where('published', 1)->where('completed',0)->get();
 
             if(!$cats->isEmpty()){
                 foreach ($cats as $cat){
@@ -253,10 +253,12 @@ class ApiController extends Controller
         foreach( $cats as $cat){
             // echo $cat->cat_id;
             $list = DB::table('categories')->select('cat_name as Cat')->where('cat_id', $cat->cat_id)->get();
+            $num = DB::table('sessions')->where('cat_id',$cat->cat_id)->value('numCircles');
 
             $data[$i] = [
                 'cat_id' => $cat->cat_id,
-                'cat_name' => $list[0]->Cat
+                'cat_name' => $list[0]->Cat,
+                'numCircles' => $num
             ];
         $i++;
         }
@@ -372,7 +374,7 @@ class ApiController extends Controller
     }
 
     //load the coordinates of next level (if exists)
-    public function loadLevel($cat_id,$levNum,$userId,$score){
+    public function loadLevel($cat_id,$levNum,$userId,$score,$num){
         $list = DB::table('levels')
         ->where('cat_id',$cat_id)
         ->where('lev_num',$levNum)
@@ -386,7 +388,7 @@ class ApiController extends Controller
     ];
 
 
-    $this->saveGameSession($userId,$cat_id,$levNum,$score);
+    $this->saveGameSession($userId,$cat_id,$levNum,$score,$num);
 
 
     return response()->json($coords);
@@ -436,6 +438,42 @@ class ApiController extends Controller
         $data = array_slice($data, 0, $num);
         return response()->json($data);
 
+    }
+
+    public function gameScoreboard($cid){
+        $list = db::table('sessions')->where('cat_id',$cid)->select('s_id','session_score')->orderBy('session_score','desc')->get();
+        $res;
+        $i = 0;
+        foreach($list as $data){
+            $sid = db::table('students')->where('s_id',$data->s_id)->value('student_id');
+
+            $res[$i] = [
+                ($i+1),
+                $sid,
+                $data->session_score
+            ];
+            $i++;
+
+        }
+
+        return response()->json($res);
+    }
+
+    public function overallScoreboard(){
+        $list = DB::table('students')->select('student_id', 'scoreTotal')->orderBy('scoreTotal','desc')->get();
+        $res;
+        $i = 0;
+        foreach($list as $data){
+            $res[$i] = [
+                ($i+1),
+                $data->student_id,
+                $data->scoreTotal
+            ];
+            $i++;
+
+        }
+
+        return response()->json($res);
     }
 
     //check whether answers submitted are correct
@@ -556,7 +594,7 @@ class ApiController extends Controller
             ->update([
                 'scoreTotal' => ($val + $score)
             ]);
-
+            event(new \App\Events\scoreChanged($cid));
             return response()->json($data);
         }
 
@@ -702,7 +740,7 @@ class ApiController extends Controller
         ]);
     }
 
-    public function saveGameSession($userId, $cid, $lnum, $score)
+    public function saveGameSession($userId, $cid, $lnum, $score, $num)
     {
         //find the id associated with the student id
         $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
@@ -717,6 +755,7 @@ class ApiController extends Controller
             ->update(
             ['lev_id'  => $levId,
              'session_score'  => $score,
+
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         );
@@ -724,7 +763,7 @@ class ApiController extends Controller
         return "Game Saved";
     }
 
-    public function endGameSession($userId,$cid,$lnum,$score){
+    public function endGameSession($userId,$cid,$lnum,$score, $num){
         //find the id associated with the student id
         $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
 
@@ -739,6 +778,7 @@ class ApiController extends Controller
             ['lev_id'  => $levId,
              'session_score'  => $score,
              'session_completed' => 1,
+             'numCircles' => $num,
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         );
@@ -901,6 +941,12 @@ class ApiController extends Controller
             'coconuts' => $coconuts
         ]);
 
+    }
+
+    public function updateCoco($userId,$num){
+        DB::table('students')->where('student_id',$userId)->update([
+            'coconuts' => $num
+        ]);
     }
 
     /**
