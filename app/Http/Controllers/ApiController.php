@@ -882,7 +882,7 @@ class ApiController extends Controller
         $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
         // dd($sid);
         $totalEarned = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('session_score');
-        dd($totalEarned);
+        // dd($totalEarned);
         $timeStarted = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('created_at'));
         $timeFinished = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('updated_at'));
         $totalTime = $timeFinished->diff($timeStarted)->format('%H:%I:%S');
