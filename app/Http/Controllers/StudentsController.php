@@ -12,8 +12,10 @@ use File;
 class StudentsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Retrieve all students enrolled in the course
+     * return IDs to the page to be displayed
      *
+     * @param  Course  $cid
      * @return \Illuminate\Http\Response
      */
     public function index($cid)
@@ -22,6 +24,13 @@ class StudentsController extends Controller
         return view('student.details')->with('s_ids',$s_ids)->with('c_id',$cid);
     }
 
+     /**
+     * Create a student if needed
+     * then add the enrolment to the specified course
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxcreate(Request $request){
         $e = new Enrolment();
         $s = new Student();
@@ -56,12 +65,19 @@ class StudentsController extends Controller
         return response()->json(['student' => $s, 'enrolment' => $e, 'message' => $message, 'type' => $type]);
     }
 
+     /**
+     * Deleting enrolment of a student
+     * and return a response to indicate success
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxdelete(Request $request){
         $number = DB::table('enrolments')->where('s_id',$request->sid)->count();
         if($number == '1'){
             $student = Student::find($request->sid);
             // dd($student);
-            $student->delete();
+            // $student->delete();
         }else{
             $eid = DB::table('enrolments')->where('c_id',$request->cid)->where('s_id',$request->sid)->value('e_id');
             $enrolment = Enrolment::find($eid);
@@ -71,6 +87,14 @@ class StudentsController extends Controller
         return response()->json($number);
     }
 
+    /**
+     * Create students if needed
+     * add all the ids in the CSV to the enrolment
+     * Validate each of the IDs to ensure no repetition
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function fileupload(Request $request){
         $this->validate($request,[
             'csvfile'=> 'required|mimes:csv,txt' 

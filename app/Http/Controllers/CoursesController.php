@@ -11,7 +11,7 @@ use DB;
 class CoursesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all the courses belonging to the user.
      *
      * @return \Illuminate\Http\Response
      */
@@ -22,6 +22,13 @@ class CoursesController extends Controller
         return view('course.details')->with('courses',$user->courses);
     }
 
+    /**
+     * Create a new course and send back the information in json format 
+     * to be displayed on the page without reload
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxcreate(Request $request){
         $course = new Course();
         $course->course_code = $request->course_code;
@@ -32,6 +39,13 @@ class CoursesController extends Controller
         return response()->json($course);
     }
 
+    /**
+     * Deleting the Course: this is to delete the selected course
+     * and return a response to indicate success
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxdelete(Request $request){
         $course = Course::find($request->id);
         $course->delete();
@@ -39,6 +53,13 @@ class CoursesController extends Controller
         return response()->json($course);
     }
 
+     /**
+     * Editing the Course name: this is to save the new name 
+     * and return the instance without page reload
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxedit(Request $request){
         $course = Course::find($request->id);
         $course->course_code = $request->course_code;

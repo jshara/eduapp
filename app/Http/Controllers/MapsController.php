@@ -9,6 +9,13 @@ use FarhanWazir\GoogleMaps\GMaps;
 
 class MapsController extends Controller
 {
+    /**
+     * Create and specify all attribute to the map
+     * that will be used in the view
+     *
+     * @param  Category $cat_id
+     * @return \Illuminate\Http\Response
+     */
     public function map($cat_id) {
         $config['center'] = '-18.147747, 178.446832';
         $config['zoom'] = '16';
@@ -43,6 +50,13 @@ class MapsController extends Controller
         return view('category.map')->with('map', $map)->with('cat_name',$cat_name);
     }
 
+    /**
+     * This function return the location of a level
+     * along with the category that it belongs to
+     *
+     * @param  Level $lev_id
+     * @return \Illuminate\Http\Response
+     */
     public function viewLevel($lev_id){
 
         $location = Level::find($lev_id);
@@ -52,6 +66,14 @@ class MapsController extends Controller
         return view('level.edit')->with('location',$location)->with('cat_id', $cid);
     }
 
+    /**
+     * Finds the existing level
+     * and updates the new location set by the user
+     * redirects to the page with the success message
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function updateLevel(Request $request){
         $lev= Level::find($request->lev_id);
         $lev->lev_location = $request->lev_location;

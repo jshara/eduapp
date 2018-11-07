@@ -7,19 +7,6 @@ use App\Question;
 
 class AnswersController extends Controller
 {
-
-    // public function hide(Request $req){   
-    //     $bool = "0";
-    //     if($req->checked == "true")
-    //     $bool = '1';
-    
-    //     // var_dump($bool);        
-    //     $question = Question::find($req->id);
-    //     $question->ques_hide = $bool;
-    //     $question->save();
-
-    //     return response()->json($question);
-    // }
     /**
      * Display a listing of the resource.
      *

@@ -11,8 +11,9 @@ use DB;
 class LevelsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all the Levels in the specified category
      *
+     * @param  Category $id
      * @return \Illuminate\Http\Response
      */
     public function index($id)    {
@@ -26,8 +27,9 @@ class LevelsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create Level and assign the position of the level
      *
+     * @param  Category $id
      * @return \Illuminate\Http\Response
      */
     public function create($id)    {
@@ -44,13 +46,10 @@ class LevelsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  Category $cid
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$cid)    {
-        // $this->validate($request, [
-        //     'location' =>'required'
-        // ]);
-        
+    public function store(Request $request,$cid)    {        
         $level = new Level();
         $level->lev_location = $request->input('location');
         $level->cat_id = $cid;
@@ -103,26 +102,12 @@ class LevelsController extends Controller
         //
     }
 
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy(Request $req)
-    // {
-    //    $allLevel = Level::where('cat_id',$req->cid)->where('lev_num','>',$req->lnum)->get();
-    //     foreach ($allLevel as $level){
-    //         --$level->lev_num;
-    //         $level->save();
-    //     }
-
-    //     $currentLevel = Level::find($req->lid);
-    //     $currentLevel->delete();
-
-    //     return redirect('/levels/'.$req->cid)->with('success', 'Level Deleted');
-    // }
-
+    /**
+     * Remove the Level from the specified category
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function destroy1(Request $req)
     {
        $allLevel = Level::where('cat_id',$req->cid)->where('lev_num','>',$req->lnum)->get();

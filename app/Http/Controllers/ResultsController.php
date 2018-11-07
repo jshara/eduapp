@@ -15,6 +15,12 @@ use Carbon\Carbon;
 
 class ResultsController extends Controller
 {
+    /**
+     * Display all the COurse created by the user
+     * along with the open course
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(){
         $user_id = auth()->user()->id;
         $user = User::find($user_id);
@@ -24,6 +30,13 @@ class ResultsController extends Controller
         return view('result.view')->with('courses',$yo);
     }
 
+    /**
+     * Manupilate all data and format it
+     * This is to display all information on the stats page
+     *
+     * @param  Category $cid
+     * @return \Illuminate\Http\Response
+     */
     public function displaystats($id){
         //find total participants
         $participants = DB::table('sessions')->where('cat_id',$id)->count();
@@ -36,6 +49,7 @@ class ResultsController extends Controller
         return view('result.stats')->with('id',$id)->with('participants',$participants)->with('time', $time_difference);   
     }
 
+    //formating the data in the array format to be readable in the graph
     public function resultsget($cat_id){
         $levelNums = Level::where('cat_id',$cat_id)->select('lev_num','max_points')->get();
        foreach($levelNums as $levelnum){

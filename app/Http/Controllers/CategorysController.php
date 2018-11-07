@@ -10,7 +10,7 @@ use DB;
 class CategorysController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all the games (category) belonging to the user.
      *
      * @return \Illuminate\Http\Response
      */
@@ -21,6 +21,14 @@ class CategorysController extends Controller
         return view('category.view')->with('category',$user->categories);
     }
 
+
+    /**
+     * Create a new game and send back the information in json format 
+     * to be displayed on the page without reload
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxcreate(Request $req){
         $cat = new Category();
         $cat->cat_name= $req->name;
@@ -31,6 +39,13 @@ class CategorysController extends Controller
         return response()->json($cat);
     }
 
+    /**
+     * Editing the Game name: this is to save the new name 
+     * and return the instance without page reload
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function ajax(Request $req){
         $cat = Category::find($req->id);
         $cat->cat_name = $req->name;
@@ -39,6 +54,13 @@ class CategorysController extends Controller
         return response()->json($cat);
     }
 
+    /**
+     * Deleting the Game name: this is to delete the selected game
+     * and return a response to indicate success
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxdelete(Request $req){
         
         $cat = Category::find($req->id);
@@ -47,16 +69,24 @@ class CategorysController extends Controller
         return response()->json($cat);
     }
 
+    /**
+     * Before publishing a game it is checked if there are levels 
+     * and if there are levels it will check if there is questions in the level
+     * otherwise it will return a error stating what is missing 
+     *
+     * @param  Category $cid
+     * @return \Illuminate\Http\Response
+     */
     public function checkpublish($cid){
         $cat = Category::find($cid);
         // var_dump($cat->cat_name);
         $message = $cat->cat_name.' has been ';
         $type = "success";
         $emptyLevels = "";
-        if($cat->published == 0){
+        if($cat->published == 0){               // Check if published
             $adequate = true;
             $levels = DB:: select('select * from levels where cat_id =? order by lev_num asc',[$cid]);
-            if(count($levels) > 0){                
+            if(count($levels) > 0){             // Check if the game has levels       
                 foreach($levels as $level){
                     if(DB::table('questions')->where('lev_id',$level->lev_id)->where('ques_hide','0')->doesntExist()){
                         $adequate = false;
@@ -67,7 +97,7 @@ class CategorysController extends Controller
                     $cat->published = 1;
                     $cat->save();
                     $message .= 'published.';
-                }else{
+                }else{                          // Check if the levels have questions in them
                     $type = "error";
                     $message = "Please Add Questions to Level(s) ".$emptyLevels;
                 }
@@ -85,6 +115,14 @@ class CategorysController extends Controller
         return redirect('categories')->with($type, $message);
     }
 
+
+    /**
+     * The game is OPEN by default this function allows the user
+     * to set the course to which the game will belong
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function setCourse(Request $request){
         $category = Category::find($request->id);
         $category->c_id = $request->course;
@@ -92,96 +130,4 @@ class CategorysController extends Controller
 
         return response()->json($category);
     }
-
-    // /**
-    //  * Show the form for creating a new resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function create()
-    // {
-    //     return view('category.create');
-    // }
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     $this->validate($request, [
-    //         'cat_name' =>'required'
-    //     ]);
-        
-    //     //create category
-    //     $cat = new Category();
-    //     $cat->cat_name= $request->input('cat_name');
-    //     $user_id = auth()->user()->id;
-    //     $cat->user_id = $user_id;
-    //     $cat->save();
-
-    //     $catsaved = Category::orderBy('created_at','desc')->first();
-
-    //     return redirect('/levels/'.$catsaved->cat_id)->with('success', 'Category created');
-    // }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     $cat = Category::find($id);
-    //     return view('category.edit')->with('cat',$cat);
-    // }
-
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     echo "i am in the controller";
-    //     // $this->validate($request, [
-    //     //     'cat_name' =>'required'
-    //     // ]);
-        
-    //     //FInd category
-    //     $cat = Category::find($id);
-    //     $cat->cat_name= $request->name;
-    //     $cat->save();
-
-    //     return redirect('/categories')->with('success', 'Category Name Updated');
-    // }
-
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy($id)
-    // {
-    //     $cat = Category::find($id);
-    //     $cat->delete();
-    //     return redirect('/categories')->with('success', 'Category Deleted');
-    // }
 }

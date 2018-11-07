@@ -11,8 +11,10 @@ use DB;
 class QuestionsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Retrieves all the question associated with the level
+     * Orders the question in desencending order
      *
+     * @param  Level $lid
      * @return \Illuminate\Http\Response
      */
     public function index($lid)
@@ -21,15 +23,24 @@ class QuestionsController extends Controller
         return view('question.details')->with('lev_id',$lid)->with('questions',$questions);
     }
 
+    /**
+     * Retrieves all the question associated with the level
+     * Orders the question in desencending order
+     *
+     * @param  Level $lid
+     * @return \Illuminate\Http\Response
+     */
     public function indexdisabled($lid)
     {
         $questions = Question::where('lev_id',$lid)->orderBy('ques_num','asc')->get();
         return view('question.detailsdisabled')->with('lev_id',$lid)->with('questions',$questions);
     }
 
-    /**
-     * Show the form for creating a new resource.
+   /**
+     * Create an instance of a questions
+     * return with question number
      *
+     * @param  Level $lid
      * @return \Illuminate\Http\Response
      */
     public function create($lid)
@@ -41,21 +52,20 @@ class QuestionsController extends Controller
         else 
             $ques_num++;
 
-        // if($ques_num < 6)
-            return view('question.add')->with('lev_id',$lid)->with('ques_num',$ques_num);
-        // else
-            // return redirect('/questions/'.$lid)->with('error', 'ITS FULL');
+        return view('question.add')->with('lev_id',$lid)->with('ques_num',$ques_num);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Storing a new question.
+     * associating it with the level it belongs to
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  Level $lid
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $lid)
     {
-        $this->validate($request,[
+        $this->validate($request,[          // validate the fields to answer no empty response
             'question'=> 'required',
             'ans_1' => 'required',
             'ans_2' => 'required'
@@ -119,7 +129,7 @@ class QuestionsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Updating the existing questions and answers
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -157,16 +167,13 @@ class QuestionsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deleting the questions and associated answers
+     * This is updated without page reload
+     * and return a response to indicate success
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $req
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function ajaxdelete(Request $req)
     {
        $allQuestions = Question::where('lev_id',$req->lid)->where('ques_num','>',$req->qnum)->get();
@@ -187,6 +194,14 @@ class QuestionsController extends Controller
         return response()->json($currentQuestion);
     }
 
+    /**
+     * Allow a question to be in the bank but hidden
+     * from the students
+     * All response is saved thru ajax without page reload
+     *
+     * @param  \Illuminate\Http\Request  $req
+     * @return \Illuminate\Http\Response
+     */
     public function hide(Request $req){  
         
         $bool = "0";
