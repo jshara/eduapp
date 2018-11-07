@@ -264,6 +264,7 @@
                             "' class='btn btn-info'>MAP</a> </td><td><?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?><select class='form-control text-center' id='course' data-id='"+ data.cat_id +
                             "'style='width:150px;'> @foreach($courses as $course)@if($course->c_id ==" + data.c_id +")<option value='{{$course->c_id}}' selected='selected'>{{$course->course_code}}</option> @else<option value='{{$course->c_id}}'>{{$course->course_code}}</option> @endif @endforeach </select></td><td><a href='/categories/publish/" + data.cat_id + 
                             "' class='btn btn-default'><span style='color:green;'> PUBLISH </span></a></td></tr>");
+                            swal("Awesome!", "Successfully Created!", "success");
                         }
                     },
 

@@ -121,6 +121,7 @@
                             $('.error').addClass('hidden');
                             $('#newcourse').val("");
                             $('#table').append("<tr class='course" + data.c_id + "'><td id='ccode" + data.c_id + "'><div class='input-group'><li class='form-control'>" + data.course_code + "</li><button class='edit-modal btn btn-info' data-id='"+ data.c_id +"' data-name='"+ data.course_code +"' style='margin:0 5px 0 5px;'><span class='fa fa-pencil fa-lg'></span></button><button class='delete-modal btn btn-danger' data-id='"+ data.c_id +"' data-name='"+ data.course_code +"' ><span class='fa fa-trash-o fa-lg'></span></button></div></td><td><li class='form-control'>{{DB::table('enrolments')->where('c_id'," + data.c_id + ")->count()}}</li></td> <td><a href='/student/" + data.c_id + "' class='btn btn-info'>Manage Students</a></td></tr>");
+                            swal("Awesome!", "Successfully Created!", "success");
                         }
                     },
 
