@@ -49,98 +49,154 @@ class ApiController extends Controller
 
     }
 
-    public function login(Request $request)
-    {
-
-        $student = Student::where('student_id', $request->student_id)->get();
-
-
-        if (!$student->isEmpty()) {
-            // dd($student[0]->s_id);
-
-            $has_token = DB::table('students')->where('s_id', $student[0]->s_id)->where('token', null)->doesntExist();
-            $expiry_token = DB::table('students')->where('s_id', $student[0]->s_id)->value('expires_at');
-
-            if (Carbon::now() > $expiry_token) {
-                $check_token = false;
-            } else {
-                $check_token = true;
-            }
-            
-            if (!$check_token) {
-
-                $tokenResult = Str::random(24) . $student[0]->student_id . Str::random(40);
-
-                // db::table('students')->where()
-
-                $student[0]->token = $tokenResult;
-                $student[0]->expires_at = Carbon::now()->addDays(10);
-                $student[0]->save();
-
-                $response = [
-                    'status' => 200,
-                    'message' => 'Login Attempt Successful'
-                ];
-
-                return response()->json($response); // Unprocessable Entity
-
-            } else {
-
-                $response = [
-                    'status' => 200,
-                    'message' => 'Login Attempt Successful'
-                ];
-
-                return response()->json($response); // Unprocessable Entity
-
-            }
-
-        } else {
-
+    public function login(Request $request){
+        if($request->login == 'true'){
             $response = $this->credentials($request->student_id, $request->password);
 
-            if ($response == '0') {
+            if($response == '0'){
+                $student = Student::where('student_id', $request->student_id)->get();
 
-                $student = new Student([
-                    'student_id' => $request->student_id
-                ]);
+                if (!$student->isEmpty()){
+                    $has_token = DB::table('students')->where('s_id', $student[0]->s_id)->where('token', null)->doesntExist();
+                    if($has_token){
+                        $expiry_token = DB::table('students')->where('s_id', $student[0]->s_id)->value('expires_at');
 
-                $tokenResult = Str::random(24) . $request->student_id . Str::random(40);
+                        if (Carbon::now() > $expiry_token) {
+                            $tokenResult = Str::random(24) . $student[0]->student_id . Str::random(40);
 
-                $student->token = $tokenResult;
-                $student->expires_at = Carbon::now()->addDays(10);
-                $student->save();
+                            // db::table('students')->where()
+            
+                            $student[0]->token = $tokenResult;
+                            $student[0]->expires_at = Carbon::now()->addDays(10);
+                            $student[0]->save();
+            
+                            $response = [
+                                'status' => 200,
+                                'message' => 'Login Attempt Successful'
+                            ];
+            
+                            return response()->json($response); 
+                        } else {
+                            $response = [
+                                'status' => 200,
+                                'message' => 'Login Attempt Successful'
+                            ];
+            
+                            return response()->json($response); 
+                        }
+                    }
+                    else{
+
+                        $tokenResult = Str::random(24) . $student[0]->student_id . Str::random(40);
+      
+                        $student[0]->token = $tokenResult;
+                        $student[0]->expires_at = Carbon::now()->addDays(10);
+                        $student[0]->save();
+        
+                        $response = [
+                            'status' => 200,
+                            'message' => 'Login Attempt Successful'
+                        ];
+        
+                        return response()->json($response); 
+                    }
+                }
+                else{
+                    $student = new Student([
+                        'student_id' => $request->student_id
+                    ]);
+
+                    $tokenResult = Str::random(24) . $request->student_id . Str::random(40);
+
+                    $student->token = $tokenResult;
+                    $student->expires_at = Carbon::now()->addDays(10);
+                    $student->save();
 
 
-                $enrolOpen = new Enrolment();   // Enrol in Open course (default)
-                $enrolOpen->s_id = $student->s_id;
-                $enrolOpen->c_id = 1;
-                $enrolOpen->save();
+                    $enrolOpen = new Enrolment();   // Enrol in Open course (default)
+                    $enrolOpen->s_id = $student->s_id;
+                    $enrolOpen->c_id = 1;
+                    $enrolOpen->save();
 
-                // $token->save();
+                    // $token->save();
 
-                $response = [
-                    'status' => 200,
-                    'message' => 'Logged In'
-                ];
+                    $response = [
+                        'status' => 200,
+                        'message' => 'Logged In'
+                    ];
 
-                return response()->json($response); // Unprocessable Entity
+                    return response()->json($response); 
+                }
 
-            } else if ($response == '1') {
-
+            }
+            elseif($response == '1'){
                 $response = [
                     'status' => 422,
                     'error' => 'Incorrect Credentials, Try Again'
                 ];
-
-                return response()->json($response); // Unprocessable Entity
-
-
-
+    
+                return response()->json($response); 
             }
+            else{
+                $response = [
+                    'status' => 422,
+                    'error' => 'Incorrect Credentials, Try Again'
+                ];
+    
+                return response()->json($response); 
+            }
+        }
+        elseif($request->login == 'false'){
+            $student = Student::where('student_id', $request->student_id)->get();
 
+            if (!$student->isEmpty()){
+                $has_token = DB::table('students')->where('s_id', $student[0]->s_id)->where('token', null)->doesntExist();
+                if($has_token){
+                    $expiry_token = DB::table('students')->where('s_id', $student[0]->s_id)->value('expires_at');
+                    if (Carbon::now() > $expiry_token) {
+                        $response = [
+                            'status' => 422,
+                            'error' => 'Log In Please'
+                        ];            
+                        return response()->json($response); 
+                    }
+                    else{
+                        $response = [
+                            'status' => 200,
+                            'message' => 'Logged In'
+                        ];
+    
+                        return response()->json($response); 
+                    }
+                }
+                else{
+                    $response = [
+                        'status' => 422,
+                        'error' => 'Log In Please'
+                    ];
+        
+                    return response()->json($response); 
+                }
+            }
+            else{
+                $response = [
+                    'status' => 422,
+                    'error' => 'Log In Please'
+                ];
+    
+                return response()->json($response); 
+            }
+        }
+        else{
+            $response = [
+                'status' => 422,
+                'error' => 'Incorrect Credentials, Try Again'
+            ];
+
+            return response()->json($response); 
         }
     }
+
 
     //api that returns score and details of user
     public function init($userId){
@@ -262,7 +318,7 @@ class ApiController extends Controller
             ];
         $i++;
         }
-        return response()->json($data);
+        return response()->json($data); 
     }
 
     public function removeSaved($userId,$catId){
@@ -299,15 +355,15 @@ class ApiController extends Controller
                         ];
                         $i++;
                     }
-                    else{
-                        $list1[$i] = [
-                            $cat->cat_name
-                        ]; 
-                        $list2[$i]=[
-                            0
-                        ];
-                        $i++;
-                    }
+                    // else{
+                    //     $list1[$i] = [
+                    //         $cat->cat_name
+                    //     ]; 
+                    //     $list2[$i]=[
+                    //         0
+                    //     ];
+                    //     $i++;
+                    // }
 
                 }
 
@@ -477,7 +533,7 @@ class ApiController extends Controller
     }
 
     //check whether answers submitted are correct
-    public function checkAns($userId,$cid, $lnum, $ans_str = null)
+    public function checkAns($userId,$cid, $lnum, $ques_str = null, $ans_str = null)
     {
         $resultSet;
         if ($ans_str == null) {
@@ -508,9 +564,9 @@ class ApiController extends Controller
                 $result = DB::table('answers')
                     ->where('ans_id', $id)
                     ->value('ans_correct');
-                $ques_id[] = DB::table('answers')
-                  ->where('ans_id',$id)
-                  ->value('ques_id');
+                // $ques_id[] = DB::table('answers')
+                //   ->where('ans_id',$id)
+                //   ->value('ques_id');
                   
 
                 if ($result == 1) {
@@ -554,7 +610,7 @@ class ApiController extends Controller
                 ->where('cat_id', $cid)
                 ->value('answerString');
 
-                $ques_id = join(',' , $ques_id);
+                // $ques_id = join(',' , $ques_str);
                 
                 if ($scoreString == null){
                     $scoreString = $score;
@@ -563,7 +619,7 @@ class ApiController extends Controller
                 }
                 else{
                     $scoreString = $scoreString.',' .$score;
-                    $ques_id = $qString.','.$ques_id;
+                    $ques_str = $qString.','.$ques_str;
                     $ans_str = $aString.','.$ans_str;
                 }
                
@@ -577,23 +633,23 @@ class ApiController extends Controller
                 ['lev_id'  => $levId,
                 'session_score'  => $score,
                 'answerString' => $ans_str,
-                'questionString' => $ques_id,
+                'questionString' => $ques_str,
                 'scoreString' => $scoreString,
                 'updated_at'=> Carbon::now()->toDateTimeString()
                 ]
             );
 
-            $val = db::table('students')
-            ->where('s_id',$sid)
-            ->where('student_id',$userId)
-            ->value('scoreTotal');    
+            // $val = db::table('students')
+            // ->where('s_id',$sid)
+            // ->where('student_id',$userId)
+            // ->value('scoreTotal');    
 
-            db::table('students')
-            ->where('s_id',$sid)
-            ->where('student_id',$userId)
-            ->update([
-                'scoreTotal' => ($val + $score)
-            ]);
+            // db::table('students')
+            // ->where('s_id',$sid)
+            // ->where('student_id',$userId)
+            // ->update([
+            //     'scoreTotal' => ($val + $score)
+            // ]);
             event(new \App\Events\scoreChanged($cid));
             return response()->json($data);
         }
@@ -755,7 +811,7 @@ class ApiController extends Controller
             ->update(
             ['lev_id'  => $levId,
              'session_score'  => $score,
-
+             'numCircles' => $num,
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         );
@@ -782,6 +838,13 @@ class ApiController extends Controller
              'updated_at'=> Carbon::now()->toDateTimeString()
              ]
         );
+
+        $total = db::table('students')->where('s_id',$sid)->value('scoreTotal');
+
+        db::table('students')->where('s_id',$sid)->update([
+            'scoreTotal' => $score + $total,
+            'updated_at'=> Carbon::now()->toDateTimeString()
+        ]);
         return "Game Finished";
     }
 
@@ -817,14 +880,16 @@ class ApiController extends Controller
         $maxScores;
 
         $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
-
+        // dd($sid);
         $totalEarned = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('session_score');
+        dd($totalEarned);
         $timeStarted = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('created_at'));
         $timeFinished = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('updated_at'));
         $totalTime = $timeFinished->diff($timeStarted)->format('%H:%I:%S');
 
         $scoreString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('scoreString');
         $qString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('questionString');
+
         $aString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('answerString');
 
         $numLevels = DB::table('levels')->where('cat_id',$cat_id)->count();
@@ -834,10 +899,12 @@ class ApiController extends Controller
             $maxScores[$x] = DB::table('levels')->where('cat_id',$cat_id)->where('lev_num',$x)->value('max_points');
         }
 
-        $levIds = DB::table('levels')->where('cat_id',$cat_id)->select('lev_id')->get();
+        $levIds = DB::table('levels')->where('cat_id',$cat_id)->select('lev_id','numOfQues')->get();
 
         $scoresPerLevel = explode(',',$scoreString);
+
         $questionsDone = explode(',',$qString);
+
         $answersGiven = explode(',',$aString);
 
         $res;
@@ -847,16 +914,21 @@ class ApiController extends Controller
         foreach($scoresPerLevel as $score){
             $x = 0;
             foreach($questionsDone as $question){
+                // dump($x+1);
                 $quesContent= DB::table('questions')->where('lev_id',$levIds[$a]->lev_id)->where('ques_id',$question)->value('ques_content');
-
-                if ($quesContent != null){
+                // dump($x. ' ' .$levIds[$a]->numOfQues);
+                $ansGiven = null;
+                if ($quesContent != null  /* && ($x) <= $levIds[$a]->numOfQues */){
+                    // dump($quesContent != null);
                     $correctAns = DB::table('answers')->where('ques_id',$question)->where('ans_correct','1')->value('ans_content');
                     $ansGiven = DB::table('answers')->where('ques_id', $question)->where('ans_id',array_shift($answersGiven))->value('ans_content');
                     $correct = false;
                     if($correctAns == $ansGiven){
                         $correct = true;
                     }
-    
+                    
+                    // dump('correct ans: '. $correctAn/* s); */
+                    // dump('ans given: '. $ansGiven);
                     $ques[$x] = [
                         'number' => ($x+1),
                         'content' => $quesContent,
@@ -864,20 +936,32 @@ class ApiController extends Controller
                         'ansGiven' => $ansGiven,
                         'correct' => $correct
                     ];
-                    $x++;
+                    $x++;                        
+
+
                 }
 
             }
 
+
+
             $res[$a] = [
                 'MaxScore' => $maxScores[$a+1],
                 'ScoreEarned' => $score,
+                'NumOfQues' => $levIds[$a]->numOfQues,
                 'Level' => ($a + 1),
                 'Questions' => $ques 
             ];
 
+
+            $res[$a]['Questions'] = array_slice($res[$a]['Questions'], 0, $levIds[$a]->numOfQues);
+
             $a++;
         }
+
+        // dump($ques);
+
+        
 
         $percentage = $totalEarned/array_sum($maxScores) * 100;
         $percentage = round($percentage,2);
@@ -965,5 +1049,12 @@ class ApiController extends Controller
         if ($token->isTokenExpired()) {
             $token->delete();
         }
+    }
+
+    public function logOut($userId){
+        DB::table('students')->where('student_id',$userId)->update([
+            'token' => null,
+            'expires_at' => null
+        ]);
     }
 }

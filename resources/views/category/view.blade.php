@@ -63,10 +63,10 @@
                             <td>
                                 <div class="input-group">
                                     <li class="form-control">{{$c->cat_name}}</li>
-                                    <button class="btn btn-info disabled" data-toggle="tooltip" title="Unpublish to Edit" style="margin:0 5px 0 5px;">
+                                    <button class="btn btn-info disabled" data-toggle="tooltip" title="Game is published, cannot edit" style="margin:0 5px 0 5px;">
                                         <span class="fa fa-pencil fa-lg"></span>
                                     </button>
-                                    <button class="btn btn-danger disabled" data-toggle="tooltip" title="Unpublish to Delete">
+                                    <button class="btn btn-danger disabled" data-toggle="tooltip" title="Game is published, cannot Delete">
                                         <span class="fa fa-trash-o fa-lg"></span>
                                     </button>
                                 </div>
@@ -77,7 +77,7 @@
                             </td>
                             <td>
                                 <?php $courses = DB::table('courses')->where('user_id',$c->user_id)->orWhere('user_id', NULL)->get();?>
-                                <select class="form-control text-center" data-toggle="tooltip" title="Unpublish to Select" style="width:150px;" disabled>                                
+                                <select class="form-control text-center" data-toggle="tooltip" title="Game is published, cannot Select" style="width:150px;" disabled>                                
                                     @foreach($courses as $course)                                
                                         @if($course->c_id == $c->c_id)
                                             <option value="{{$course->c_id}}" selected="selected">{{$course->course_code}}</option>

@@ -64,7 +64,7 @@ class ResultsController extends Controller
         $c_id = Category::where('cat_id',$cat_id)->value('c_id');
         $students = Enrolment::where('c_id',$c_id)->select('s_id')->get();
 
-        $student_ids;
+        $student_ids = [];
         foreach($students as $student){
             $student_ids[]= Student::where('s_id',$student['s_id'])->value('student_id');
         }     
@@ -76,10 +76,12 @@ class ResultsController extends Controller
 
     public function loadResults($userId,$cat_id){
         $category = DB::table('categories')->where('cat_id',$cat_id)->value('cat_name');
-        $maxScores;
-        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
 
-        if(DB::table('sessions')->where('s_id',$sid)->Exists()){
+        $maxScores;
+
+        $sid = DB::table('students')->where('student_id',$userId)->value('s_id');
+        // dd(DB::table('sessions')->where('s_id',$sid)->Exists());
+        if(DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->Exists()){
 
         $totalEarned = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('session_score');
         $timeStarted = new Carbon (DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('created_at'));
@@ -88,6 +90,7 @@ class ResultsController extends Controller
 
         $scoreString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('scoreString');
         $qString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('questionString');
+
         $aString = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat_id)->value('answerString');
 
         $numLevels = DB::table('levels')->where('cat_id',$cat_id)->count();
@@ -97,28 +100,36 @@ class ResultsController extends Controller
             $maxScores[$x] = DB::table('levels')->where('cat_id',$cat_id)->where('lev_num',$x)->value('max_points');
         }
 
-        $levIds = DB::table('levels')->where('cat_id',$cat_id)->select('lev_id')->get();
+        $levIds = DB::table('levels')->where('cat_id',$cat_id)->select('lev_id','numOfQues')->get();
 
         $scoresPerLevel = explode(',',$scoreString);
+
         $questionsDone = explode(',',$qString);
+
         $answersGiven = explode(',',$aString);
 
         $res;
         $ques;
+
         $a = 0;
         foreach($scoresPerLevel as $score){
             $x = 0;
             foreach($questionsDone as $question){
+                // dump($x+1);
                 $quesContent= DB::table('questions')->where('lev_id',$levIds[$a]->lev_id)->where('ques_id',$question)->value('ques_content');
-
-                if ($quesContent != null){
+                // dump($x. ' ' .$levIds[$a]->numOfQues);
+                $ansGiven = null;
+                if ($quesContent != null  /* && ($x) <= $levIds[$a]->numOfQues */){
+                    // dump($quesContent != null);
                     $correctAns = DB::table('answers')->where('ques_id',$question)->where('ans_correct','1')->value('ans_content');
                     $ansGiven = DB::table('answers')->where('ques_id', $question)->where('ans_id',array_shift($answersGiven))->value('ans_content');
                     $correct = false;
                     if($correctAns == $ansGiven){
                         $correct = true;
                     }
-    
+                    
+                    // dump('correct ans: '. $correctAn/* s); */
+                    // dump('ans given: '. $ansGiven);
                     $ques[$x] = [
                         'number' => ($x+1),
                         'content' => $quesContent,
@@ -126,22 +137,29 @@ class ResultsController extends Controller
                         'givenAns' => $ansGiven,
                         'correct' => $correct
                     ];
-                    $x++;
+                    $x++;                        
+
+
                 }
 
             }
-        
+
             $res[$a] = [
                 'MaxScore' => $maxScores[$a+1],
                 'ScoreEarned' => $score,
+                'NumOfQues' => $levIds[$a]->numOfQues,
                 'Level' => ($a + 1),
                 'Questions' => $ques 
             ];
 
+
+            $res[$a]['Questions'] = array_slice($res[$a]['Questions'], 0, $levIds[$a]->numOfQues);
+
             $a++;
-        }
+        }    
 
         $percentage = $totalEarned/array_sum($maxScores) * 100;
+        $percentage = round($percentage,2);
         $comment;
         if ($percentage >= 80){
             $comment = "Excellent! Keep It Up";
@@ -163,10 +181,12 @@ class ResultsController extends Controller
             'results' => $res
         ];
 
+
         return view('result.studentdetails')->with('cat_id',$cat_id)->with('data',$data);
     }else{
         $data = 0;
         return view('result.studentdetails')->with('cat_id',$cat_id)->with('data',$data);
     }
     }
+
 }
