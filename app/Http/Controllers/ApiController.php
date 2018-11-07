@@ -263,10 +263,20 @@ class ApiController extends Controller
             if(!$cats->isEmpty()){
                 foreach ($cats as $cat){
                     $result = DB::table('sessions')->where('s_id',$sid)->where('cat_id',$cat->cat_id)->exists();
+                    $cid = db::table('categories')->where('cat_id',$cat->cat_id)->value('c_id');
+
+
                     if ($result != true){
+                        $students = DB::table('enrolments')->where('c_id',$cid)->count();
+                        $course = DB::table('courses')->where('c_id',$cid)->value('course_code');
+                        $points = db::table('levels')->where('cat_id',$cat->cat_id)->sum('max_points');
+ 
                         $list[$i] = [
                             'cat_id' => $cat->cat_id,
-                            'cat_name' => $cat->cat_name
+                            'cat_name' => $cat->cat_name,
+                            'students' => $students,
+                            'points' => $points,
+                            'course' => $course
                         ]; 
                         $i++;
                     }
@@ -289,11 +299,14 @@ class ApiController extends Controller
         $i = 0;
         foreach( $cats as $cat){
             // echo $cat->cat_id;
+            $completed = 0;
             $list = DB::table('categories')->select('cat_name as Cat')->where('cat_id', $cat->cat_id)->get();
+            $completed = DB::table('categories')->where('cat_id', $cat->cat_id)->value('completed');
 
             $data[$i] = [
                 'cat_id' => $cat->cat_id,
-                'cat_name' => $list[0]->Cat
+                'cat_name' => $list[0]->Cat,
+                'completed' => $completed
             ];
         $i++;
         }
@@ -310,11 +323,22 @@ class ApiController extends Controller
             // echo $cat->cat_id;
             $list = DB::table('categories')->select('cat_name as Cat')->where('cat_id', $cat->cat_id)->get();
             $num = DB::table('sessions')->where('cat_id',$cat->cat_id)->value('numCircles');
+            $earned = db::table('sessions')->where('cat_id',$cat->cat_id)->where('s_id',$sid)->value('session_score');
+
+            $currentLev = db::table('sessions')->where('cat_id',$cat->cat_id)->where('s_id',$sid)->value('lev_id');
+            $currentLev = db::table('levels')->where('lev_id',$currentLev)->value('lev_num');
+
+            $levels = db::table('levels')->where('cat_id',$cat->cat_id)->count('lev_num');    
+            $points = db::table('levels')->where('cat_id',$cat->cat_id)->sum('max_points');
 
             $data[$i] = [
                 'cat_id' => $cat->cat_id,
                 'cat_name' => $list[0]->Cat,
-                'numCircles' => $num
+                'numCircles' => $num,
+                'earned' => $earned,
+                'points' => $points,
+                'level' => ($currentLev - 1),
+                'levels' => $levels
             ];
         $i++;
         }
