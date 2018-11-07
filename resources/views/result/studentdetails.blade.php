@@ -6,7 +6,7 @@
         <a href="/perform/{{$cat_id}}" class="btn btn-danger">BACK</a>
     </div>
     <div class="col-md-6 offset-md-2">
-        <h2><b>{{$data['Category']}}</b></h2>
+        <h2><b>{{$data['Category']}} - {{$data['ID']}}</b></h2>
     </div>
 </div><br>
 @if($data != 0)

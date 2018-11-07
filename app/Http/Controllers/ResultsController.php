@@ -151,11 +151,8 @@ class ResultsController extends Controller
                         'givenAns' => $ansGiven,
                         'correct' => $correct
                     ];
-                    $x++;                        
-
-
+                    $x++;                   
                 }
-
             }
 
             $res[$a] = [
@@ -163,7 +160,7 @@ class ResultsController extends Controller
                 'ScoreEarned' => $score,
                 'NumOfQues' => $levIds[$a]->numOfQues,
                 'Level' => ($a + 1),
-                'Questions' => $ques 
+                'Questions' => $ques
             ];
 
 
@@ -192,7 +189,8 @@ class ResultsController extends Controller
             'Percentage' => $percentage,
             'Comment' => $comment,
             'TotalPossibleScore' => array_sum($maxScores),
-            'results' => $res
+            'results' => $res,
+            'ID' => $userId
         ];
 
 
