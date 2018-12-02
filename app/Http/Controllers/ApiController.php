@@ -587,18 +587,13 @@ class ApiController extends Controller
             foreach ($ans_id as $id) {
                 $result = DB::table('answers')
                     ->where('ans_id', $id)
-                    ->value('ans_correct');
-                // $ques_id[] = DB::table('answers')
-                //   ->where('ans_id',$id)
-                //   ->value('ques_id');
-                  
+                    ->value('ans_correct');               
 
                 if ($result == 1) {
-                    // echo 'correct ' . $result;
                     $resultSet[] = ($result);
                     $numCorrect++;
                 } else {
-                    // echo 'wrong '.$result;
+
                     $resultSet[] = ($result);
                 }
             }
@@ -633,13 +628,9 @@ class ApiController extends Controller
                 ->where('s_id', $sid)
                 ->where('cat_id', $cid)
                 ->value('answerString');
-
-                // $ques_id = join(',' , $ques_str);
                 
                 if ($scoreString == null){
                     $scoreString = $score;
-                    // $ques_id = $qString;
-                    // $ans_str = $aString;
                 }
                 else{
                     $scoreString = $scoreString.',' .$score;
@@ -662,18 +653,6 @@ class ApiController extends Controller
                 'updated_at'=> Carbon::now()->toDateTimeString()
                 ]
             );
-
-            // $val = db::table('students')
-            // ->where('s_id',$sid)
-            // ->where('student_id',$userId)
-            // ->value('scoreTotal');    
-
-            // db::table('students')
-            // ->where('s_id',$sid)
-            // ->where('student_id',$userId)
-            // ->update([
-            //     'scoreTotal' => ($val + $score)
-            // ]);
             event(new \App\Events\scoreChanged($cid));
             return response()->json($data);
         }
@@ -941,7 +920,7 @@ class ApiController extends Controller
                 // dump($x+1);
                 $quesContent= DB::table('questions')->where('lev_id',$levIds[$a]->lev_id)->where('ques_id',$question)->value('ques_content');
                 // dump($x. ' ' .$levIds[$a]->numOfQues);
-                $ansGiven = null;
+                // $ansGiven = null;
                 if ($quesContent != null  /* && ($x) <= $levIds[$a]->numOfQues */){
                     // dump($quesContent != null);
                     $correctAns = DB::table('answers')->where('ques_id',$question)->where('ans_correct','1')->value('ans_content');
